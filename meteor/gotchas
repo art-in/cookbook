@@ -1,0 +1,51 @@
+1. Template scoped reactive state.
+   Solution: ReactiveVar
+   
+2. Sending collection count to client.
+   "Publish function can only return a Cursor or an array of Cursors".
+   Solution: tmeasday:publish-counts
+   
+3. No MVVM support (two-way bindings) - no view to viewmodel binding.
+   Solution: manuel:viewmodel
+   
+   "What happens if you encounter a situation where you can't use view models, 
+    for example, you can't bind to an element for whatever reason? 
+    The answer is simple: you do it in good old Blaze/Meteor."
+   
+   3.a viewmodel does not apply click handler on partial render inside {{# if }}
+       data-bind='visible: bool'
+       Solution: https://github.com/ManuelDeLeon/viewmodel/issues/93
+   3.b viewmodel does not see {{# each }}-context and unable to use context's
+       properties inside 'data-bind'
+       Solution: Move to separate template or use vanila one-way binding.
+   3.c unable to use expressions in data-bind, like
+       "class: {'myclass': state === 'value'}"
+       Solution: Add separate vm helper, like
+                 "class: {'myclass': eq('state', 'value')}"
+   
+4. Long (auto)updates in c9 environment
+   Solution: Preriodically restart meteor server 
+
+5. Sorting not obviously should be done both on server (pub) and client (sub),
+   because server sends only documents that client's local db does not have.
+   
+6. Several subscriptions for the same collection (list and selected item).
+   Publications of the same collection are merged, and selected item always added 
+   to the list, even if it should not be on current page.
+   Solution: http://stackoverflow.com/questions/32140736/several-subscriptions-for-the-same-collection-in-meteorjs
+
+7. Passing parameters to template kills reactivity of #each data context 
+   inside nested template, because parameters object is not reactive datasource.
+   Solution: Inside nested template use '../each_data_context_property' from html, 
+             or Template.parentData() from code
+             or this.templateInstance.view.templateInstance().data for reactivity
+             
+   7.a Template.parentData() failes with 'view not set' error when Blaze 
+       is not in render phaze (?).
+       Cache parent data when Blaze is right phaze (Template.instance() is not null).
+       Solution: do not use Template.parentData().
+       
+8. Annoying auto-refreshes when uploading images to public folder at runtime.
+   Solution: Use separate folder '.uploads' and request handler to serve from there
+             http://stackoverflow.com/a/20358612/1064570
+   

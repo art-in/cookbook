@@ -1,0 +1,75 @@
+.recipes {
+    box-shadow: 0 0 35px #65523F;
+    background-color: rgba(101, 82, 63, 0.7);
+    width: 700px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 5px;
+    position: relative;
+}
+
+.recipes header {
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.recipes header .add {
+    background-image: url('/images/add.png');
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    opacity: 0.7;
+}
+
+.recipes header .sorting {
+    float: right;
+}
+
+.recipe-list {}
+
+.recipes .paging {
+    padding: 5px;
+    text-align: center;
+}
+
+.recipes .recipe-list + .paging {
+    margin-top: 10px;
+}
+
+.recipes .paging a.prev {
+    float: left;
+}
+
+.recipes .paging a.next {
+    float: right;
+}
+
+.recipes .paging ul.page-list {
+    display: inline-block;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recipes .paging ul.page-list li {
+    display: inline;
+}
+
+.recipes .spinner {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 2s;
+}
+
+.recipes .spinner.active {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #65523F;
+    opacity: 0.5;
+}
+
+.recipes .page-list li + li {
+    margin-left: 5px;
+}

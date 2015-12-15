@@ -1,0 +1,12 @@
+1. Component should return one item only.
+   If I want my component to be presented by two or more say divs, which lie right 
+   to each other, then I have to wrap them up with one more div.
+
+2. A lot of event handlers in main component.
+   Events from child components flow up to the main component (the holder 
+   of the app state). Which is reasoble, because this is the idea of predictable
+   data flow in React. But so many handlers occuire in main component...
+   React "contexts" is for the resque here, but it can broke explicit data flow,
+   that's why this feature is still not officialy documented.
+   https://discuss.reactjs.org/t/documentation-on-context/130
+

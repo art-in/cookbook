@@ -1,0 +1,32 @@
+section.recipes
+    header
+        a.add(href='#')
+        div.sorting
+            a.alphabet(href='#') по алфавиту
+            a.complexity(href='#') по сложности
+            a.popularity(href='#') по популярности
+    
+    section.recipe-list(style={display:'none'})
+        article.recipe-list-item
+            div.buttons
+                a.delete(href='#')
+            div.photo
+                img
+            div.properties
+                a.name
+                br
+                div.metrics
+                    span
+                        | Популярность:
+                        span.popularity
+                    span
+                        | Сложность:
+                        span.complexity
+                div.description
+
+    div.paging
+        a.prev(href='#') Назад
+        ul.page-list
+            li: a(href='#')
+        a.next(href='#') Вперёд
+    div.spinner

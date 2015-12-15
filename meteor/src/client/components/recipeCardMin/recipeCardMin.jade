@@ -1,0 +1,33 @@
+template(name='recipeCardMin')
+  article.recipe-card-min(
+    data-bind='class: {selectable: selectable}, click: onSelect')
+    
+    div.buttons
+      a.delete(href='#', 
+               data-bind='visible: deletable, click: onDelete')
+        
+    div.photo(class='empty', data-bind='click:onPhotoClick')
+      img(data-bind='attr:{src:getRecipePhotoPath}')
+      input(type="file", accept="image/*", data-bind='change:onPhotoChange')
+    div.properties
+      a.name(data-bind='htmlEditable:recipe.name, \
+                        focusSelectContent:true, \
+                        contenteditable: inEditMode, \
+                        preventNewLine:true')
+      br
+      div.metrics
+        span
+          | Популярность:
+          span.popularity(data-bind='numberInput:recipe.popularity, min:1, max:10, \
+                                     focusSelectContent:true, \
+                                     contenteditable: inEditMode, \
+                                     preventNewLine:true')
+        span
+          | Сложность:
+          span.complexity(data-bind='numberInput:recipe.complexity, min:1, max:10, \
+                                     focusSelectContent:true, \
+                                     contenteditable: inEditMode, \
+                                     preventNewLine:true')
+      div.description(data-bind='htmlEditable:recipe.description, \
+                                 focusSelectContent:true, \
+                                 contenteditable: inEditMode')

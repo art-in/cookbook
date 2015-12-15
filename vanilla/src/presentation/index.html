@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Книга рецептов</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.ico?v=5" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/styles.css">
+
+    <!-- Scripts -->
+    <script src='scripts/lib/require.config.js'></script>
+    <script data-main='client' src='scripts/lib/vendor/require.js'></script>
+</head>
+<body>
+
+<section class="recipes">
+    <header>
+        <a href="#" class="add"></a>
+        <div class="sorting">
+            <a href="#" class="alphabet">по алфавиту</a>
+            <a href="#" class="complexity">по сложности</a>
+            <a href="#" class="popularity">по популярности</a>
+        </div>
+    </header>
+    <section class="recipe-list" style="display: none">
+        <article class="recipe-list-item">
+            <div class="buttons">
+                <a href="#" class="delete"></a>
+            </div>
+            <div class="photo">
+                <img>
+            </div>
+            <div class="properties">
+                <a class="name"></a>
+                <br>
+                <div class="metrics">
+                    Популярность: <span class="popularity"></span>
+                    Сложность: <span class="complexity"></span>
+                </div>
+                <div class="description"></div>
+            </div>
+        </article>
+    </section>
+    <div class="paging">
+        <a href="#" class="prev">Назад</a>
+        <ul class="page-list">
+            <li><a href="#"></a></li>
+        </ul>
+        <a href="#" class="next">Вперёд</a>
+    </div>
+    <div class="spinner"></div>
+</section>
+
+<div class="fog" style="display: none"></div>
+<section class="recipe" style="display: none">
+    <div class="buttons">
+        <a href="#" class="edit"></a>
+        <a href="#" class="save"></a>
+        <a href="#" class="discard"></a>
+        <a href="#" class="delete"></a>
+        <a href="#" class="close"></a>
+    </div>
+    <div class="basics">
+        <div class="photo">
+            <img>
+            <a href="#" class="delete"></a>
+        </div>
+        <input type="file" accept="image/*">
+        <div class="properties">
+            <span class="name"></span>
+            <br>
+            <div class="metrics">
+                Популярность: <span class="popularity"></span>
+                Сложность: <span class="complexity"></span>
+            </div>
+            <div class="description"></div>
+        </div>
+    </div>
+    <div class="specifics">
+        <div class="ingredients">
+            <div class="title">Ингредиенты: <a href="#" class="add"></a></div>
+            <ul class="ingredient-list">
+                <li class="ingredient-list-item">
+                    <div class="name"></div>
+                    <div class="controls">
+                        <a href="#" class="delete"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="steps">
+            <div class="title">Шаги: <a href="#" class="add"></a></div>
+            <ul class="step-list">
+                <li class="step-list-item">
+                    <div class="name"></div>
+                    <div class="controls">
+                        <a href="#" class="delete"></a>
+                        <span class="drag-handle"> ||| </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

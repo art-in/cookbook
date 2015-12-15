@@ -1,0 +1,47 @@
+div.fog(style={display: 'none'})
+section.recipe(style={display: 'none'})
+
+    div.buttons
+        a.edit(href='#')
+        a.save(href='#')
+        a.discard(href='#')
+        a.delete(href='#')
+        a.close(href='#')
+
+    div.basics
+        div.photo
+            img
+            a.delete(href='#')
+        input(type='file', accept='image/*')
+        div.properties
+            span.name
+            br
+            div.metrics
+                span
+                    | Популярность:
+                    span.popularity
+                span
+                    | Сложность:
+                    span.complexity
+            div.description
+
+    div.specifics
+        div.ingredients
+            div.title
+                | Ингредиенты:
+                a.add(href='#')
+            ul.ingredient-list
+                li.ingredient-list-item
+                    div.name
+                    div.controls
+                        a.delete(href='#')
+        div.steps
+            div.title
+                | Шаги:
+                a.add(href='#')
+            ul.step-list
+                li.step-list-item
+                    div.name
+                    div.controls
+                        a.delete(href='#')
+                        span.drag-handle |||

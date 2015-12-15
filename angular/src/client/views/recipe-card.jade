@@ -1,0 +1,69 @@
+div.fog(ng-if='cardShown' ng-cloak)
+section.recipe(
+    ng-if='cardShown'
+    ng-controller='RecipeCardCtrl as card'
+    ng-class='{ editing: inEditMode }'
+    ng-cloak)
+    
+    div.buttons
+        a.edit(href ng-click='card.onEdit()' ng-if='!inEditMode && !isNewRecipe')
+        a.save(href ng-click='card.onSave()' ng-if='inEditMode')
+        a.discard(href ng-click='card.onDiscard()' ng-if='inEditMode && !isNewRecipe')
+        a.delete(href ng-click='card.onDelete()' ng-if='!isNewRecipe')
+        a.close(href ng-click='card.onClose()')
+
+    div.basics
+        div.photo(ng-class='{ empty: !recipe.photoId }'
+                  ng-click='card.onPhotoSelect($event)')
+            img(recipe-image-src='{{ recipe.photoId }}')
+            a.delete(href ng-click='card.onPhotoDelete($event)')
+            input(type='file' accept='image/*'
+                  onchange='angular.element(this).scope().onPhotoChange(this)')
+        div.properties
+            span.name(contenteditable='{{ inEditMode }}' 
+                      ng-model='recipe.name'
+                      no-line-breaks='true'
+                      focus-select-content='{{ inEditMode }}'
+                      set-focus='{{ isNewRecipe }}')
+            br
+            div.metrics
+                span
+                    | Популярность:
+                    span.popularity(contenteditable='{{ inEditMode }}' 
+                                    ng-model='recipe.popularity'
+                                    focus-select-content='{{ inEditMode }}'
+                                    number-input='{{ inEditMode }}' min='0' max='10')
+                span
+                    | Сложность:
+                    span.complexity(contenteditable='{{ inEditMode }}' 
+                                    ng-model='recipe.complexity'
+                                    focus-select-content='{{ inEditMode }}'
+                                    number-input='{{ inEditMode }}' min='0' max='10')
+            div.description(contenteditable='{{ inEditMode }}' 
+                            ng-model='recipe.description'
+                            focus-select-content='{{ inEditMode }}')
+
+    div.specifics
+        div.ingredients
+            div.title
+                | Ингредиенты:
+                a.add(href ng-click='card.onIngredientAdd()' ng-if='inEditMode')
+            ul.ingredient-list
+                li.ingredient-list-item(ng-repeat='ingredient in recipe.ingredients')
+                    div.name(contenteditable='{{ inEditMode }}' 
+                             ng-model='ingredient.name'
+                             focus-select-content='{{ inEditMode }}')
+                    div.controls(ng-if='inEditMode')
+                        a.delete(href ng-click='card.onIngredientDelete(ingredient)')
+        div.steps
+            div.title
+                | Шаги:
+                a.add(href ng-click='card.onStepAdd()' ng-if='inEditMode')
+            ul.step-list
+                li.step-list-item(ng-repeat='step in recipe.steps')
+                    div.name(contenteditable='{{ inEditMode }}' 
+                             ng-model='step.name'
+                             focus-select-content='{{ inEditMode }}')
+                    div.controls(ng-if='inEditMode')
+                        a.delete(href ng-click='card.onStepDelete(step)')
+                        span.drag-handle |||

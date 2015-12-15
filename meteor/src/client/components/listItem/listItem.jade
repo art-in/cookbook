@@ -1,0 +1,5 @@
+template(name='listItem')
+  li(data-bind='class:className')
+    div.name(data-bind='htmlEditable:model.name, contenteditable:inEditMode, focusSelectContent:true')
+    div.controls
+      a.delete(href='#' data-bind='click:onDelete')

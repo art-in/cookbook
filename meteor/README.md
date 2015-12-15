@@ -1,0 +1,2 @@
+```
+cookbook([meteor, jade])

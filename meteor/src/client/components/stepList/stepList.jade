@@ -1,0 +1,12 @@
+template(name='stepList'): div.steps
+
+  div.title
+    | Шаги:
+    a.add(href='#', data-bind='visible: inEditMode, click:onAdd')
+
+  ul.step-list
+    each steps
+      +listItem (model=this
+                 className='step-list-item' 
+                 inEditMode=inEditMode
+                 events=stepItemEvents)

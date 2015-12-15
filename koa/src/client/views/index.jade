@@ -1,0 +1,14 @@
+doctype html
+html
+  head(lang="en")
+    meta(charset="UTF-8")
+    title= "Книга рецептов"
+    
+    link(rel='shortcut icon', href='/favicon.ico?v=1')
+    link(rel='stylesheet', href='/styles/styles.css')
+    
+    script(src='/scripts/lib/require.config.js')
+    script(data-main='client', src='scripts/lib/vendor/require.js')
+  body
+    include recipe-list.jade
+    include recipe-card.jade

@@ -1,0 +1,12 @@
+template(name='ingredientList'): div.ingredients
+
+  div.title
+    | Ингредиенты:
+    a.add(href='#', data-bind='visible: inEditMode, click:onAdd')
+
+  ul.ingredient-list
+    each ingredients
+      +listItem (model=this
+                 className='ingredient-list-item' 
+                 inEditMode=inEditMode
+                 events=ingredientItemEvents)

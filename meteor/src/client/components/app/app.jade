@@ -1,0 +1,12 @@
+template(name='app')
+  +recipeList (recipes=recipes 
+               events=recipeListEvents)
+  
+  if selectedRecipe
+    div.fog
+    +recipeCard (recipe=selectedRecipe
+                 events=recipeCardEvents
+                 editable=isNotNew 
+                 discardable=isNotNew 
+                 deletable=isNotNew
+                 inEditMode=isNew)

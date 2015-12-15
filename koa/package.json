@@ -1,0 +1,52 @@
+{
+  "name": "cookbook-koa",
+  "version": "1.0.0",
+  "description": "Cookbook on Koa framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/artin-phares/cookbook.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/artin-phares/cookbook/issues"
+  },
+  "homepage": "https://github.com/artin-phares/cookbook",
+  "dependencies": {
+    "bluebird": "^2.9.30",
+    "debug": "^2.2.0",
+    "formidable": "^1.0.17",
+    "jade": "^1.11.0",
+    "koa": "~0.21.0",
+    "koa-body": "^1.2.1",
+    "koa-compress": "^1.0.8",
+    "koa-conditional-get": "^1.0.3",
+    "koa-favicon": "^1.2.0",
+    "koa-logger": "^1.2.2",
+    "koa-router": "^5.1.2",
+    "koa-static": "^1.4.9",
+    "koa-views": "^3.0.0",
+    "nconf": "^0.7.1",
+    "promised-mongo": "^1.1.1"
+  },
+  "devDependencies": {
+    "del": "^1.2.0",
+    "esprima": "^2.4.0",
+    "event-stream": "^3.3.1",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-insert": "^0.4.0",
+    "gulp-minify-css": "^1.1.6",
+    "gulp-replace": "^0.5.3",
+    "gulp-requirejs": "^0.1.3",
+    "gulp-sprite-generator": "^0.2.3",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.5",
+    "ncp": "^2.0.0",
+    "requirejs": "^2.1.18"
+  }
+}

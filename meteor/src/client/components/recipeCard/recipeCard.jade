@@ -1,0 +1,14 @@
+template(name='recipeCard'): section.recipe
+    if recipe
+      +recipeCardMin recipe=recipe inEditMode=inEditModeExt events=recipeCardMinEvents
+    
+    div.buttons
+      a.edit(href='#', data-bind='visible: editableAndNotInEditMode, click:onEdit')
+      a.save(href='#', data-bind='visible: inEditMode, click:onSave')
+      a.discard(href='#', data-bind='visible: discardableAndInEditMode, click:onDiscard')
+      a.delete(href='#', data-bind='visible: deletable, click:onDelete')
+      a.close(href='#', data-bind='click:onClose')
+    
+    div.specifics
+        +ingredientList ingredients=recipe.ingredients inEditMode=inEditMode events=ingredientListEvents
+        +stepList steps=recipe.steps inEditMode=inEditMode events=stepListEvents

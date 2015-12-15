@@ -1,0 +1,23 @@
+template(name='recipeList'): section.recipes
+  header
+    a.add(href='#', data-bind='click:onNewRecipe')
+    
+    div.sorting
+      a.name(href='#', data-bind='click:onSorting, class: { active: eq("sortProp", "name") }') по алфавиту
+      a.complexity(href='#', data-bind='click:onSorting, class: { active: eq("sortProp", "complexity") }') по сложности
+      a.popularity(href='#', data-bind='click:onSorting, class: { active: eq("sortProp", "popularity") }') по популярности
+  
+  section.recipe-list
+    each recipes
+      +recipeCardMin (recipe=this
+                      events=recipeCardMinEvents
+                      deletable=true
+                      selectable=true)
+
+  div.paging
+      a.prev(href='#', data-bind='click:onPagePrev') Назад
+      ul.page-list
+        each pages
+          li: a(href='#', class='{{#if isCurrent}}active{{/if}}'): | #{pageDisplayName}
+      a.next(href='#', data-bind='click:onPageNext') Вперёд
+  div.spinner

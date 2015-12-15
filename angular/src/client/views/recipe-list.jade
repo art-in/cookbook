@@ -1,0 +1,54 @@
+section.recipes(
+    ng-controller='RecipeListCtrl as list'
+    ng-cloak)
+    
+    header
+        a.add(href ng-click='list.onRecipeAdd()')
+        div.sorting
+            a.alphabet(href 
+                ng-click='list.onSort("name")'
+                ng-class='{ active: sortProp === "name" }') 
+                | по алфавиту
+            
+            a.complexity(href 
+                ng-click='list.onSort("complexity")' 
+                ng-class='{ active: sortProp === "complexity" }')
+                | по сложности
+            
+            a.popularity(href 
+                ng-click='list.onSort("popularity")' 
+                ng-class='{ active: sortProp === "popularity" }')
+                | по популярности
+    
+    section.recipe-list
+        article.recipe-card-min.selectable(
+            ng-repeat='recipe in recipes'
+            ng-click='list.onRecipeSelect(recipe)')
+                
+            div.buttons
+                a.delete(href ng-click='list.onRecipeDelete(recipe, $event)')
+            div.photo
+                img(recipe-image-src="{{ recipe.photoId }}")
+            div.properties
+                a.name(ng-bind='recipe.name')
+                br
+                div.metrics
+                    span
+                        | Популярность:
+                        span.popularity
+                            | {{ recipe.popularity }}
+                    span
+                        | Сложность:
+                        span.complexity
+                            | {{ recipe.complexity }}
+                div.description(ng-bind-html='recipe.description')
+
+    div.paging
+        a.prev(href ng-click='list.onPrevPage()') Назад
+        ul.page-list
+            li(ng-repeat='page in pages')
+                a(href
+                    ng-click='list.onPaging(page)'
+                    ng-class='{ active: page === pageNumber }')  {{ page }}
+        a.next(href ng-click='list.onNextPage()') Вперёд
+    div.spinner

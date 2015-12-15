@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+var app = require('../server/app/app');
+
+var server = app.listen(process.env.PORT);
+
+server.on('listening', function() {
+    console.log('Listening on ' + server.address().port + '\n');
+});
