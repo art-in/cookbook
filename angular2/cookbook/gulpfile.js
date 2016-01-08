@@ -52,10 +52,18 @@ gulp.task('build', ['clean'], function () {
                         /node_modules/
                     ],
                     query: {
-                        // 'legacy' because standard for decorators
-                        // is still being changed, and this is only
-                        // available working solution for now
-                        plugins: ['transform-decorators-legacy'],
+                        plugins: [
+                            // for dependency injection by property type
+                            // "constructor(router: Router)"
+                            'angular2-annotations',
+                            // 'legacy' because standard for decorators
+                            // is still being changed, and this is only
+                            // available working solution for now
+                            'transform-decorators-legacy',
+                            'transform-class-properties',
+                            // for "constructor(router: Router)"
+                            //  -> "constructor(router)"
+                            'transform-flow-strip-types'],
                         presets: ['es2015', 'stage-0']
                     }
                 }

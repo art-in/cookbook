@@ -1,6 +1,8 @@
 node_modules/
 packages/
 
+*.log
+
 # IntelliJ
 .idea/
 *.iml
