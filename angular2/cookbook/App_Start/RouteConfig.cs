@@ -7,9 +7,9 @@ namespace cookbook
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            routes.MapRoute("Default", "{controller}/{action}/{id}",
+            // all routes (except webapi and files) 
+            // targeted to SPA controller
+            routes.MapRoute("Default", "{*all}",
                 new {controller = "Home", action = "Index", id = UrlParameter.Optional}
                 );
         }

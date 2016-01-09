@@ -1,17 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Web.Http;
-using cookbook.Models;
+using System.Web.UI.WebControls;
+using cookbook.Data;
 
 namespace cookbook.Controllers.api
 {
     public class RecipesController : ApiController
     {
-        public List<Recipe> Get()
+        private readonly RecipeContext db = new RecipeContext();
+
+        public object Get(string sprop, bool sdesc, int skip, int limit)
         {
-            return new List<Recipe>
+            var recipes = db.Recipes
+                .SortBy(sprop + (sdesc ? " DESC" : ""))
+                .Skip(skip)
+                .Take(limit)
+                .ToList();
+
+            return new
             {
-                new Recipe { Name = "Recipe 1" },
-                new Recipe { Name = "Recipe 2" }
+                recipes,
+                recipesTotal = db.Recipes.Count()
             };
         }
     }

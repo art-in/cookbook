@@ -43,6 +43,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -119,11 +127,23 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\cookbook.Data.RecipeContext.mdf" />
+    <Content Include="App_Data\cookbook.Data.RecipeContext_log.ldf">
+      <DependentUpon>cookbook.Data.RecipeContext.mdf</DependentUpon>
+    </Content>
     <Content Include="config.js" />
     <Content Include="gulpfile.js" />
     <Content Include="packages.config" />
-    <Content Include="Scripts\Components\App.js" />
+    <Content Include="Scripts\components\app.js" />
     <Content Include="Scripts\boot.js" />
+    <Content Include="Scripts\components\helpers\url.js" />
+    <Content Include="Scripts\components\recipes\recipe-card-min\recipe-card-min.css" />
+    <Content Include="Scripts\components\recipes\recipe-card-min\recipe-card-min.html" />
+    <Content Include="Scripts\components\recipes\recipe-card-min\recipe-card-min.js" />
+    <Content Include="Scripts\components\recipes\recipe-list\recipe-list.js" />
+    <Content Include="Scripts\components\recipes\recipe-list\recipe-list.css" />
+    <Content Include="Scripts\components\recipes\recipe-list\recipe-list.html" />
+    <Content Include="Scripts\components\recipes\recipe-service\recipe-service.js" />
     <Content Include="Views\web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include=".eslintrc" />
@@ -145,6 +165,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\api\RecipesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Data\RecipeContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -152,7 +173,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\" />
   </ItemGroup>
   <PropertyGroup>
@@ -170,7 +190,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>44021</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44021/</IISUrl>
+          <IISUrl>http://localhost:3000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

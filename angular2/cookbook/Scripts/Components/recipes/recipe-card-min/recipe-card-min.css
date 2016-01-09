@@ -1,0 +1,14 @@
+﻿:host {
+    display: block;
+    border: 1px solid green;
+}
+
+:host + :host {
+    margin-top: 5px;
+}
+
+:host > .controls {
+    display: inline-block;
+    border: 1px solid lightgray;
+    float: right;
+}

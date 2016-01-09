@@ -23,3 +23,13 @@ IDE
 - ES2015 syntax is not supported in VS2015 (modules, arrow functions, etc.)
   Have to disable VS errors for js files completely, and use R# inspections
 - Some experimental ES features are not supported even in R# (decorators)
+  Have to disable R# inspections completely (Ctrl+Shift+Alt+8 for file, 
+  or ReSharper > Options > Code Inspection > Settings)
+
+Angular2 (beta.0)
+
+- "Expression ___ has changed after it was checked"-error
+  Dev-mode error that will raise if model changes found on second digest, 
+  right after first one. That means changes were initiated by digest itself.
+  So if you binding to function that will return new array each time, this
+  error will be thrown. Even if returned array is the same.

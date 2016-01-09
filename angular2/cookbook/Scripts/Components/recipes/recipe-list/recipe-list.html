@@ -1,0 +1,28 @@
+﻿<header>
+    <button class="add" (click)="onNewRecipe()">добавить</button>
+    <ul class="sort">
+        <li (click)="onSort('Name')" 
+            [ngClass]="{active: currentSortProp === 'Name'}">по алфавиту</li>
+        <li (click)="onSort('Complexity')"
+            [ngClass]="{active: currentSortProp === 'Complexity'}">по сложности</li>
+        <li (click)="onSort('Popularity')"
+             [ngClass]="{active: currentSortProp === 'Popularity'}">по популярности</li>
+    </ul>
+</header>
+
+<recipe-card-min *ngFor="#recipe of recipes" [recipe]="recipe" (click)="onRecipeSelected(recipe)">
+</recipe-card-min>
+
+<footer>
+    <a class="prev" (click)="onPagePrev()">Назад</a>
+
+    <ul class="pages">
+        <li *ngFor="#page of pages"
+            [ngClass]="{active: page === currentPage}"
+            (click)="onPage(page)">
+            {{page}}
+        </li>
+    </ul>
+
+    <a class="next" (click)="onPageNext()">Вперёд</a>
+</footer>

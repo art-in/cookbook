@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cookbook", "cookbook\cookbo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{DB5B9F4C-AEC1-43A7-92E2-B2BEEA4154D5}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		gotchas = gotchas
 		package.json = package.json
 	EndProjectSection
