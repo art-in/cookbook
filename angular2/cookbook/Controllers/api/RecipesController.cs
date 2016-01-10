@@ -1,10 +1,18 @@
-﻿using System.Data.Entity;
-using System.Data.Entity.Migrations;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.UI.WebControls;
 using cookbook.Data;
 using cookbook.Models;
+using ApiController = System.Web.Http.ApiController;
+using HttpResponseException = System.Web.Http.HttpResponseException;
+using System.IO;
+using System.Net.Http.Headers;
 
 namespace cookbook.Controllers.api
 {
@@ -45,7 +53,7 @@ namespace cookbook.Controllers.api
                 // Remove existing entity and add again, so
                 // there is no headache with updating dependencies
                 // (extremely inefficient)
-                this.Delete(recipeId);
+                Delete(recipeId);
             }
 
             db.Recipes.Add(recipe);
@@ -64,6 +72,44 @@ namespace cookbook.Controllers.api
             db.Steps.RemoveRange(rec.Steps);
             db.Recipes.Remove(rec);
             db.SaveChanges();
+
+            // TODO: remove recipe photo
+        }
+
+        [HttpPost]
+        [Route("api/recipes/photo")]
+        public async Task<HttpResponseMessage> PostPhoto()
+        {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var root = HttpContext.Current.Server.MapPath("~/Content/photos");
+            var provider = new CustomMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data.
+                await Request.Content.ReadAsMultipartAsync(provider);
+                return HttpRequestMessageCommonExtensions.CreateResponse(Request, HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/recipes/photo/{photoId}")]
+        public HttpResponseMessage GetPhoto(string photoId)
+        {
+            var path = HttpContext.Current.Server.MapPath("~/Content/photos/" + photoId);
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            var stream = new FileStream(path, FileMode.Open);
+            result.Content = new StreamContent(stream);
+            return result;
         }
     }
 }

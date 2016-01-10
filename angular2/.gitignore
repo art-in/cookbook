@@ -3,6 +3,8 @@ packages/
 
 *.log
 
+photos/
+
 # IntelliJ
 .idea/
 *.iml

@@ -48,4 +48,16 @@ export default class RecipeService {
             method: 'DELETE'
         }));
     }
+
+    uploadRecipePhoto(photoId, photo) {
+        console.log(`uploadRecipePhoto(${JSON.stringify(Array.from(arguments))})`);
+        
+        let data = new FormData();
+        data.append('photo', photo, photoId);
+
+        return fetch(new Request(`api/recipes/photo`), {
+            method: 'POST',
+            body: data
+        });
+    }
 }

@@ -1,4 +1,17 @@
-﻿<div class="props">
+﻿<div class="photo" [ngClass]="{exists: recipe && recipe.PhotoId}"
+     (click)="onPhotoAdd($event, photo)">
+
+    <div class="controls" *ngIf="editable && recipe && recipe.PhotoId">
+        <a class="delete" (click)="onPhotoDelete($event)">
+            удалить
+        </a>
+    </div>
+
+    <img *ngIf="recipe && recipe.PhotoId" [src]="photoPath"/>
+    <input type="file" #photo (change)="onPhotoChange($event)"/>
+</div>
+
+<div class="props">
     <input class="name"
            [(ngModel)]="recipe.Name"
            [disabled]="!editable"

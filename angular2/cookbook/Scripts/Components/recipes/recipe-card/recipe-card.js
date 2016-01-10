@@ -40,6 +40,12 @@ export default class RecipeCard {
             await this.service.getRecipe(this.recipeId);
 
         this.recipe = recipe;
+
+        window.addEventListener('beforeunload', (e) => {
+            if (this.inEditMode) {
+                e.returnValue = `Некоторые данные могли быть не сохранены!`;
+            }
+        })
     }
 
     onClose() {

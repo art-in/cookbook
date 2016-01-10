@@ -13,5 +13,7 @@ namespace cookbook.Models
 
         public List<Step> Steps { get; set; }
         public List<Ingredient> Ingredients { get; set; }
+
+        public Guid? PhotoId { get; set; }
     }
 }
