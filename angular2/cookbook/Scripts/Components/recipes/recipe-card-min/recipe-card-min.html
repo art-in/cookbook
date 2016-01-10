@@ -1,5 +1,31 @@
-﻿{{recipe.Name}}
+﻿<div class="props">
+    <input class="name"
+           [(ngModel)]="recipe.Name"
+           [disabled]="!editable"
+           autofocus="editable && focusName"
+           select-on-click>
+    <textarea class="description"
+              [(ngModel)]="recipe.Description"
+              [disabled]="!editable"
+              select-on-click>
+    </textarea>
 
-<div class="controls">
+    Сложность: <input class="complexity"
+                      type="number"
+                      min="1"
+                      max="10"
+                      [(ngModel)]="recipe.Complexity"
+                      [disabled]="!editable"
+                      select-on-click>
+    Популярность: <input class="popularity"
+                         type="number"
+                         min="1"
+                         max="10"
+                         [(ngModel)]="recipe.Popularity"
+                         [disabled]="!editable"
+                         select-on-click>
+</div>
+
+<div class="controls" *ngIf="deletable">
     <a class="delete" (click)="onDelete($event)">удалить</a>
 </div>

@@ -1,14 +1,15 @@
 ﻿import {Component} from 'angular2/core';
 import {Router, RouteParams} from 'angular2/router';
 import RecipeService from '../recipe-service/recipe-service';
-import url from '../../helpers/url';
+import {url} from '../../helpers/helpers';
 import RecipeCardMin from '../recipe-card-min/recipe-card-min';
+import RecipeCard from '../recipe-card/recipe-card';
 
 @Component({
     selector: 'recipe-list',
     templateUrl: url.resolve('recipe-list.html'),
     styleUrls: [url.resolve('recipe-list.css')],
-    directives: [RecipeCardMin]
+    directives: [RecipeCardMin, RecipeCard]
 })
 export default class RecipeList {
     constructor(
@@ -23,6 +24,8 @@ export default class RecipeList {
         this.routeParams = routeParams;
 
         this.pageSize = 3;
+
+        this.selectedRecipeId = this.routeParams.params.rid;
     }
 
     service;
@@ -41,11 +44,13 @@ export default class RecipeList {
     currentPage;
     currentSortProp;
 
+    selectedRecipeId;
+
     ngOnInit() {
         this.reload();
     }
 
-    reload() {
+    async reload() {
         let sortProp = this.routeParams.get('sprop') || 'Name';
         let sortDesc = this.routeParams.get('sdesc') !== null;
         let page = this.routeParams.get('p') || 1;
@@ -53,33 +58,30 @@ export default class RecipeList {
         let skip = (page - 1) * this.pageSize;
         let limit = this.pageSize;
 
-        this.service
-            .getRecipes(sortProp, sortDesc, skip, limit)
-            .then(data => {
-                this.recipes = data.recipes;
-                this.recipesTotal = data.recipesTotal;
+        let data = await this.service.getRecipes(
+            sortProp, sortDesc, skip, limit);
 
-                // update pages
-                let pageCount =
-                    Math.floor(this.recipesTotal / this.pageSize) + 1;
-                this.pages = [];
-                for (let i = 1; i <= pageCount; i++) {
-                    this.pages.push(i);
-                }
+        this.recipes = data.recipes;
+        this.recipesTotal = data.recipesTotal;
 
-                this.currentPage = (+this.routeParams.params.p || 1);
+        // update pages
+        let pageCount =
+            Math.ceil(this.recipesTotal / this.pageSize);
+        this.pages = [];
+        for (let i = 1; i <= pageCount; i++) {
+            this.pages.push(i);
+        }
 
-                // update sort
-                this.currentSortProp = (this.routeParams.params.sprop || 'Name');
-            });
+        this.currentPage = (Number(this.routeParams.params.p) || 1);
+
+        // update sort
+        this.currentSortProp = (this.routeParams.params.sprop || 'Name');
     }
 
     onSort(prop) {
         let routeName = 'RecipeList';
         let sortProp = this.routeParams.get('sprop') || 'Name';
         let sortDesc = this.routeParams.get('sdesc') !== null;
-        let page = this.routeParams.get('p') || 1;
-
         let routeParams = this.routeParams.params;
 
         if (prop === sortProp) {
@@ -117,10 +119,7 @@ export default class RecipeList {
     }
 
     onNewRecipe() {
-        let recipe = this.service.createRecipe();
-        this.selectedRecipe = recipe;
-
-        alert('creating new recipe');
+        this.selectedRecipeId = '_NEW_';
     }
 
     onPage(pageNumber) {
@@ -148,7 +147,34 @@ export default class RecipeList {
     }
 
     onRecipeSelected(recipe) {
-        alert(`Editing recipe '${recipe.Name}'`);
+        let params = this.routeParams.params;
+        params.rid = recipe.Id;
+        this.router.navigate(['RecipeList', params]);
+        this.selectedRecipeId = recipe.Id;
     }
 
+    onRecipeCardClosing() {
+        let params = this.routeParams.params;
+        delete params.rid;
+        this.router.navigate(['RecipeList', params]);
+        this.selectedRecipeId = null;
+    }
+
+    onRecipeDeleted() {
+        if (this.recipes.length === 1 && this.currentPage !== 1) {
+            // move one page back if last item on the page
+            this.onPage(this.currentPage - 1);
+        } else {
+            this.reload();
+        }
+    }
+
+    onRecipeCardSaved() {
+        this.reload();
+    }
+
+    onRecipeCardDeleted() {
+        this.onRecipeCardClosing();
+        this.onRecipeDeleted();
+    }
 }

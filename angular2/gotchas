@@ -4,12 +4,19 @@
   and require separate references.
   http://stackoverflow.com/questions/11990036/how-to-add-web-api-to-an-existing-asp-net-mvc-4-web-application-project
 
+Entity Framework 6
+
+- Updating related entities while updating parent one.
+  Surprisingly requires too much dance: manually find all entities
+  that were added and add them to db context, same for deleted entities.
 
 Webpack build
 
 - Incremented build is slow (~5 sec)
   Do not minify on incremental build (~1 sec). Still slow.
   Use 'eval-source-map' (~300 ms). Pretty good.
+
+- Sometimes stops rebuild on changes (with no errors)
 
 - Too long build log (mainly because of vendor modules: babel, angular)
   stats.toString({chunks:false})

@@ -1,6 +1,7 @@
 ﻿:host {
     display: block;
-    border: 1px solid green;
+    outline: 1px solid green;
+    position: relative;
 }
 
 :host + :host {
@@ -9,6 +10,43 @@
 
 :host > .controls {
     display: inline-block;
-    border: 1px solid lightgray;
-    float: right;
+    outline: 1px solid lightgray;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+:host input,
+:host textarea {
+    border: none;
+    background: transparent;
+    color: black;
+    cursor: inherit;
+}
+
+:host input:not([disabled]),
+:host textarea:not([disabled]) {
+    outline: 2px solid brown;
+}
+
+:host > .props {
+    margin: 0 50px 0 150px;
+}
+
+:host > .props input.name {
+    width: 100%;
+}
+
+:host > .props textarea.description {
+    width: 100%;
+}
+
+:host > .props input.complexity {
+    width: 30px;
+    text-align: center;
+}
+
+:host > .props input.popularity {
+    width: 30px;
+    text-align: center;
 }

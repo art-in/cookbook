@@ -12,7 +12,7 @@ namespace cookbook
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}",
-                defaults: new { controller = "webapi" }
+                defaults: new { controller = "recipes" }
             );
         }
     }

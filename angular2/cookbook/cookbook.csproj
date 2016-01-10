@@ -136,10 +136,16 @@
     <Content Include="packages.config" />
     <Content Include="Scripts\components\app.js" />
     <Content Include="Scripts\boot.js" />
-    <Content Include="Scripts\components\helpers\url.js" />
+    <Content Include="Scripts\components\directives\autofocus.js" />
+    <Content Include="Scripts\components\directives\select-on-click.js" />
+    <Content Include="Scripts\components\helpers\helpers.js" />
+    <Content Include="Scripts\components\recipes\list\list.js" />
     <Content Include="Scripts\components\recipes\recipe-card-min\recipe-card-min.css" />
     <Content Include="Scripts\components\recipes\recipe-card-min\recipe-card-min.html" />
     <Content Include="Scripts\components\recipes\recipe-card-min\recipe-card-min.js" />
+    <Content Include="Scripts\components\recipes\recipe-card\recipe-card.css" />
+    <Content Include="Scripts\components\recipes\recipe-card\recipe-card.html" />
+    <Content Include="Scripts\components\recipes\recipe-card\recipe-card.js" />
     <Content Include="Scripts\components\recipes\recipe-list\recipe-list.js" />
     <Content Include="Scripts\components\recipes\recipe-list\recipe-list.css" />
     <Content Include="Scripts\components\recipes\recipe-list\recipe-list.html" />
@@ -169,7 +175,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\Recipe.cs" />
+    <Compile Include="Models\Step.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

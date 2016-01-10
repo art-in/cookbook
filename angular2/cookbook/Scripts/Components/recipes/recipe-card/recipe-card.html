@@ -1,0 +1,34 @@
+﻿<div class="controls">
+    <a (click)="onEdit()" *ngIf="!inEditMode && recipeId !== '_NEW_'">редактировать</a>
+    <a (click)="onSave()" *ngIf="inEditMode || recipeId === '_NEW_'">сохранить</a>
+    <a (click)="onCancel()" *ngIf="inEditMode">отменить</a>
+    <a (click)="onDelete()" *ngIf="recipeId !== '_NEW_'">удалить</a>
+    <a (click)="onClose()">закрыть</a>
+</div>
+
+<recipe-card-min *ngIf="recipe"
+                  [recipe]="recipe"
+                  [deletable]="false"
+                  [editable]="inEditMode || recipeId === '_NEW_'"
+                  [focusName]="recipeId === '_NEW_'">
+</recipe-card-min>
+
+Ингредиенты:
+<list class="ingredients"
+      *ngIf="recipe"
+      [items]="recipe.Ingredients"
+      [editable]="inEditMode || recipeId === '_NEW_'"
+      [deletable]="inEditMode || recipeId === '_NEW_'"
+      [sortable]="false"
+      [ordered]="false">
+</list>
+
+Шаги:
+<list class="steps"
+      *ngIf="recipe"
+      [items]="recipe.Steps"
+      [editable]="inEditMode || recipeId === '_NEW_'"
+      [deletable]="inEditMode || recipeId === '_NEW_'"
+      [sortable]="true"
+      [ordered]="true">
+</list>

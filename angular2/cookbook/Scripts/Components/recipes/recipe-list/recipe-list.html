@@ -10,7 +10,12 @@
     </ul>
 </header>
 
-<recipe-card-min *ngFor="#recipe of recipes" [recipe]="recipe" (click)="onRecipeSelected(recipe)">
+<recipe-card-min *ngFor="#recipe of recipes"
+                  [recipe]="recipe"
+                  [editable]="false"
+                  [deletable]="true"
+                  (click)="onRecipeSelected(recipe)"
+                  (recipeDeleted)="onRecipeDeleted()">
 </recipe-card-min>
 
 <footer>
@@ -26,3 +31,10 @@
 
     <a class="next" (click)="onPageNext()">Вперёд</a>
 </footer>
+
+<recipe-card *ngIf="selectedRecipeId"
+              [recipeId]="selectedRecipeId"
+              (closing)="onRecipeCardClosing($event)"
+              (saved)="onRecipeCardSaved()"
+              (deleted)="onRecipeCardDeleted()">
+</recipe-card>

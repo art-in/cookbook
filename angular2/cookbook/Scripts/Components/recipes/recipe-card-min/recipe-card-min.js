@@ -1,16 +1,31 @@
-﻿import {Component, Input, EventEmitter} from 'angular2/core';
+﻿import {Component, Input, Output, EventEmitter} from 'angular2/core';
 import RecipeService from '../recipe-service/recipe-service';
-import url from '../../helpers/url';
+import {url} from '../../helpers/helpers';
+import AutofocusDirective from '../../directives/autofocus';
+import SelectOnClickDirective from '../../directives/select-on-click';
 
 @Component({
     selector: 'recipe-card-min',
     templateUrl: url.resolve('recipe-card-min.html'),
     styleUrls: [url.resolve('recipe-card-min.css')],
-    providers: [RecipeService]
+    providers: [RecipeService],
+    directives: [AutofocusDirective, SelectOnClickDirective]
 })
-export default class {
+export default class RecipeCardMin {
     @Input()
     recipe;
+
+    @Input()
+    editable;
+
+    @Input()
+    deletable;
+
+    @Input()
+    focusName;
+
+    @Output()
+    recipeDeleted = new EventEmitter();
 
     service;
 
@@ -18,8 +33,9 @@ export default class {
         this.service = service;
     }
 
-    onDelete(e) {
-        alert(`Deleting recipe: '${this.recipe.Name}'`);
+    async onDelete(e) {
         e.stopPropagation();
+        await this.service.deleteRecipe(this.recipe.Id);
+        this.recipeDeleted.emit();
     }
 }

@@ -72,6 +72,9 @@ gulp.task('build', ['clean'], function () {
                 config.paths.sources.angular2_polyfill
             ]
         },
+        eslint: {
+            emitWarning: true
+        },
         resolveLoader: {
             root: config.paths.nodeModules
         },
@@ -90,6 +93,7 @@ gulp.task('build', ['clean'], function () {
             console.log(err);
             return;
         }
+
         gutil.log("[webpack]", stats.toString({ colors: true, chunks: false }));
         gutil.log("Output: " + gutil.colors.magenta(config.paths.target));
     });
