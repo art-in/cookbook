@@ -7,3 +7,12 @@
 :host > .container > header {
     padding: 10px 0;
 }
+
+:host > .container > recipe-card-min {
+    cursor: pointer;
+    outline: 1px solid lightgray;
+}
+
+recipe-card-min + recipe-card-min {
+    margin-top: 5px;
+}

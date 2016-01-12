@@ -1,45 +1,63 @@
-﻿<div class="photo"
-     (click)="onPhotoAdd($event, photo)">
+﻿
+<div class="col-md-2 col-sm-4 col-xs-12 photo" [ngClass]="{editable: editable}"
+        (click)="onPhotoAdd($event, photo)">
 
     <div class="controls" *ngIf="editable && recipe && recipe.PhotoId">
-        <a class="delete" (click)="onPhotoDelete($event)">
-            удалить
-        </a>
+        <span (click)="onPhotoDelete($event)"
+                class="glyphicon glyphicon-remove"></span>
     </div>
 
-    <img *ngIf="recipe && recipe.PhotoId" [src]="photoPath" />
-    <img *ngIf="!recipe || !recipe.PhotoId" data-src="holder.js/140x140"/>
+    <img *ngIf="recipe && recipe.PhotoId" [src]="photoPath"/>
+
+    <!-- placeholder -->
+    <img *ngIf="!recipe || !recipe.PhotoId" data-src="holder.js/160x160"/>
+
     <input type="file" #photo (change)="onPhotoChange($event)"/>
 </div>
 
-<div class="props">
-    <input class="name"
-           [(ngModel)]="recipe.Name"
-           [disabled]="!editable"
-           autofocus="editable && focusName"
-           select-on-click>
-    <textarea class="description"
-              [(ngModel)]="recipe.Description"
-              [disabled]="!editable"
-              select-on-click>
-    </textarea>
-
-    Сложность: <input class="complexity"
-                      type="number"
-                      min="1"
-                      max="10"
-                      [(ngModel)]="recipe.Complexity"
-                      [disabled]="!editable"
-                      select-on-click>
-    Популярность: <input class="popularity"
-                         type="number"
-                         min="1"
-                         max="10"
-                         [(ngModel)]="recipe.Popularity"
-                         [disabled]="!editable"
-                         select-on-click>
+<div class="col-md-10 col-sm-8 col-xs-12">
+    <form>
+        <div class="form-group">
+            <input class="name col-xs-12"
+                    [(ngModel)]="recipe.Name"
+                    [disabled]="!editable"
+                    autofocus="editable && focusName"
+                    select-on-click>
+        </div>
+        <div class="form-group">
+            <textarea class="description col-xs-12"
+                        [(ngModel)]="recipe.Description"
+                        [disabled]="!editable"
+                        select-on-click></textarea>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                <label>
+                    <span class="glyphicon glyphicon-time"></span>
+                </label>
+                <input type="number"
+                        class="complexity"
+                        min="1" max="10"
+                        [(ngModel)]="recipe.Complexity"
+                        [disabled]="!editable"
+                        select-on-click>
+            </div>
+            <div class="col-xs-3">
+                <label>
+                    <span class="glyphicon glyphicon-star"></span>
+                </label>
+                <input type="number"
+                        class="popularity"
+                        min="1" max="10"
+                        [(ngModel)]="recipe.Popularity"
+                        [disabled]="!editable"
+                        select-on-click>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div class="controls" *ngIf="deletable">
-    <a class="delete" (click)="onDelete($event)">удалить</a>
+    <span (click)="onDelete($event)"
+            class="glyphicon glyphicon-remove"></span>
 </div>

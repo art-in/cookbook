@@ -1,19 +1,21 @@
 ﻿:host {
-    display: block;
-    outline: 1px solid lightgray;
     position: relative;
-    overflow: hidden;
-}
-
-:host + :host {
-    margin-top: 5px;
 }
 
 :host .photo {
-    float: left;
     position: relative;
-    width: 140px;
-    height: 140px;
+}
+
+:host .photo > .controls {
+    display: none;
+}
+
+:host .photo:hover > .controls {
+    display: block;
+}
+
+:host .photo.editable {
+    cursor: pointer;
 }
 
 :host .photo > input[type="file"] {
@@ -21,54 +23,36 @@
 }
 
 :host .photo > img {
-    width: 140px;
+    width: 160px;
 }
 
-:host .photo .controls {
+:host > .photo .controls {
     position: absolute;
     right: 0;
     top: 0;
 }
+
 
 :host > .controls {
-    display: inline-block;
-    outline: 1px solid lightgray;
+    display: none;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
 }
 
-:host input,
-:host textarea {
+:host:hover > .controls {
+    display: inline-block;
+}
+
+:host form input[disabled],
+:host form textarea[disabled] {
     border: none;
     background: transparent;
     color: black;
     cursor: inherit;
 }
 
-:host input:not([disabled]),
-:host textarea:not([disabled]) {
-    outline: 2px solid brown;
-}
-
-:host > .props {
-    margin: 0 50px 0 150px;
-}
-
-:host > .props input.name {
+:host form input.name {
     width: 100%;
-}
-
-:host > .props textarea.description {
-    width: 100%;
-}
-
-:host > .props input.complexity {
-    width: 30px;
-    text-align: center;
-}
-
-:host > .props input.popularity {
-    width: 30px;
-    text-align: center;
+    font-size: 1.5em;
 }

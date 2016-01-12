@@ -118,7 +118,7 @@ export default class RecipeList {
         this.reload();
     }
 
-    onNewRecipe() {
+    onRecipeAdd() {
         this.selectedRecipeId = '_NEW_';
     }
 
