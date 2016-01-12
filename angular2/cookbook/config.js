@@ -8,7 +8,9 @@ module.exports = {
 
             // additional resources
             babel_polyfill: path.join(__dirname, '../node_modules/babel-polyfill/'),
-            angular2_polyfill: path.join(__dirname, '../node_modules/angular2/bundles/angular2-polyfills.js')
+            angular2_polyfill: path.join(__dirname, '../node_modules/angular2/bundles/angular2-polyfills.js'),
+            jquery: path.join(__dirname, '../node_modules/jquery/dist/jquery.js'),
+            bootstrap_webpack: path.join(__dirname, '../node_modules/bootstrap-webpack/')
         },
 
         // target folder

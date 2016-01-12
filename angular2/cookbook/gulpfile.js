@@ -32,6 +32,8 @@ gulp.task('build', ['clean'], function () {
         entry: [
             config.paths.sources.babel_polyfill,
             config.paths.sources.angular2_polyfill,
+            config.paths.sources.jquery,
+            config.paths.sources.bootstrap_webpack,
             config.paths.sources.scripts + config.paths.sources.entryModule
         ],
         plugins: plugins.concat([]),
@@ -66,7 +68,14 @@ gulp.task('build', ['clean'], function () {
                             'transform-flow-strip-types'],
                         presets: ['es2015', 'stage-0']
                     }
-                }
+                },
+
+                // bootstrap
+                { test: /jquery\.js$/, loader: 'expose?jQuery' },
+                { test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=application/font-woff' },
+                { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=application/octet-stream' },
+                { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=application/octet-stream' },
+                { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=image/svg+xml' }
             ],
             noParse: [
                 config.paths.sources.angular2_polyfill
