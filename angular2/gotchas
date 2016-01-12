@@ -4,6 +4,12 @@
   and require separate references.
   http://stackoverflow.com/questions/11990036/how-to-add-web-api-to-an-existing-asp-net-mvc-4-web-application-project
 
+- Referencing HTML resources from node_modules/, which is outside of root
+  asp.net app folder (one level upper; e.g. I want packages.json in git root).
+  Have to add virtual directory to .vs\config\applicationhost.config
+  site > application >
+  <virtualDirectory path="/node_modules" physicalPath="absolute\node_modules"/>
+
 Entity Framework 6
 
 - Updating related entities while updating parent one.
