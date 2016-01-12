@@ -32,7 +32,7 @@ export default class RecipeCardMin {
     constructor(service: RecipeService) {
         this.service = service;
     }
-    
+
     get photoPath() {
         return `api/recipes/photo/${this.recipe.PhotoId}`;
     }
@@ -50,7 +50,7 @@ export default class RecipeCardMin {
 
         let photo = e.target.files[0];
         let photoId = guid();
-        await this.service.uploadRecipePhoto(photoId,  photo);
+        await this.service.uploadRecipePhoto(photoId, photo);
         this.recipe.PhotoId = photoId;
     }
 

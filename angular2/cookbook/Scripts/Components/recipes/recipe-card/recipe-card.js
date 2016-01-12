@@ -41,11 +41,11 @@ export default class RecipeCard {
 
         this.recipe = recipe;
 
-        window.addEventListener('beforeunload', (e) => {
+        window.addEventListener('beforeunload', e => {
             if (this.inEditMode) {
                 e.returnValue = `Некоторые данные могли быть не сохранены!`;
             }
-        })
+        });
     }
 
     onClose() {

@@ -50,8 +50,9 @@ export default class RecipeService {
     }
 
     uploadRecipePhoto(photoId, photo) {
-        console.log(`uploadRecipePhoto(${JSON.stringify(Array.from(arguments))})`);
-        
+        console.log(`uploadRecipePhoto(${JSON.stringify(
+            Array.from(arguments))})`);
+
         let data = new FormData();
         data.append('photo', photo, photoId);
 
