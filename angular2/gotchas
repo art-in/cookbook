@@ -9,6 +9,8 @@
   Have to add virtual directory to .vs\config\applicationhost.config
   site > application >
   <virtualDirectory path="/node_modules" physicalPath="absolute\node_modules"/>
+  OR
+  Just add resource to webpack bundle
 
 Entity Framework 6
 
