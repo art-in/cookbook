@@ -1,40 +1,60 @@
-﻿<header>
-    <button class="add" (click)="onNewRecipe()">добавить</button>
-    <ul class="sort">
-        <li (click)="onSort('Name')" 
-            [ngClass]="{active: currentSortProp === 'Name'}">по алфавиту</li>
-        <li (click)="onSort('Complexity')"
-            [ngClass]="{active: currentSortProp === 'Complexity'}">по сложности</li>
-        <li (click)="onSort('Popularity')"
-             [ngClass]="{active: currentSortProp === 'Popularity'}">по популярности</li>
-    </ul>
-</header>
+﻿<div class="container" role="main">
+    
+    <header>
+        <button class="btn btn-default btn-lg" (click)="onNewRecipe()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+        <div class="btn-group pull-right">
+            <button class="btn btn-default"
+                    (click)="onSort('Name')"
+                    [ngClass]="{active: currentSortProp === 'Name'}">
+                по алфавиту
+            </button>
+            <button class="btn btn-default"
+                    (click)="onSort('Complexity')"
+                    [ngClass]="{active: currentSortProp === 'Complexity'}">
+                по сложности
+            </button>
+            <button class="btn btn-default"
+                    (click)="onSort('Popularity')"
+                    [ngClass]="{active: currentSortProp === 'Popularity'}">
+                по популярности
+            </button>
+        </div>
+    </header>
 
-<recipe-card-min *ngFor="#recipe of recipes"
-                  [recipe]="recipe"
-                  [editable]="false"
-                  [deletable]="true"
-                  (click)="onRecipeSelected(recipe)"
-                  (recipeDeleted)="onRecipeDeleted()">
-</recipe-card-min>
+    <recipe-card-min *ngFor="#recipe of recipes"
+                     [recipe]="recipe"
+                     [editable]="false"
+                     [deletable]="true"
+                     (click)="onRecipeSelected(recipe)"
+                     (recipeDeleted)="onRecipeDeleted()">
+    </recipe-card-min>
+    
+    <footer class="text-center">
+        <ul class="pagination">
+            <li>
+                <a (click)="onPagePrev()">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li *ngFor="#page of pages"
+                 [ngClass]="{active: page === currentPage}"
+                 (click)="onPage(page)">
+                <a>{{page}}</a>
+            </li>
+            <li>
+                <a (click)="onPageNext()">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </footer>
 
-<footer>
-    <a class="prev" (click)="onPagePrev()">Назад</a>
-
-    <ul class="pages">
-        <li *ngFor="#page of pages"
-            [ngClass]="{active: page === currentPage}"
-            (click)="onPage(page)">
-            {{page}}
-        </li>
-    </ul>
-
-    <a class="next" (click)="onPageNext()">Вперёд</a>
-</footer>
-
-<recipe-card *ngIf="selectedRecipeId"
-              [recipeId]="selectedRecipeId"
-              (closing)="onRecipeCardClosing($event)"
-              (saved)="onRecipeCardSaved()"
-              (deleted)="onRecipeCardDeleted()">
-</recipe-card>
+    <recipe-card *ngIf="selectedRecipeId"
+                  [recipeId]="selectedRecipeId"
+                  (closing)="onRecipeCardClosing($event)"
+                  (saved)="onRecipeCardSaved()"
+                  (deleted)="onRecipeCardDeleted()">
+    </recipe-card>
+</div>

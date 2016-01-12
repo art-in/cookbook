@@ -10,7 +10,8 @@ module.exports = {
             babel_polyfill: path.join(__dirname, '../node_modules/babel-polyfill/'),
             angular2_polyfill: path.join(__dirname, '../node_modules/angular2/bundles/angular2-polyfills.js'),
             jquery: path.join(__dirname, '../node_modules/jquery/dist/jquery.js'),
-            bootstrap_webpack: path.join(__dirname, '../node_modules/bootstrap-webpack/')
+            bootstrap_webpack: path.join(__dirname, '../node_modules/bootstrap-webpack/'),
+            holderjs: path.join(__dirname, '../node_modules/holderjs/src/index.js')
         },
 
         // target folder

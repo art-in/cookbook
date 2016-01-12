@@ -1,4 +1,4 @@
-﻿<div class="photo" [ngClass]="{exists: recipe && recipe.PhotoId}"
+﻿<div class="photo"
      (click)="onPhotoAdd($event, photo)">
 
     <div class="controls" *ngIf="editable && recipe && recipe.PhotoId">
@@ -7,7 +7,8 @@
         </a>
     </div>
 
-    <img *ngIf="recipe && recipe.PhotoId" [src]="photoPath"/>
+    <img *ngIf="recipe && recipe.PhotoId" [src]="photoPath" />
+    <img *ngIf="!recipe || !recipe.PhotoId" data-src="holder.js/140x140"/>
     <input type="file" #photo (change)="onPhotoChange($event)"/>
 </div>
 

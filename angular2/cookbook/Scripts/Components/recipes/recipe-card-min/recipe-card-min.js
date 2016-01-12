@@ -3,6 +3,7 @@ import RecipeService from '../recipe-service/recipe-service';
 import {url, guid} from '../../helpers/helpers';
 import AutofocusDirective from '../../directives/autofocus';
 import SelectOnClickDirective from '../../directives/select-on-click';
+import Holder from 'holderjs';
 
 @Component({
     selector: 'recipe-card-min',
@@ -31,6 +32,12 @@ export default class RecipeCardMin {
 
     constructor(service: RecipeService) {
         this.service = service;
+    }
+
+    ngAfterViewChecked() {
+        // re-apply holder.js
+        // why here? this is the only place I've found it works correctly
+        Holder.run();
     }
 
     get photoPath() {

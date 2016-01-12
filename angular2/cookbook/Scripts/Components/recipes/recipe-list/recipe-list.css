@@ -1,69 +1,9 @@
-﻿:host {
-    display: block;
-    outline: 1px solid red;
-    width: 710px;
-    margin: 0 auto;
-    padding: 5px;
+﻿:host > .container {
+    outline: 1px solid lightgray;
+    margin-top: 10px;
+    box-shadow: 0 0 150px;
 }
 
-:host > header {
-    overflow: hidden;
+:host > .container > header {
     padding: 10px 0;
-}
-
-:host > header button.add {
-    float: left;
-    cursor: pointer;
-}
-
-:host > header ul.sort {
-    float: right;
-    margin: 0;
-}
-
-:host > header ul.sort > li {
-    display: inline;
-    cursor: pointer;
-}
-
-:host > header ul.sort > li.active {
-    color: red;
-}
-
-:host > footer {
-    overflow: hidden;
-    text-align: center;
-    margin-top: 5px;
-}
-
-:host > footer a.prev {
-    float: left;
-    cursor: pointer;
-}
-
-:host > footer a.next {
-    float: right;
-    cursor: pointer;
-}
-
-:host > footer ul.pages {
-    display: inline;
-    margin: 0 auto;
-}
-
-:host > footer li {
-    display: inline;
-    cursor: pointer;
-}
-
-:host > footer li.active {
-    color: red;
-}
-
-:host > footer li + li {
-    margin-left: 5px;
-}
-
-:host > recipe-card-min {
-    cursor: pointer;
 }

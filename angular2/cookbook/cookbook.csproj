@@ -134,6 +134,7 @@
     <Content Include="config.js" />
     <Content Include="gulpfile.js" />
     <Content Include="packages.config" />
+    <Content Include="Scripts\components\app.css" />
     <Content Include="Scripts\components\app.js" />
     <Content Include="Scripts\boot.js" />
     <Content Include="Scripts\components\directives\autofocus.js" />

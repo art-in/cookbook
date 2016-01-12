@@ -34,6 +34,7 @@ gulp.task('build', ['clean'], function () {
             config.paths.sources.angular2_polyfill,
             config.paths.sources.jquery,
             config.paths.sources.bootstrap_webpack,
+            config.paths.sources.holderjs,
             config.paths.sources.scripts + config.paths.sources.entryModule
         ],
         plugins: plugins.concat([]),

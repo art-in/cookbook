@@ -1,6 +1,6 @@
 ﻿:host {
     display: block;
-    outline: 1px solid green;
+    outline: 1px solid lightgray;
     position: relative;
     overflow: hidden;
 }
@@ -12,24 +12,16 @@
 :host .photo {
     float: left;
     position: relative;
-}
-
-:host .photo:not(.exists) {
-    min-width: 100px;
-    min-height: 100px;
-    outline: 1px solid lightgreen;
+    width: 140px;
+    height: 140px;
 }
 
 :host .photo > input[type="file"] {
     display: none;
 }
 
-:host .photo.exists > img {
-    width: 100px;
-}
-
-:host .photo:not(.exists) > img {
-    display: none;
+:host .photo > img {
+    width: 140px;
 }
 
 :host .photo .controls {

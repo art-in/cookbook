@@ -5,9 +5,9 @@ import RecipeList from './recipes/recipe-list/recipe-list';
 @Component({
     selector: 'app',
     template: `
-        <base href="/">
         <router-outlet></router-outlet>
     `,
+    styleUrls: ['Scripts/components/app.css'],
     directives: [RouterOutlet]
 })
 @RouteConfig([
