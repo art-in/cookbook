@@ -21,7 +21,7 @@ export default class RecipeService {
         return {
             Id: guid(),
             Name: 'Новый рецепт',
-            Description: '',
+            Description: 'Описание',
             Complexity: 1,
             Popularity: 1,
             Ingredients: [],
@@ -29,8 +29,8 @@ export default class RecipeService {
         };
     }
 
-    updateRecipe(recipe) {
-        console.log(`updateRecipe(${JSON.stringify(Array.from(arguments))})`);
+    upsertRecipe(recipe) {
+        console.log(`upsertRecipe(${JSON.stringify(Array.from(arguments))})`);
 
         return fetch(new Request(`api/recipes/${recipe.Id}`, {
             method: 'PUT',

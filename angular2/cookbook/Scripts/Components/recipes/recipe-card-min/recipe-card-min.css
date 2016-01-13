@@ -1,6 +1,7 @@
 ﻿:host {
     display: block;
     position: relative;
+    outline: none;
 }
 
 /* controls (delete) */
@@ -9,7 +10,7 @@
     display: none;
     position: absolute;
     top: 0;
-    right: 10px;
+    right: 15px;
 }
 
 :host:hover > .controls {
@@ -56,6 +57,14 @@
 
 :host form input.name {
     font-size: 1.5em;
+}
+
+:host form .description {
+    color: #666;
+}
+
+:host form .description:not(.scrollable) {
+    overflow: hidden;
 }
 
 :host form input.complexity,

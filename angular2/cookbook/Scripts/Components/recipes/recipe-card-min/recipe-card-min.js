@@ -28,6 +28,9 @@ export default class RecipeCardMin {
     @Input()
     descriptionRowsCount = 2;
 
+    @Input()
+    descriptionScrollable = true;
+
     @Output()
     recipeDeleted = new EventEmitter();
 

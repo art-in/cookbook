@@ -48,7 +48,7 @@ export default class List {
     }
 
     @Input()
-    items;
+    items = [];
 
     @Input()
     editable;
@@ -63,11 +63,15 @@ export default class List {
     ordered;
 
     get sortedItems() {
+        if (!this.items) {
+            return [];
+        }
+
         return this.items.sort((i1, i2) => i1.Order > i2.Order);
     }
 
     onAdd() {
-        if (!this.editable) {
+        if (!this.editable && !this.items) {
             return;
         }
 

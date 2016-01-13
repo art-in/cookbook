@@ -16,6 +16,10 @@
     resize: none;
 }
 
+:host .pagination a {
+    cursor: pointer;
+}
+
 recipe-card-min + recipe-card-min {
     margin-top: 5px;
 }

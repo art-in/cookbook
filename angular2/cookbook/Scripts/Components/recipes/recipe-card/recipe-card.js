@@ -3,6 +3,7 @@ import {url, clone} from '../../helpers/helpers';
 import RecipeCardMin from '../recipe-card-min/recipe-card-min';
 import RecipeService from '../recipe-service/recipe-service';
 import List from '../list/list';
+import $ from 'jquery';
 
 @Component({
     selector: 'recipe-card',
@@ -34,18 +35,30 @@ export default class RecipeCard {
 
     inEditMode;
 
-    async ngOnInit() {
-        let recipe = this.recipeId === '_NEW_' ?
-            this.service.createRecipe() :
-            await this.service.getRecipe(this.recipeId);
-
-        this.recipe = recipe;
-
+    ngOnInit() {
         window.addEventListener('beforeunload', e => {
             if (this.inEditMode) {
                 e.returnValue = `Некоторые данные могли быть не сохранены!`;
             }
         });
+
+        $('#recipe-card-modal')
+            .on('hidden.bs.modal', () => {
+                this.recipe = null;
+                this.inEditMode = false;
+            });
+    }
+
+    async ngOnChanges() {
+        if (this.recipeId) {
+            let recipe = this.recipeId === '_NEW_' ?
+                this.service.createRecipe() :
+                await this.service.getRecipe(this.recipeId);
+
+            this.recipe = recipe;
+
+            this.inEditMode = this.recipeId === '_NEW_';
+        }
     }
 
     onClose() {
@@ -53,8 +66,7 @@ export default class RecipeCard {
     }
 
     async onSave() {
-        await this.service.updateRecipe(this.recipe);
-
+        await this.service.upsertRecipe(this.recipe);
         this.saved.emit();
 
         if (this.recipeId === '_NEW_') {
@@ -78,5 +90,6 @@ export default class RecipeCard {
     async onDelete() {
         await this.service.deleteRecipe(this.recipe.Id);
         this.deleted.emit();
+        this.closing.emit();
     }
 }

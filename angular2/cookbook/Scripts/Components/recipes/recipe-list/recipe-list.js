@@ -4,6 +4,7 @@ import RecipeService from '../recipe-service/recipe-service';
 import {url} from '../../helpers/helpers';
 import RecipeCardMin from '../recipe-card-min/recipe-card-min';
 import RecipeCard from '../recipe-card/recipe-card';
+import $ from 'jquery';
 
 @Component({
     selector: 'recipe-list',
@@ -24,8 +25,6 @@ export default class RecipeList {
         this.routeParams = routeParams;
 
         this.pageSize = 3;
-
-        this.selectedRecipeId = this.routeParams.params.rid;
     }
 
     service;
@@ -48,6 +47,13 @@ export default class RecipeList {
 
     ngOnInit() {
         this.reload();
+
+        this.selectedRecipeId = this.routeParams.params.rid;
+        if (this.selectedRecipeId) {
+            // starting bootstrap modal on startup is main reason
+            // we have to use jquery, i.e. directly access DOM...
+            $('#recipe-card-modal').modal('show');
+        }
     }
 
     async reload() {
@@ -120,6 +126,7 @@ export default class RecipeList {
 
     onRecipeAdd() {
         this.selectedRecipeId = '_NEW_';
+        $('#recipe-card-modal').modal('show');
     }
 
     onPage(pageNumber) {
@@ -151,6 +158,7 @@ export default class RecipeList {
         params.rid = recipe.Id;
         this.router.navigate(['RecipeList', params]);
         this.selectedRecipeId = recipe.Id;
+        $('#recipe-card-modal').modal('show');
     }
 
     onRecipeCardClosing() {
@@ -158,6 +166,7 @@ export default class RecipeList {
         delete params.rid;
         this.router.navigate(['RecipeList', params]);
         this.selectedRecipeId = null;
+        $('#recipe-card-modal').modal('hide');
     }
 
     onRecipeDeleted() {
