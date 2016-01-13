@@ -1,21 +1,25 @@
-﻿
-<div class="col-md-2 col-sm-4 col-xs-12 photo" [ngClass]="{editable: editable}"
-        (click)="onPhotoAdd($event, photo)">
+﻿<div class="photo col-md-3 col-sm-4 col-xs-12"
+     [ngClass]="{editable: editable}"
+     (click)="onPhotoAdd($event, photo)">
 
     <div class="controls" *ngIf="editable && recipe && recipe.PhotoId">
         <span (click)="onPhotoDelete($event)"
-                class="glyphicon glyphicon-remove"></span>
+                class="glyphicon glyphicon-trash"></span>
     </div>
 
-    <img *ngIf="recipe && recipe.PhotoId" [src]="photoPath"/>
+    <img *ngIf="recipe && recipe.PhotoId"
+          class="img-thumbnail"
+          [src]="photoPath"/>
 
     <!-- placeholder -->
-    <img *ngIf="!recipe || !recipe.PhotoId" data-src="holder.js/160x160"/>
+    <img *ngIf="!recipe || !recipe.PhotoId"
+          class="img-thumbnail"
+          data-src="holder.js/160x160"/>
 
     <input type="file" #photo (change)="onPhotoChange($event)"/>
 </div>
 
-<div class="col-md-10 col-sm-8 col-xs-12">
+<div class="col-md-9 col-sm-8 col-xs-12">
     <form>
         <div class="form-group">
             <input class="name col-xs-12"
@@ -26,12 +30,14 @@
         </div>
         <div class="form-group">
             <textarea class="description col-xs-12"
-                        [(ngModel)]="recipe.Description"
-                        [disabled]="!editable"
-                        select-on-click></textarea>
+                      [rows]="descriptionRowsCount"
+                      [(ngModel)]="recipe.Description"
+                      [disabled]="!editable"
+                      select-on-click>
+            </textarea>
         </div>
         <div class="form-group">
-            <div class="col-xs-3">
+            <div class="col-xs-6 col-sm-4 col-md-2">
                 <label>
                     <span class="glyphicon glyphicon-time"></span>
                 </label>
@@ -42,7 +48,7 @@
                         [disabled]="!editable"
                         select-on-click>
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-6 col-sm-4 col-md-2">
                 <label>
                     <span class="glyphicon glyphicon-star"></span>
                 </label>
@@ -59,5 +65,5 @@
 
 <div class="controls" *ngIf="deletable">
     <span (click)="onDelete($event)"
-            class="glyphicon glyphicon-remove"></span>
+            class="glyphicon glyphicon-trash"></span>
 </div>

@@ -5,37 +5,36 @@ import SelectOnClickDirective from '../../directives/select-on-click';
 @Component({
     selector: 'list',
     template: `
-        <a class="add" (click)="onAdd()">
-            добавить
-        </a>
-        <ul [ngClass]="{ ordered: ordered }">
+        <ul *ngIf="sortedItems.length > 0"
+            [ngClass]="{ ordered: ordered }">
             <li *ngFor="#item of sortedItems">
                 <input [(ngModel)]="item.Description"
-                       [disabled]="!editable"
-                       select-on-click>
-                <a *ngIf="deletable" (click)="onDelete(item)">удалить</a>
+                        [disabled]="!editable"
+                        type="text"
+                        select-on-click>
+
+                <button *ngIf="deletable"
+                        class="btn btn-default"
+                        (click)="onDelete(item)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
             </li>
         </ul>
+        <button *ngIf="editable"
+                class="btn btn-default"
+                (click)="onAdd()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
         `,
     styles: [`
         :host {
             display: block;
-            outline: 1px solid lightgray;
-        }
-
-        :host > a.add {
-            cursor: pointer;
         }
 
         :host input {
-            border: none;
             background: transparent;
             color: black;
             cursor: inherit;
-        }
-
-        :host input:not([disabled]) {
-            outline: 2px solid brown;
         }
 
         :host ul.ordered {
@@ -51,10 +50,6 @@ export default class List {
     @Input()
     items;
 
-    get sortedItems() {
-        return this.items.sort((i1, i2) => i1.Order > i2.Order);
-    }
-
     @Input()
     editable;
 
@@ -66,6 +61,10 @@ export default class List {
 
     @Input()
     ordered;
+
+    get sortedItems() {
+        return this.items.sort((i1, i2) => i1.Order > i2.Order);
+    }
 
     onAdd() {
         if (!this.editable) {

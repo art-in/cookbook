@@ -25,6 +25,9 @@ export default class RecipeCardMin {
     @Input()
     focusName;
 
+    @Input()
+    descriptionRowsCount = 2;
+
     @Output()
     recipeDeleted = new EventEmitter();
 

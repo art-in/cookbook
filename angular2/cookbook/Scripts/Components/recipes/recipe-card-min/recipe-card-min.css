@@ -1,28 +1,44 @@
 ﻿:host {
+    display: block;
     position: relative;
 }
 
-:host .photo {
+/* controls (delete) */
+
+:host > .controls {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+:host:hover > .controls {
+    display: inline-block;
+}
+
+/* photo */
+
+:host > .photo {
     position: relative;
 }
 
-:host .photo > .controls {
+:host > .photo > .controls {
     display: none;
 }
 
-:host .photo:hover > .controls {
+:host > .photo:hover > .controls {
     display: block;
 }
 
-:host .photo.editable {
+:host > .photo.editable {
     cursor: pointer;
 }
 
-:host .photo > input[type="file"] {
+:host > .photo > input[type="file"] {
     display: none;
 }
 
-:host .photo > img {
+:host > .photo > img {
     width: 160px;
 }
 
@@ -32,27 +48,21 @@
     top: 0;
 }
 
+/* form */
 
-:host > .controls {
-    display: none;
-    position: absolute;
-    top: 5px;
-    right: 5px;
-}
-
-:host:hover > .controls {
-    display: inline-block;
-}
-
-:host form input[disabled],
-:host form textarea[disabled] {
-    border: none;
-    background: transparent;
-    color: black;
-    cursor: inherit;
+:host form textarea {
+    resize: vertical;
 }
 
 :host form input.name {
-    width: 100%;
     font-size: 1.5em;
+}
+
+:host form input.complexity,
+:host form input.popularity {
+    width: 45px;
+}
+
+:host form .form-group {
+    margin-bottom: 0;
 }

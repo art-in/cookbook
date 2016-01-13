@@ -1,8 +1,9 @@
 ﻿<div class="container" role="main">
 
-    <header class="container-fluid">
+    <header>
         <button class="btn btn-default btn-lg" (click)="onRecipeAdd()">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"
+                  data-toggle="modal" data-target="#recipe-card"></span>
         </button>
         <div class="btn-group pull-right">
             <button class="btn btn-default"
@@ -23,14 +24,20 @@
         </div>
     </header>
 
-    <recipe-card-min *ngFor="#recipe of recipes"
-                      class="row clearfix"
-                      [recipe]="recipe"
-                      [editable]="false"
-                      [deletable]="true"
-                      (click)="onRecipeSelected(recipe)"
-                      (recipeDeleted)="onRecipeDeleted()">
-    </recipe-card-min>
+    <template ngFor #recipe [ngForOf]="recipes">
+        <hr/>
+        <recipe-card-min class="row"
+                         tabindex="-1" role="dialog"
+                         [recipe]="recipe"
+                         [editable]="false"
+                         [deletable]="true"
+                         data-toggle="modal"
+                         data-target="#recipe-card"
+                         (click)="onRecipeSelected(recipe)"
+                         (recipeDeleted)="onRecipeDeleted()">
+        </recipe-card-min>
+    </template>
+    <hr/>
 
     <footer class="text-center">
         <ul class="pagination">
@@ -51,11 +58,11 @@
             </li>
         </ul>
     </footer>
-
-    <recipe-card *ngIf="selectedRecipeId"
-                  [recipeId]="selectedRecipeId"
-                  (closing)="onRecipeCardClosing($event)"
-                  (saved)="onRecipeCardSaved()"
-                  (deleted)="onRecipeCardDeleted()">
-    </recipe-card>
 </div>
+
+<recipe-card *ngIf="selectedRecipeId"
+             [recipeId]="selectedRecipeId"
+             (closing)="onRecipeCardClosing($event)"
+             (saved)="onRecipeCardSaved()"
+             (deleted)="onRecipeCardDeleted()">
+</recipe-card>

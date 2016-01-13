@@ -1,3 +1,11 @@
 ﻿:host {
     font-size: 2rem;
 }
+
+:host input[disabled],
+:host textarea[disabled] {
+    border: none;
+    background: transparent;
+    color: black;
+    cursor: inherit;
+}

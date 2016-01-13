@@ -10,7 +10,10 @@
 
 :host > .container > recipe-card-min {
     cursor: pointer;
-    outline: 1px solid lightgray;
+}
+
+:host > .container > recipe-card-min textarea {
+    resize: none;
 }
 
 recipe-card-min + recipe-card-min {
