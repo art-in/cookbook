@@ -60,9 +60,9 @@
     </footer>
 </div>
 
-<recipe-card id="recipe-card-modal" class="modal"
-             [recipeId]="selectedRecipeId"
-             (closing)="onRecipeCardClosing($event)"
-             (saved)="onRecipeCardSaved()"
-             (deleted)="onRecipeCardDeleted()">
+<recipe-card *ngIf="selectedRecipeId"
+              [recipeId]="selectedRecipeId"
+              (closing)="onRecipeCardClosing($event)"
+              (saved)="onRecipeCardSaved()"
+              (deleted)="onRecipeCardDeleted()">
 </recipe-card>

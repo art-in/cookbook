@@ -20,8 +20,8 @@ export default class RecipeService {
     createRecipe() {
         return {
             Id: guid(),
-            Name: 'Новый рецепт',
-            Description: 'Описание',
+            Name: '',
+            Description: '',
             Complexity: 1,
             Popularity: 1,
             Ingredients: [],

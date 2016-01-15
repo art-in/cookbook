@@ -22,18 +22,20 @@
 <div class="col-md-9 col-sm-8 col-xs-12">
     <form>
         <div class="form-group">
-            <input class="name col-xs-12"
-                    [(ngModel)]="recipe.Name"
-                    [disabled]="!editable"
-                    autofocus="editable && focusName"
-                    select-on-click>
+            <input class="name full-width"
+                   [(ngModel)]="recipe.Name"
+                   [disabled]="!editable"
+                   placeholder="Название"
+                   autofocus="editable && focusName"
+                   select-on-click>
         </div>
         <div class="form-group">
-            <textarea class="description col-xs-12"
+            <textarea class="description full-width"
                       [ngClass]="{scrollable: descriptionScrollable}"
                       [rows]="descriptionRowsCount"
                       [(ngModel)]="recipe.Description"
                       [disabled]="!editable"
+                      placeholder="Описание"
                       select-on-click>
             </textarea>
         </div>
@@ -43,22 +45,22 @@
                     <span class="glyphicon glyphicon-time"></span>
                 </label>
                 <input type="number"
-                        class="complexity"
-                        min="1" max="10"
-                        [(ngModel)]="recipe.Complexity"
-                        [disabled]="!editable"
-                        select-on-click>
+                       class="complexity"
+                       min="1" max="10"
+                       [(ngModel)]="recipe.Complexity"
+                       [disabled]="!editable"
+                       select-on-click>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-2">
                 <label>
                     <span class="glyphicon glyphicon-star"></span>
                 </label>
                 <input type="number"
-                        class="popularity"
-                        min="1" max="10"
-                        [(ngModel)]="recipe.Popularity"
-                        [disabled]="!editable"
-                        select-on-click>
+                       class="popularity"
+                       min="1" max="10"
+                       [(ngModel)]="recipe.Popularity"
+                       [disabled]="!editable"
+                       select-on-click>
             </div>
         </div>
     </form>

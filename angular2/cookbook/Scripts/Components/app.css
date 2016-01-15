@@ -2,10 +2,28 @@
     font-size: 2rem;
 }
 
+:host .full-width {
+    width: 100%;
+}
+
+:host input,
+:host textarea {
+    padding: 5px;
+    outline-offset: 0;
+}
+
 :host input[disabled],
 :host textarea[disabled] {
     border: none;
+    box-shadow: none;
     background: transparent;
     color: black;
     cursor: inherit;
+}
+
+:host input:not([disabled]),
+:host textarea:not([disabled]) {
+    border: none;
+    box-shadow: none;
+    outline: 1px solid gray;
 }

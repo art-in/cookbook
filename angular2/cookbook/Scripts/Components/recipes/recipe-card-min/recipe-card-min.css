@@ -19,31 +19,31 @@
 
 /* photo */
 
-:host > .photo {
+.photo {
     position: relative;
 }
 
-:host > .photo > .controls {
+.photo > .controls {
     display: none;
 }
 
-:host > .photo:hover > .controls {
+.photo:hover > .controls {
     display: block;
 }
 
-:host > .photo.editable {
+.photo.editable {
     cursor: pointer;
 }
 
-:host > .photo > input[type="file"] {
+.photo > input[type="file"] {
     display: none;
 }
 
-:host > .photo > img {
+.photo > img {
     width: 160px;
 }
 
-:host > .photo .controls {
+.photo .controls {
     position: absolute;
     right: 0;
     top: 0;
@@ -51,27 +51,28 @@
 
 /* form */
 
-:host form textarea {
+form textarea {
     resize: vertical;
 }
 
-:host form input.name {
+form input.name {
     font-size: 1.5em;
+    height: 1.5em;
 }
 
-:host form .description {
+form .description {
     color: #666;
 }
 
-:host form .description:not(.scrollable) {
+form .description:not(.scrollable) {
     overflow: hidden;
 }
 
-:host form input.complexity,
-:host form input.popularity {
+form input.complexity,
+form input.popularity {
     width: 45px;
 }
 
-:host form .form-group {
+form .form-group {
     margin-bottom: 0;
 }

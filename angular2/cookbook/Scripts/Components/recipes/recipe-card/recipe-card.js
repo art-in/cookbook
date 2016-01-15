@@ -35,19 +35,35 @@ export default class RecipeCard {
 
     inEditMode;
 
+    $modalElement = $(`#modal-element-id`);
+
     ngOnInit() {
-        window.addEventListener('beforeunload', e => {
-            if (this.inEditMode) {
-                e.returnValue = `Некоторые данные могли быть не сохранены!`;
-            }
+        // show modal
+        // bootstrap-jquery api - is only reason for direct DOM access.
+        // bootstrap-attribute api will not work for starup popup from route
+        this.$modalElement.modal('show');
+
+        // on background click
+        this.$modalElement.on('hide.bs.modal', () => {
+            this.onClose();
         });
 
-        $('#recipe-card-modal')
-            .on('hidden.bs.modal', () => {
-                this.recipe = null;
-                this.inEditMode = false;
-            });
+        window.addEventListener('beforeunload', this.onWindowBeforeUnloadBound);
     }
+
+    ngOnDestroy() {
+        this.$modalElement.modal('hide');
+        window.removeEventListener('beforeunload',
+            this.onWindowBeforeUnloadBound);
+    }
+
+    onWindowBeforeUnload(e) {
+        if (this.inEditMode) {
+            e.returnValue = `Некоторые данные могли быть не сохранены!`;
+        }
+    }
+
+    onWindowBeforeUnloadBound = this.onWindowBeforeUnload.bind(this);
 
     async ngOnChanges() {
         if (this.recipeId) {

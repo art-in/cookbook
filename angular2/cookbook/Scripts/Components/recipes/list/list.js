@@ -5,6 +5,14 @@ import SelectOnClickDirective from '../../directives/select-on-click';
 @Component({
     selector: 'list',
     template: `
+        <span class="h3 title">
+           {{title}}:
+        </span>
+        <button *ngIf="editable"
+                class="btn btn-default btn-sm"
+                (click)="onAdd()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
         <ul *ngIf="sortedItems.length > 0"
             [ngClass]="{ ordered: ordered }">
             <li *ngFor="#item of sortedItems">
@@ -20,24 +28,24 @@ import SelectOnClickDirective from '../../directives/select-on-click';
                 </button>
             </li>
         </ul>
-        <button *ngIf="editable"
-                class="btn btn-default"
-                (click)="onAdd()">
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
         `,
     styles: [`
         :host {
             display: block;
+            margin: 10px auto;
         }
 
-        :host input {
+        .title {
+            display: inline-block;
+        }
+
+        input {
             background: transparent;
             color: black;
             cursor: inherit;
         }
 
-        :host ul.ordered {
+        ul.ordered {
             list-style-type: decimal;
         }
         `],
@@ -46,6 +54,9 @@ import SelectOnClickDirective from '../../directives/select-on-click';
 export default class List {
     constructor() {
     }
+
+    @Input()
+    title;
 
     @Input()
     items = [];

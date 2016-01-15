@@ -1,65 +1,68 @@
-﻿<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="pull-right">
-                <button type="button" class="btn btn-default"
-                        (click)="onEdit()" *ngIf="!inEditMode && recipeId !== '_NEW_'">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-                <button type="button" class="btn btn-default"
-                        (click)="onSave()" *ngIf="inEditMode || recipeId === '_NEW_'">
-                    <span class="glyphicon glyphicon-save"></span>
-                </button>
-                <button type="button" class="btn btn-default"
-                        (click)="onCancel()" *ngIf="inEditMode && recipeId !== '_NEW_'">
-                    <span class="glyphicon glyphicon-erase"></span>
-                </button>
-                <button type="button" class="btn btn-default"
-                        (click)="onDelete()" *ngIf="recipeId !== '_NEW_'">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-                <button type="button" class="btn btn-default"
-                        (click)="onClose()">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
+﻿<div id="modal-element-id" class="modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default"
+                            (click)="onEdit()" *ngIf="!inEditMode && recipeId !== '_NEW_'">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            (click)="onSave()" *ngIf="inEditMode || recipeId === '_NEW_'">
+                        <span class="glyphicon glyphicon-save"></span>
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            (click)="onCancel()" *ngIf="inEditMode && recipeId !== '_NEW_'">
+                        <span class="glyphicon glyphicon-erase"></span>
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            (click)="onDelete()" *ngIf="recipeId !== '_NEW_'">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            (click)="onClose()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="modal-body">
-            <recipe-card-min class="row"
-                             *ngIf="recipe"
-                             descriptionRowsCount="5"
-                             [recipe]="recipe"
-                             [deletable]="false"
-                             [editable]="inEditMode || recipeId === '_NEW_'"
-                             [focusName]="recipeId === '_NEW_'">
-            </recipe-card-min>
+            <div class="modal-body">
+                <recipe-card-min class="row"
+                                 *ngIf="recipe"
+                                 descriptionRowsCount="5"
+                                 [recipe]="recipe"
+                                 [deletable]="false"
+                                 [editable]="inEditMode || recipeId === '_NEW_'"
+                                 [focusName]="recipeId === '_NEW_'">
+                </recipe-card-min>
 
-            <div class="row">
-                <h3 class="col-xs-12">
-                    Ингредиенты:
-                </h3>
-                <list class="ingredients col-xs-12"
-                      *ngIf="recipe"
-                      [items]="recipe.Ingredients"
-                      [editable]="inEditMode || recipeId === '_NEW_'"
-                      [deletable]="inEditMode || recipeId === '_NEW_'"
-                      [sortable]="false"
-                      [ordered]="false">
-                </list>
-            </div>
+                <div class="row">
+                    <div class="col-md-offset-3 col-sm-offset-4
+                                col-md-9 col-sm-8 col-xs-12">
+                        <list class="ingredients"
+                              *ngIf="recipe"
+                              title="Ингредиенты"
+                              [items]="recipe.Ingredients"
+                              [editable]="inEditMode || recipeId === '_NEW_'"
+                              [deletable]="inEditMode || recipeId === '_NEW_'"
+                              [sortable]="false"
+                              [ordered]="false">
+                        </list>
+                    </div>
+                </div>
 
-            <div class="row">
-                <h3 class="col-xs-12">
-                    Шаги:
-                </h3>
-                <list class="steps col-xs-12"
-                      *ngIf="recipe"
-                      [items]="recipe.Steps"
-                      [editable]="inEditMode || recipeId === '_NEW_'"
-                      [deletable]="inEditMode || recipeId === '_NEW_'"
-                      [sortable]="true"
-                      [ordered]="true">
-                </list>
+                <div class="row">
+                    <div class="col-md-offset-3 col-sm-offset-4
+                                col-md-9 col-sm-8 col-xs-12">
+                        <list *ngIf="recipe"
+                               title="Шаги"
+                               [items]="recipe.Steps"
+                               [editable]="inEditMode || recipeId === '_NEW_'"
+                               [deletable]="inEditMode || recipeId === '_NEW_'"
+                               [sortable]="true"
+                               [ordered]="true">
+                        </list>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
