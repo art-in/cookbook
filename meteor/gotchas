@@ -48,4 +48,17 @@
 8. Annoying auto-refreshes when uploading images to public folder at runtime.
    Solution: Use separate folder '.uploads' and request handler to serve from there
              http://stackoverflow.com/a/20358612/1064570
-   
+
+
+--- year later (v1.3.3.1) ---
+
+9. Error on start of todo list app from tutorial.
+   "Unable to locate babel-helpers module"
+   Solution: remove ecmascript package from user/AppRoaming
+
+10. Auto-reload extremely slow on changes.
+    Change single line in .js file - 20sec to rebuild.
+    https://github.com/meteor/meteor/issues/4284
+
+11. Unable to use CSS Modules.
+    No official support. Existing 'nathantreid/meteor-css-modules' package does not work with latest meteor version. 
