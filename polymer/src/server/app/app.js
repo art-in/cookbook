@@ -34,6 +34,7 @@ app.use(conditional());
 
 app.use(favicon(path.join(__dirname, '../../../client/images/favicon.ico')));
 app.use(statics(path.join(__dirname, '../../client')));
+app.use(statics(path.join(__dirname, '../../../bower_components')));
 
 const server = app.listen(config.get('server:port'));
 

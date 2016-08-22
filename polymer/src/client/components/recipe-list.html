@@ -1,0 +1,41 @@
+<link rel="import" href="/polymer/polymer.html">
+<link rel='import' href='recipe-card-min.html'>
+
+<dom-module id="recipe-list">
+    <template>
+        <style>
+            main {
+                outline: 1px solid lightgray;
+                width: 900px;
+                margin: 50px auto;
+            }
+        </style>
+
+        <main>
+            <template is='dom-if' if='{{!loaded}}'>
+                Loading...
+            </template>
+            <template is='dom-if' if='{{loaded}}'>
+                <recipe-card-min>
+                </recipe-card-min>
+            </template>
+        </main>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'recipe-list',
+            properties: {
+                loaded: {
+                    value: false,
+                    notify: true
+                }
+            }
+        });
+
+        setTimeout(function() {
+            let card = document.querySelector('recipe-list');
+            card.loaded = true;
+        }, 2000);
+    </script>
+</dom-module>

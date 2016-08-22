@@ -1,0 +1,20 @@
+{
+  "name": "cookbook-polymer",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "artin-phares <artin.phares@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/artin-phares/cookbook",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.6.1"
+  }
+}
