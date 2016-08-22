@@ -1,0 +1,10 @@
+{
+    "server": {
+        "ip": "0.0.0.0",
+        "port": 8080,
+        
+        "database": {
+            "connectionString": "mongodb://127.0.0.1:27017/cookbook"
+        }
+    }
+}
