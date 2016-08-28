@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
 const router = require('koa-router')();
+const send = require('koa-send');
 
 router.prefix('/api');
 
@@ -34,6 +35,12 @@ router
     .del('/recipes/:id', async function (next) {
         await storage.deleteRecipe(this.params.id);
         this.status = 200;
+    })
+
+    .get('/recipes/photo/:id', async function(ctx, next) {
+        const photoId = this.params.id;
+        await send(this, photoId + '.jpg', {
+            root: path.join(__dirname, '../photos/')});
     })
 
     .post('/recipes/:id/photo', async function (next) {

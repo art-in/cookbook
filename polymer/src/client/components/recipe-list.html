@@ -1,22 +1,71 @@
 <link rel="import" href="/polymer/polymer.html">
 <link rel='import' href='recipe-card-min.html'>
+<link rel="import" href="recipe-card.html">
 
 <dom-module id="recipe-list">
-    <template>
-        <style>
-            main {
-                outline: 1px solid lightgray;
-                width: 900px;
-                margin: 50px auto;
-            }
-        </style>
+    <style>
+        .container {
+            outline: 1px solid lightgray;
+            margin-top: 10px;
+            box-shadow: 0 0 150px;
+        }
 
-        <main>
-            <template is='dom-if' if='{{!loaded}}'>
-                Loading...
-            </template>
-            <template is='dom-if' if='{{loaded}}'>
-                <recipe-card-min>
+        .container > header {
+            padding: 10px 0;
+        }
+
+        .container > recipe-card-min {
+            cursor: pointer;
+        }
+
+        .container > recipe-card-min textarea {
+            resize: none;
+        }
+
+        .pagination a {
+            cursor: pointer;
+        }
+
+        recipe-card-min:hover {
+            background-color: rgba(170, 170, 170, 0.12);
+            box-shadow: 0 0 25px rgb(238, 238, 238);
+        }
+
+        recipe-card-min + recipe-card-min {
+            margin-top: 5px;
+        }
+    </style>
+
+    <template>
+        <main class="container">
+            <header>
+                <button class="btn btn-default btn-lg" on-click="onRecipeAdd">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default"
+                            (click)="onSort('Name')"
+                            [ngClass]="{active: currentSortProp === 'Name'}">
+                        по алфавиту
+                    </button>
+                    <button class="btn btn-default"
+                            (click)="onSort('Complexity')"
+                            [ngClass]="{active: currentSortProp === 'Complexity'}">
+                        по сложности
+                    </button>
+                    <button class="btn btn-default"
+                            (click)="onSort('Popularity')"
+                            [ngClass]="{active: currentSortProp === 'Popularity'}">
+                        по популярности
+                    </button>
+                </div>
+            </header>
+
+            <template is="dom-repeat" items="{{recipes}}">
+                <hr/>
+                <recipe-card-min class="row" recipe="{{item}}"
+                    editable="{{isRecipeEditable()}}"
+                    deletable="{{isRecipeDeletable()}}">
                 </recipe-card-min>
             </template>
         </main>
@@ -26,16 +75,17 @@
         Polymer({
             is: 'recipe-list',
             properties: {
-                loaded: {
-                    value: false,
-                    notify: true
-                }
+                recipes: Object
+            },
+            isRecipeEditable() {
+                return false;
+            },
+            isRecipeDeletable() {
+                return true;
+            },
+            onRecipeAdd() {
+                this.fire('recipe-add');
             }
         });
-
-        setTimeout(function() {
-            let card = document.querySelector('recipe-list');
-            card.loaded = true;
-        }, 2000);
     </script>
 </dom-module>

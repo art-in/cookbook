@@ -1,6 +1,20 @@
-- unhandled promise rejections not logged by nodejs v6.3
-- polymer ships only through bower and not npm
-- tripple naming: file name, <dom-module id=''>, Polymer({is: ''}).
-- external stylesheets for modules are deprecated in Polymer v1
-  https://www.polymer-project.org/1.0/docs/devguide/styling#external-stylesheets
+nodejs:
 
+- unhandled promise rejections not logged by nodejs v6.3
+
+polymer:
+
+- polymer ships only through bower and not npm
+- tripple module naming: file name, <dom-module id=''>, Polymer({is: ''}).
+- cannot move module styles to separate .css,
+  external stylesheets for modules are deprecated in Polymer v1
+  https://www.polymer-project.org/1.0/docs/devguide/styling#external-stylesheets
+- shady dom instead of native shadow dom (even in Chrome) (class='style-scope module-name')
+- data-binding system based on paths
+- binding expressions not supported. 
+  - dom-if template if-logic through separate function only
+  - conditional classes through separate function only
+- conditional elements does not re-render by default ("display: none"),
+  but there is no lifecycle event for element is shown after beeing hidden
+
+  

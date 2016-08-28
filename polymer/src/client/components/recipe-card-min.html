@@ -1,12 +1,214 @@
 <link rel="import" href="/polymer/polymer.html">
+<script src="../helpers/helpers.js"></script>
 
 <dom-module id="recipe-card-min">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            outline: none;
+        }
+
+        :host .full-width {
+            width: 100%;
+        }
+
+        /* controls (delete) */
+
+        :host > .controls {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 15px;
+        }
+
+        :host:hover > .controls {
+            display: inline-block;
+        }
+
+        /* photo */
+
+        .photo {
+            position: relative;
+        }
+
+        .photo > .controls {
+            display: none;
+        }
+
+        .photo:hover > .controls {
+            display: block;
+        }
+
+        .photo.editable {
+            cursor: pointer;
+        }
+
+        .photo > input[type="file"] {
+            display: none;
+        }
+
+        .photo > img {
+            width: 160px;
+        }
+
+        .photo .controls {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        /* form */
+
+        form textarea {
+            resize: vertical;
+        }
+
+        form input.name {
+            font-size: 1.5em;
+            height: 1.5em;
+        }
+
+        form .description {
+            color: #666;
+        }
+
+        form .description:not(.scrollable) {
+            overflow: hidden;
+        }
+
+        form input.complexity,
+        form input.popularity {
+            width: 45px;
+        }
+
+        form .form-group {
+            
+        }
+    </style>
     <template>
-        I'm recipe card
+        <div class$="photo col-md-3 col-sm-4 col-xs-12 {{getPhotoClass(editable)}}"
+            on-click="onPhotoAdd">
+
+            <template is="dom-if" if="{{isRecipePhotoEditable()}}">
+                <div class="controls">
+                    <span on-click="onPhotoDelete($event)"
+                            class="glyphicon glyphicon-trash"></span>
+                </div>
+            </template>
+            
+            <template is="dom-if" if="{{isRecipePhotoExists(recipe)}}">
+                <img class="img-thumbnail"
+                    src$="{{getPhotoPath()}}"/>
+            </template>
+            
+            <template is="dom-if" if="{{!isRecipePhotoExists(recipe)}}">
+                <!-- placeholder -->
+                <img class="img-thumbnail"
+                    data-src="holder.js/160x160"/>
+            </template>
+
+            <input id="photoInput" type="file" on-change="onPhotoChange"/>
+        </div>
+
+        <div class="col-md-9 col-sm-8 col-xs-12">
+            <form>
+                <div class="form-group">
+                    <input class="name full-width"
+                        value="{{recipe.name}}"
+                        disabled$="{{!editable}}"
+                        placeholder="Название"
+                        autofocus="editable && focusName">
+                </div>
+                <div class="form-group">
+                    <textarea class="description full-width"
+                        rows="2"
+                        value="{{recipe.description}}"
+                        disabled$="{{!editable}}"
+                        placeholder="Описание">
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6 col-sm-4 col-md-2">
+                        <label>
+                            <span class="glyphicon glyphicon-time"></span>
+                        </label>
+                        <input type="number"
+                            class="complexity"
+                            min="1" max="10"
+                            value="{{recipe.complexity}}"
+                            disabled$="{{!editable}}">
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-2">
+                        <label>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </label>
+                        <input type="number"
+                            class="popularity"
+                            min="1" max="10"
+                            value="{{recipe.popularity}}"
+                            disabled$="{{!editable}}">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <template is="dom-if" if="{{deletable}}">
+            <div class="controls">
+                <span (click)="onDelete($event)"
+                        class="glyphicon glyphicon-trash"></span>
+            </div>
+        </template>
     </template>
     <script>
         Polymer({
-            is: 'recipe-card-min'
+            is: 'recipe-card-min',
+            
+            properties: {
+                recipe: Object,
+                editable: {
+                    value: true
+                },
+                deletable: {
+                    value: true
+                }
+            },
+
+            getPhotoClass(editable) {
+                return editable ? 'editable' : null;
+            },
+
+            isRecipePhotoExists(recipe) {
+                return recipe && recipe && recipe.PhotoId;
+            },
+
+            isRecipePhotoEditable() {
+                return this.edit && this.recipe && this.recipe.PhotoId;
+            },
+
+            getPhotoPath() {
+                return `api/recipes/photo/${this.recipe.PhotoId}`;
+            },
+
+            onPhotoAdd(e) {
+                if (!this.editable) {
+                    return;
+                }
+
+                e.stopPropagation();
+                this.$.photoInput.click();
+            },
+
+            onPhotoChange(e) {
+                if (!this.editable || !e.target.files.length) {
+                    return;
+                }
+
+                let photo = e.target.files[0];
+                let photoId = guid();
+                this.fire('photochange', photoId, photo);
+                this.recipe.PhotoId = photoId;
+            }
         })
     </script>
 </dom-module>
