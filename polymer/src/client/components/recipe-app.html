@@ -1,0 +1,127 @@
+<link rel="import" href="/polymer/polymer.html">
+<link rel="import" href="./recipe-list.html">
+<link rel="import" href="/iron-ajax/iron-ajax.html">
+
+<script src="../helpers/helpers.js"></script>
+
+<dom-module id="recipe-app">
+    <style>
+        :host {
+            font-size: 2rem;
+        }
+
+        :host .full-width {
+            width: 100%;
+        }
+
+    </style>
+    <template>
+        <iron-ajax
+            auto
+            url="/api/recipes"
+            handle-as="json"
+            on-response="onRecipesReceived""></iron-ajax>
+
+        <recipe-list
+            recipes="{{recipes}}"
+            on-recipe-add="onRecipeAdd"
+            on-recipe-select="onRecipeSelect"
+            on-recipe-delete="onRecipeDelete">
+        </recipe-list>
+        
+        <template is="dom-if" if="{{selectedRecipe}}"
+            restamp="false">
+            <recipe-card
+                recipe="{{selectedRecipe}}"
+                editable="{{cardEditable}}"
+                saveable="{{cardSaveable}}"
+                cancelable="{{cardCancelable}}"
+                deletable="{{cardDeletable}}"
+                editing="{{cardEditing}}"
+                on-save="onRecipeSave"
+                on-cancel="onRecipeCancel"
+                on-delete="onRecipeDelete"
+                on-close="onRecipeCardClose"></recipe-card>
+        </template>
+    </template>
+    <script>
+        Polymer({
+            is: 'recipe-app',
+            properties: {
+                recipes: Object,
+                selectedRecipe: Object,
+                
+                cardEditable: Boolean,
+                cardSaveable: Boolean,
+                cardCancelable: Boolean,
+                cardDeletable: Boolean,
+
+                cardEditing: Boolean
+            },
+            onRecipesReceived(data) {
+                this.recipes = data.detail.response.items;
+            },
+            onRecipeAdd() {
+                var newRecipe = {
+                    id: null,
+                    name: '',
+                    description: '',
+                    complexity: 1,
+                    popularity: 1,
+                    ingredients: [],
+                    steps: []
+                };
+
+                this.selectedRecipe = newRecipe;
+
+                this.cardEditable = false;
+                this.cardSaveable = true;
+                this.cardCancelable = false;
+                this.cardDeletable = false;
+
+                this.cardEditing = true;
+            },
+            onRecipeSelect(e) {
+                var recipe = e.detail;
+                this.selectedRecipe = clone(recipe);
+
+                this.cardEditable = true;
+                this.cardSaveable = true;
+                this.cardCancelable = true;
+                this.cardDeletable = true;
+
+                this.cardEditing = false;
+            },
+            onRecipeSave() {
+                if (this.selectedRecipe.id === null) {
+                    // TODO: set id
+                    this.push('recipes', this.selectedRecipe);
+                } else {
+                    // update existing recipe
+                    let oldRecipeIdx = this.recipes
+                        .findIndex(r => r.id === this.selectedRecipe.id);
+                    
+                    // mutate array observably
+                    this.splice('recipes', oldRecipeIdx, 1, this.selectedRecipe);
+                }
+
+                this.selectedRecipe = null;
+            },
+            onRecipeDelete(e) {
+                let recipe = e.detail;
+
+                let recipeIdx = this.recipes
+                    .findIndex(r => r.id === recipe.id);
+                this.splice('recipes', recipeIdx, 1);
+                this.selectedRecipe = null;
+            },
+            onRecipeCancel() {
+                let recipe = this.recipes.find(r => r.id === this.selectedRecipe.id);
+                this.selectedRecipe = recipe;
+            },
+            onRecipeCardClose() {
+                this.selectedRecipe = null;
+            }
+        })
+    </script>
+</dom-module>

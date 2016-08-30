@@ -26,6 +26,28 @@
             display: inline-block;
         }
 
+        :host input,
+        :host textarea {
+            padding: 5px;
+            outline-offset: 0;
+        }
+
+        :host input[disabled],
+        :host textarea[disabled] {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            color: black;
+            cursor: inherit;
+        }
+
+        :host input:not([disabled]),
+        :host textarea:not([disabled]) {
+            border: none;
+            box-shadow: none;
+            outline: 1px solid gray;
+        }
+
         /* photo */
 
         .photo {
@@ -40,7 +62,7 @@
             display: block;
         }
 
-        .photo.editable {
+        .photo.editing {
             cursor: pointer;
         }
 
@@ -87,10 +109,10 @@
         }
     </style>
     <template>
-        <div class$="photo col-md-3 col-sm-4 col-xs-12 {{getPhotoClass(editable)}}"
+        <div class$="photo col-md-3 col-sm-4 col-xs-12 {{getPhotoClass(editing)}}"
             on-click="onPhotoAdd">
 
-            <template is="dom-if" if="{{isRecipePhotoEditable()}}">
+            <template is="dom-if" if="{{isRecipePhotoEditable(editing)}}">
                 <div class="controls">
                     <span on-click="onPhotoDelete($event)"
                             class="glyphicon glyphicon-trash"></span>
@@ -104,7 +126,7 @@
             
             <template is="dom-if" if="{{!isRecipePhotoExists(recipe)}}">
                 <!-- placeholder -->
-                <img class="img-thumbnail"
+                <img class="img-thumbnail" id="photo"
                     data-src="holder.js/160x160"/>
             </template>
 
@@ -115,16 +137,16 @@
             <form>
                 <div class="form-group">
                     <input class="name full-width"
-                        value="{{recipe.name}}"
-                        disabled$="{{!editable}}"
+                        value="{{recipe.name::input}}"
+                        disabled$="{{!editing}}"
                         placeholder="Название"
-                        autofocus="editable && focusName">
+                        autofocus="editing && focusName">
                 </div>
                 <div class="form-group">
                     <textarea class="description full-width"
                         rows="2"
-                        value="{{recipe.description}}"
-                        disabled$="{{!editable}}"
+                        value="{{recipe.description::input}}"
+                        disabled$="{{!editing}}"
                         placeholder="Описание">
                     </textarea>
                 </div>
@@ -136,8 +158,8 @@
                         <input type="number"
                             class="complexity"
                             min="1" max="10"
-                            value="{{recipe.complexity}}"
-                            disabled$="{{!editable}}">
+                            value="{{recipe.complexity::input}}"
+                            disabled$="{{!editing}}">
                     </div>
                     <div class="col-xs-6 col-sm-4 col-md-2">
                         <label>
@@ -146,8 +168,8 @@
                         <input type="number"
                             class="popularity"
                             min="1" max="10"
-                            value="{{recipe.popularity}}"
-                            disabled$="{{!editable}}">
+                            value="{{recipe.popularity::input}}"
+                            disabled$="{{!editing}}">
                     </div>
                 </div>
             </form>
@@ -155,7 +177,7 @@
 
         <template is="dom-if" if="{{deletable}}">
             <div class="controls">
-                <span (click)="onDelete($event)"
+                <span on-click="onDelete"
                         class="glyphicon glyphicon-trash"></span>
             </div>
         </template>
@@ -163,35 +185,47 @@
     <script>
         Polymer({
             is: 'recipe-card-min',
-            
+            listeners: {
+                'click': 'onSelect'
+            },
             properties: {
-                recipe: Object,
-                editable: {
-                    value: true
+                recipe: {
+                    type: Object,
+                    notify: true
                 },
+                editing: Boolean,
+                selectable: Boolean,
                 deletable: {
                     value: true
                 }
             },
 
-            getPhotoClass(editable) {
-                return editable ? 'editable' : null;
+            getPhotoClass(editing) {
+                return editing ? 'editing' : null;
             },
 
             isRecipePhotoExists(recipe) {
                 return recipe && recipe && recipe.PhotoId;
             },
 
-            isRecipePhotoEditable() {
-                return this.edit && this.recipe && this.recipe.PhotoId;
+            isRecipePhotoEditable(editing) {
+                return editing && this.recipe && this.recipe.PhotoId;
             },
 
             getPhotoPath() {
                 return `api/recipes/photo/${this.recipe.PhotoId}`;
             },
 
+            attached() {
+                // need to skip current task, as dom-if templates
+                // will be resolved later
+                setTimeout(function() {
+                    Holder.run();
+                }, 0);
+            },
+
             onPhotoAdd(e) {
-                if (!this.editable) {
+                if (!this.editing) {
                     return;
                 }
 
@@ -200,7 +234,7 @@
             },
 
             onPhotoChange(e) {
-                if (!this.editable || !e.target.files.length) {
+                if (!this.editing || !e.target.files.length) {
                     return;
                 }
 
@@ -208,6 +242,13 @@
                 let photoId = guid();
                 this.fire('photochange', photoId, photo);
                 this.recipe.PhotoId = photoId;
+            },
+            onSelect() {
+                this.fire('recipe-select', this.recipe);
+            },
+            onDelete(e) {
+                e.stopPropagation();
+                this.fire('delete', this.recipe);
             }
         })
     </script>

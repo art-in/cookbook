@@ -11,22 +11,30 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-default"
-                                    (click)="onEdit()" *ngIf="!inEditMode && recipeId !== '_NEW_'">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                            </button>
-                            <button type="button" class="btn btn-default"
-                                    (click)="onSave()" *ngIf="inEditMode || recipeId === '_NEW_'">
-                                <span class="glyphicon glyphicon-save"></span>
-                            </button>
-                            <button type="button" class="btn btn-default"
-                                    (click)="onCancel()" *ngIf="inEditMode && recipeId !== '_NEW_'">
-                                <span class="glyphicon glyphicon-erase"></span>
-                            </button>
-                            <button type="button" class="btn btn-default"
-                                    (click)="onDelete()" *ngIf="recipeId !== '_NEW_'">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </button>
+                            <template is="dom-if" if="{{isEditActionShown(editable, editing)}}">
+                                <button type="button" class="btn btn-default"
+                                        on-click="onEdit">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </button>
+                            </template>
+                            <template is="dom-if" if="{{isSaveActionShown(saveable, editing)}}">
+                                <button type="button" class="btn btn-default"
+                                        on-click="onSave">
+                                    <span class="glyphicon glyphicon-save"></span>
+                                </button>
+                            </template>
+                            <template is="dom-if" if="{{isCancelActionShown(cancelable, editing)}}">
+                                <button type="button" class="btn btn-default"
+                                        on-click="onCancel">
+                                    <span class="glyphicon glyphicon-erase"></span>
+                                </button>
+                            </template>
+                            <template is="dom-if" if="{{isDeleteActionShown(deletable)}}">
+                                <button type="button" class="btn btn-default"
+                                        on-click="onDelete">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </template>
                             <button type="button" class="btn btn-default"
                                 data-dismiss="modal"
                                 on-click="onClose">
@@ -36,12 +44,9 @@
                     </div>
                     <div class="modal-body">
                         <recipe-card-min class="row"
-                                        *ngIf="recipe"
-                                        descriptionRowsCount="5"
                                         recipe="{{recipe}}"
-                                        [deletable]="false"
-                                        [editable]="inEditMode || recipeId === '_NEW_'"
-                                        [focusName]="recipeId === '_NEW_'">
+                                        deletable="{{cardMinDeletable}}"
+                                        editing="{{editing}}">
                         </recipe-card-min>
 
                         <div class="row">
@@ -80,9 +85,24 @@
     <script>
         Polymer({
             is: 'recipe-card',
+
             properties: {
-                recipe: Object
+                recipe: {
+                    type: Object,
+                    notify: true
+                },
+                cardMinDeletable: {
+                    value: false
+                },
+
+                editable: Boolean,
+                saveable: Boolean,
+                cancelable: Boolean,
+                deletable: Boolean,
+
+                editing: Boolean
             },
+
             attached() {
                 this.$modal = $(this.$['modal-element-id']);
 
@@ -106,8 +126,46 @@
                 window.addEventListener('beforeunload', this.onWindowBeforeUnloadBound);
             },
 
+            detached() {
+                this.$modal.modal('hide');
+            },
+            
+            isEditActionShown(editable, editing) {
+                return editable && !editing;
+            },
+
+            isSaveActionShown(saveable, editing) {
+                return saveable && editing;
+            },
+
+            isCancelActionShown(cancelable, editing) {
+                return cancelable && editing;
+            },
+
+            isDeleteActionShown(deletable) {
+                return deletable;
+            },
+
             onClose() {
                 this.fire('close');
+            },
+
+            onEdit() {
+                this.editing = true;
+            },
+
+            onSave() {
+                this.editing = false;
+                this.fire('save');
+            },
+
+            onCancel() {
+                this.editing = false;
+                this.fire('cancel');
+            },
+
+            onDelete() {
+                this.fire('delete', this.recipe);
             }
         });
     </script>

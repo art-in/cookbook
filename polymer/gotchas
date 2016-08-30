@@ -10,11 +10,18 @@ polymer:
   external stylesheets for modules are deprecated in Polymer v1
   https://www.polymer-project.org/1.0/docs/devguide/styling#external-stylesheets
 - shady dom instead of native shadow dom (even in Chrome) (class='style-scope module-name')
-- data-binding system based on paths
 - binding expressions not supported. 
   - dom-if template if-logic through separate function only
   - conditional classes through separate function only
 - conditional elements does not re-render by default ("display: none"),
   but there is no lifecycle event for element is shown after beeing hidden
+- module lifecycle event ready() is triggered before dom-if templates are resolved
+  https://github.com/Polymer/polymer/issues/2500
 
-  
+- data-binding system based on paths
+  - inconsistent observable property mutations 
+    direct prop setting is OK observable change,
+    to deep mutate object/arrays - use special API this.set(), this.push(), this.splice() etc.
+    (eg. this.set('address.street', 'Half Moon Street'))
+
+

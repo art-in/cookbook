@@ -64,8 +64,10 @@
             <template is="dom-repeat" items="{{recipes}}">
                 <hr/>
                 <recipe-card-min class="row" recipe="{{item}}"
-                    editable="{{isRecipeEditable()}}"
-                    deletable="{{isRecipeDeletable()}}">
+                    editing="{{isRecipeEditing()}}"
+                    deletable="{{isRecipeDeletable()}}"
+                    on-recipe-select="onRecipeSelect"
+                    on-delete="onRecipeDelete">
                 </recipe-card-min>
             </template>
         </main>
@@ -77,7 +79,7 @@
             properties: {
                 recipes: Object
             },
-            isRecipeEditable() {
+            isRecipeEditing() {
                 return false;
             },
             isRecipeDeletable() {
@@ -85,6 +87,12 @@
             },
             onRecipeAdd() {
                 this.fire('recipe-add');
+            },
+            onRecipeSelect(e) {
+                this.fire('recipe-select', e.detail);
+            },
+            onRecipeDelete(e) {
+                this.fire('recipe-delete', e.detail);
             }
         });
     </script>
