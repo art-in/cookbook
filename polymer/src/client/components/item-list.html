@@ -1,0 +1,113 @@
+<link rel="import" href="/polymer/polymer.html">
+
+<dom-module id="item-list">
+    <style>
+        :host {
+            display: block;
+            margin: 10px auto;
+        }
+
+        .title {
+            display: inline-block;
+        }
+
+        input {
+            background: transparent;
+            color: black;
+            cursor: inherit;
+        }
+
+        ul.ordered {
+            list-style-type: decimal;
+        }
+
+        :host input,
+        :host textarea {
+            padding: 5px;
+            outline-offset: 0;
+        }
+
+        :host input[disabled],
+        :host textarea[disabled] {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            color: black;
+            cursor: inherit;
+        }
+
+        :host input:not([disabled]),
+        :host textarea:not([disabled]) {
+            border: none;
+            box-shadow: none;
+            outline: 1px solid gray;
+        }
+    </style>
+    <template>
+        <span class="h3 title">
+           {{title}}:
+        </span>
+        <template is="dom-if" if="{{editing}}">
+            <button
+                class="btn btn-default btn-sm"
+                on-click="onAdd">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </template>
+        <template is="dom-if" if="{{hasItems(items)}}">
+
+        </template>
+        <ul class$="{{getOrderedClass(ordered)}}">
+            <template is="dom-repeat" items="{{items}}">
+                <li>
+                    <input value="{{item.Description::change}}"
+                        disabled$="{{!editing}}">
+
+                    <template is="dom-if" if="{{editing}}">
+                        <button
+                            class="btn btn-default"
+                            data-item-id$="{{item.id}}"
+                            on-click="onDelete">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </template>
+                </li>
+            </template>
+        </ul>
+    </template>
+    <script>
+        Polymer({
+            is: 'item-list',
+            properties: {
+                title: String,
+                items: {
+                    value: [],
+                    notify: true
+                },
+                ordered: Boolean,
+                editing: Boolean
+            },
+
+            hasItems(items) {
+                return items && items.length > 0;
+            },
+            getOrderedClass(ordered) {
+                return ordered ? 'ordered' : '';
+            },
+
+            onAdd() {
+                this.push('items', {
+                    id: guid(),
+                    description: ''
+                });
+            },
+            onDelete(e) {                
+                let itemId = e.target.getAttribute('data-item-id');
+                let item = this.items.find(i => i.id === itemId);
+                let idx = this.items.indexOf(item);
+
+                this.splice('items', idx, 1);
+            }
+        });
+    </script>
+</dom-module>

@@ -1,5 +1,7 @@
 <link rel="import" href="/polymer/polymer.html">
+
 <link rel="import" href="recipe-card-min.html">
+<link rel="import" href="item-list.html">
 
 <dom-module id="recipe-card">
     <style>
@@ -52,29 +54,24 @@
                         <div class="row">
                             <div class="col-md-offset-3 col-sm-offset-4
                                         col-md-9 col-sm-8 col-xs-12">
-                                <list class="ingredients"
-                                    *ngIf="recipe"
+                                <item-list class="ingredients"
                                     title="Ингредиенты"
-                                    [items]="recipe.Ingredients"
-                                    [editable]="inEditMode || recipeId === '_NEW_'"
-                                    [deletable]="inEditMode || recipeId === '_NEW_'"
-                                    [sortable]="false"
-                                    [ordered]="false">
-                                </list>
+                                    items="{{recipe.ingredients}}"
+                                    editing="{{editing}}"
+                                    ordered="{{isIngredientsListOrdered()}}">
+                                </item-list>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-offset-3 col-sm-offset-4
                                         col-md-9 col-sm-8 col-xs-12">
-                                <list *ngIf="recipe"
+                                <item-list
                                     title="Шаги"
-                                    [items]="recipe.Steps"
-                                    [editable]="inEditMode || recipeId === '_NEW_'"
-                                    [deletable]="inEditMode || recipeId === '_NEW_'"
-                                    [sortable]="true"
-                                    [ordered]="true">
-                                </list>
+                                    items="{{recipe.steps}}"
+                                    editing="{{editing}}"
+                                    ordered="{{isStepsListOrdered()}}">
+                                </item-list>
                             </div>
                         </div>
                     </div>
@@ -144,6 +141,13 @@
 
             isDeleteActionShown(deletable) {
                 return deletable;
+            },
+
+            isIngredientsListOrdered() {
+                return false;
+            },
+            isStepsListOrdered() {
+                return true;
             },
 
             onClose() {

@@ -26,13 +26,13 @@ polymer:
     to deep mutate object/arrays - use special API this.set(), this.push(), this.splice() etc.
     (eg. this.set('address.street', 'Half Moon Street'))
   - computed props will not compute until all refs are defined
-  - property-attribute mapping
-    to bind childProperty to parentProperty - dashed notation should be used in parent
-    child-property="{{parentProperty}}"
   - computed prop dependancies are not recursive.
     if prop depends on object property
     computed: 'getValue(dependancyObject)'
     changing dependancyObject.prop1 will not hit recomputation of computed prop
+  - property-attribute mapping
+    to bind childProperty to parentProperty - dashed notation should be used in parent
+    child-property="{{parentProperty}}"
 
 - making requests to API over DOM elements (wtf) (iron-ajax)
   actually idea is to create request and bind result to DOM without writing any javascript
