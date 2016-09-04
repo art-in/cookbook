@@ -16,8 +16,8 @@ router
         const data = await storage.getRecipes(
             opts.skip ? parseInt(opts.skip, 10) : null,
             opts.limit ? parseInt(opts.limit, 10) : null,
-            opts.sortProp || 'name',
-            opts.sortDirection ? parseInt(opts.sortDirection, 10) : 1);
+            opts.sprop || 'name',
+            opts.sdesc === 'true' ? -1 : 1);
 
         this.body = JSON.stringify(data);
     })
@@ -39,16 +39,12 @@ router
 
     .get('/recipes/photo/:id', async function(ctx, next) {
         const photoId = this.params.id;
-        await send(this, photoId + '.jpg', {
+        await send(this, photoId, {
             root: path.join(__dirname, '../photos/')});
     })
 
     .post('/recipes/:id/photo', async function (next) {
         if (this.request.finished) return this.request.end();
-
-        const fileName = this.params.id;
-        const width = this.query.width || 2 * 150;
-        const height = this.query.height || 2 * 130;
 
         let resolve;
         let reject;
@@ -58,7 +54,7 @@ router
         });
 
         const form = new formidable.IncomingForm();
-        form.uploadDir = path.join(__dirname, '../../client/images/recipes/');
+        form.uploadDir = path.join(__dirname, '../photos/');
         form.keepExtensions = true;
 
         form.once('file', onFileReceived.bind(this));
@@ -71,12 +67,12 @@ router
          * @param {File} file -
          */
         function onFileReceived(name, file) {
-            console.log(`[FS] File received: ${fileName} [${file.path}]`);
+            console.log(`[FS] File received: ${file.name} [${file.path}]`);
 
             const extension = path.extname(file.path);
-            const newPath = form.uploadDir + fileName;
+            const newPath = form.uploadDir + file.name;
 
-            if (extension.search(/^\.(jpg|jpeg|png|gif)$/) === -1) {
+            if (file.type !== 'image/jpeg') {
                 onProcessError(file.path, 
                     'Unsupported image format: ' + extension);
                 return;
@@ -86,8 +82,6 @@ router
             fs.rename(file.path, newPath);
 
             // TODO: add compression / resize
-
-            console.log('Image resized: %s (%d x %d)', fileName, width, height);
 
             this.status = 200;
             resolve();

@@ -119,12 +119,12 @@
                 </div>
             </template>
             
-            <template is="dom-if" if="{{isRecipePhotoExists(recipe)}}">
+            <template is="dom-if" if="{{isRecipePhotoExists(recipe.PhotoId)}}">
                 <img class="img-thumbnail"
-                    src$="{{getPhotoPath()}}"/>
+                    src$="{{getPhotoPath(recipe.PhotoId)}}"/>
             </template>
             
-            <template is="dom-if" if="{{!isRecipePhotoExists(recipe)}}">
+            <template is="dom-if" if="{{!isRecipePhotoExists(recipe.PhotoId)}}">
                 <!-- placeholder -->
                 <img class="img-thumbnail" id="photo"
                     data-src="holder.js/160x160"/>
@@ -204,16 +204,20 @@
                 return editing ? 'editing' : null;
             },
 
-            isRecipePhotoExists(recipe) {
-                return recipe && recipe && recipe.PhotoId;
+            isRecipePhotoExists(PhotoId) {
+                return Boolean(PhotoId);
             },
 
             isRecipePhotoEditable(editing) {
                 return editing && this.recipe && this.recipe.PhotoId;
             },
 
-            getPhotoPath() {
-                return `api/recipes/photo/${this.recipe.PhotoId}`;
+            getPhotoPath(PhotoId) {
+                if (!PhotoId) {
+                    // can be empty when clearing selectedRecipe
+                    return null;
+                }
+                return `api/recipes/photo/${PhotoId}`;
             },
 
             attached() {
@@ -239,9 +243,16 @@
                 }
 
                 let photo = e.target.files[0];
+
                 let photoId = guid();
-                this.fire('photochange', photoId, photo);
-                this.recipe.PhotoId = photoId;
+                this.fire('photochange', {
+                    fileName: photoId, 
+                    photo, 
+                    onUploaded: function() {
+                        console.log('setting recipe photo')
+                        this.set('recipe.PhotoId', photoId);
+                    }.bind(this)
+                });
             },
             onSelect() {
                 this.fire('recipe-select', this.recipe);

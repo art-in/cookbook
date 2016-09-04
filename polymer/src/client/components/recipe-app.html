@@ -16,14 +16,23 @@
 
     </style>
     <template>
-        <iron-ajax
+        
+        <iron-ajax id="ajaxGetRecipes"
             auto
             url="/api/recipes"
             handle-as="json"
+            params="{{getRecipesRequestParams(sortProp, sortDesc, skip, limit)}}"
             on-response="onRecipesReceived""></iron-ajax>
 
         <recipe-list
             recipes="{{recipes}}"
+            recipes-total="{{recipesTotal}}"
+
+            skip="{{skip}}"
+            limit="{{limit}}"
+            sort-prop="{{sortProp}}"
+            sort-desc="{{sortDesc}}"
+
             on-recipe-add="onRecipeAdd"
             on-recipe-select="onRecipeSelect"
             on-recipe-delete="onRecipeDelete">
@@ -38,10 +47,12 @@
                 cancelable="{{cardCancelable}}"
                 deletable="{{cardDeletable}}"
                 editing="{{cardEditing}}"
+
                 on-save="onRecipeSave"
                 on-cancel="onRecipeCancel"
                 on-delete="onRecipeDelete"
-                on-close="onRecipeCardClose"></recipe-card>
+                on-close="onRecipeCardClose"
+                on-photochange="onRecipeCardPhotoChange"></recipe-card>
         </template>
     </template>
     <script>
@@ -49,6 +60,14 @@
             is: 'recipe-app',
             properties: {
                 recipes: Object,
+                recipesTotal: Number,
+
+                page: Number,
+                sortProp: String,
+                sortDesc: Boolean,
+                skip: Number,
+                limit: Number,
+
                 selectedRecipe: Object,
                 
                 cardEditable: Boolean,
@@ -58,12 +77,26 @@
 
                 cardEditing: Boolean
             },
+
+            getRecipesRequestParams(sortProp, sortDesc, skip, limit) {
+                
+                let params = {
+                    sprop: sortProp,
+                    sdesc: sortDesc,
+                    skip,
+                    limit
+                };
+
+                return params;
+            },
+
             onRecipesReceived(data) {
                 this.recipes = data.detail.response.items;
+                this.recipesTotal = data.detail.response.total;
             },
             onRecipeAdd() {
                 var newRecipe = {
-                    id: null,
+                    id: null, // null means this is new recipe
                     name: '',
                     description: '',
                     complexity: 1,
@@ -83,6 +116,7 @@
             },
             onRecipeSelect(e) {
                 var recipe = e.detail;
+
                 this.selectedRecipe = clone(recipe);
 
                 this.cardEditable = true;
@@ -93,26 +127,35 @@
                 this.cardEditing = false;
             },
             onRecipeSave() {
-                if (this.selectedRecipe.id === null) {
-                    // TODO: set id
-                    this.push('recipes', this.selectedRecipe);
+                let recipeId = this.selectedRecipe.id;
+                if (recipeId === null) {
+                    this.selectedRecipe.id = guid();
+                    fetch('/api/recipes/', {
+                        method: 'post',
+                        headers: {['Content-Type']: 'application/json'},
+                        body: JSON.stringify(this.selectedRecipe)
+                    });
                 } else {
-                    // update existing recipe
-                    let oldRecipeIdx = this.recipes
-                        .findIndex(r => r.id === this.selectedRecipe.id);
-                    
-                    // mutate array observably
-                    this.splice('recipes', oldRecipeIdx, 1, this.selectedRecipe);
+                    fetch('/api/recipes/' + recipeId, {
+                        method: 'put',
+                        headers: {['Content-Type']: 'application/json'},
+                        body: JSON.stringify(this.selectedRecipe)
+                    });
                 }
+
+                this.$.ajaxGetRecipes.generateRequest();
 
                 this.selectedRecipe = null;
             },
             onRecipeDelete(e) {
                 let recipe = e.detail;
 
-                let recipeIdx = this.recipes
-                    .findIndex(r => r.id === recipe.id);
-                this.splice('recipes', recipeIdx, 1);
+                fetch('/api/recipes/' + recipe.id, {
+                    method: 'delete'
+                });
+
+                this.$.ajaxGetRecipes.generateRequest();
+
                 this.selectedRecipe = null;
             },
             onRecipeCancel() {
@@ -121,6 +164,20 @@
             },
             onRecipeCardClose() {
                 this.selectedRecipe = null;
+            },
+            onRecipeCardPhotoChange(e) {
+                let recipe = this.selectedRecipe;
+                let photo = e.detail.photo;
+                let fileName = e.detail.fileName;
+                let onUploaded = e.detail.onUploaded;
+
+                let data = new FormData();
+                data.append('photo', photo, fileName);
+
+                fetch(`api/recipes/${recipe.id}/photo`, {
+                    method: 'POST',
+                    body: data
+                }).then(onUploaded);
             }
         })
     </script>

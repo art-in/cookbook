@@ -15,13 +15,26 @@ polymer:
   - conditional classes through separate function only
 - conditional elements does not re-render by default ("display: none"),
   but there is no lifecycle event for element is shown after beeing hidden
-- module lifecycle event ready() is triggered before dom-if templates are resolved
-  https://github.com/Polymer/polymer/issues/2500
+- module lifecycle event ready() 
+  - does not wait for dom-if templates are resolved
+    https://github.com/Polymer/polymer/issues/2500
+  - does not wait for child elements to render
 
-- data-binding system based on paths
-  - inconsistent observable property mutations 
+- data-binding
+  - inconsistent observable property changes 
     direct prop setting is OK observable change,
     to deep mutate object/arrays - use special API this.set(), this.push(), this.splice() etc.
     (eg. this.set('address.street', 'Half Moon Street'))
+  - computed props will not compute until all refs are defined
+  - property-attribute mapping
+    to bind childProperty to parentProperty - dashed notation should be used in parent
+    child-property="{{parentProperty}}"
+  - computed prop dependancies are not recursive.
+    if prop depends on object property
+    computed: 'getValue(dependancyObject)'
+    changing dependancyObject.prop1 will not hit recomputation of computed prop
 
-
+- making requests to API over DOM elements (wtf) (iron-ajax)
+  actually idea is to create request and bind result to DOM without writing any javascript
+  for simple GET's iron-ajax is OK,
+  for POST/PUT/etc or complex result handling from GET - use normal fetch() or xhr

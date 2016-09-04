@@ -43,19 +43,37 @@
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
                 <div class="btn-group pull-right">
-                    <button class="btn btn-default"
-                            (click)="onSort('Name')"
-                            [ngClass]="{active: currentSortProp === 'Name'}">
+
+                    <!--
+                        Why button sort name specified twice (in 'data-prop' and binding) ?
+                        Because...
+                        Computed binding (like class here) can receive custom values,
+                        but have no access to target element.
+                        Same time, event handlers (like on-click here) cannot receive custom values,
+                        but have access to target element.
+                        So, values corresponding to particular button come differently:
+                        to binding - through custom value in refs list ('name'),
+                        to handler - through separate attribute (data-prop='name')
+                     -->
+                    <button 
+                        class$="btn btn-default 
+                                {{getSortButtonActiveClass(sortProp, 'name')}}"
+                        on-click="onSort"
+                        data-prop="name">
                         по алфавиту
                     </button>
-                    <button class="btn btn-default"
-                            (click)="onSort('Complexity')"
-                            [ngClass]="{active: currentSortProp === 'Complexity'}">
+                    <button 
+                        class$="btn btn-default
+                                {{getSortButtonActiveClass(sortProp, 'complexity')}}"
+                        on-click="onSort"
+                        data-prop="complexity">
                         по сложности
                     </button>
-                    <button class="btn btn-default"
-                            (click)="onSort('Popularity')"
-                            [ngClass]="{active: currentSortProp === 'Popularity'}">
+                    <button 
+                        class$="btn btn-default
+                                {{getSortButtonActiveClass(sortProp, 'popularity')}}"
+                        on-click="onSort"
+                        data-prop="popularity">
                         по популярности
                     </button>
                 </div>
@@ -70,6 +88,28 @@
                     on-delete="onRecipeDelete">
                 </recipe-card-min>
             </template>
+
+            <footer class="text-center">
+                <ul class="pagination">
+                    <li>
+                        <a on-click="onPagePrev">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <template is="dom-repeat" items="{{pages}}">
+                        <li class$="{{getPageButtonActiveClass(page, item)}}">
+                            <a href="#" data-page$="{{item}}" on-click="onPage">
+                                {{item}}
+                            </a>
+                        </li>
+                    </template>
+                    <li>
+                        <a on-click="onPageNext">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </footer>
         </main>
     </template>
 
@@ -77,22 +117,103 @@
         Polymer({
             is: 'recipe-list',
             properties: {
-                recipes: Object
+                recipes: Object,
+                recipesTotal: Number,
+
+                pageSize: {
+                    value: 2
+                },
+                page: {
+                    value: 1
+                },
+                pages: {
+                    value: [],
+                    readOnly: true,
+                    computed: 'getPages(pageSize, recipesTotal)'
+                },
+
+                skip: {
+                    notify: true,
+                    type: Number,
+                    computed: 'getSkip(page, pageSize)'
+                },
+                limit: {
+                    notify: true,
+                    computed: 'getLimit(pageSize)'
+                },
+                sortProp: {
+                    value: 'name',
+                    notify: true
+                },
+                sortDesc: {
+                    value: false,
+                    notify: true
+                }
             },
+
             isRecipeEditing() {
                 return false;
             },
             isRecipeDeletable() {
                 return true;
             },
+            getSortButtonActiveClass(sortProp, buttonSortProp) {
+                if (sortProp === buttonSortProp) {
+                    return 'active';
+                }
+            },
+            getPageButtonActiveClass(page, buttonPage) {
+                if (page === buttonPage) {
+                    return 'active';
+                }
+            },
+
+            getSkip(page, pageSize) {
+                return (page - 1) * pageSize;
+            },
+            getLimit(pageSize) {
+                return pageSize;
+            },
+            getPages(pageSize, recipesTotal) {
+                let pages = [];
+                let pageCount =
+                    Math.ceil(recipesTotal / pageSize);
+                for (let i = 1; i <= pageCount; i++) {
+                    pages.push(i)
+                }
+                return pages;
+            },
+
             onRecipeAdd() {
                 this.fire('recipe-add');
             },
             onRecipeSelect(e) {
+                e.stopPropagation();
                 this.fire('recipe-select', e.detail);
             },
             onRecipeDelete(e) {
                 this.fire('recipe-delete', e.detail);
+            },
+            onPage(e) {
+                var page = e.target.getAttribute('data-page');
+                this.page = Number(page);
+            },
+            onPagePrev() {
+                this.page = Math.max(1, this.page - 1);
+            },
+            onPageNext() {
+                this.page = Math.min(this.pages.length, this.page + 1);
+            },
+            onSort(e) {
+                var sortProp = e.target.getAttribute('data-prop');
+                if (this.sortProp === sortProp) {
+                    this.sortDesc = !this.sortDesc;
+                } else {
+                    this.sortProp = sortProp;
+                    this.sortDesc = false;
+                }
+
+                this.page = 1;
             }
         });
     </script>
