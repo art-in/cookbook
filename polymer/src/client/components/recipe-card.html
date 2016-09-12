@@ -4,9 +4,6 @@
 <link rel="import" href="item-list.html">
 
 <dom-module id="recipe-card">
-    <style>
-
-    </style>
     <template>
         <div id="modal-element-id" class="modal">
             <div class="modal-dialog modal-lg">
@@ -110,7 +107,7 @@
 
                 this.$modal.on('shown.bs.modal', function () {
                     // bootstap does not support jquery > 3,
-                    // jq changed the way .show() works
+                    // jquery changed the way .show() works
                     // so we need this workaround
                     this.$modal.css('display', 'block');
                 }.bind(this));
@@ -127,6 +124,10 @@
                 this.$modal.modal('hide');
             },
             
+            /**
+             * Unable to perform expressions inside template,
+             * so there are a lot of seperate functions for simple calc 
+             */
             isEditActionShown(editable, editing) {
                 return editable && !editing;
             },

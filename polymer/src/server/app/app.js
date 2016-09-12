@@ -13,6 +13,8 @@ const app = koa();
 
 app.config = config;
 
+// async-await for middlewares will be supported in koa@2
+// for now using normal generator
 app.use(function* (next) {
     try {
         yield next;
@@ -25,14 +27,12 @@ app.use(function* (next) {
 
 app.use(logger());
 app.use(compress());
-
 app.use(bodyParser());
-
 app.use(apiRouter.routes());
-
 app.use(conditional());
 
 app.use(favicon(path.join(__dirname, '../../../client/images/favicon.ico')));
+
 app.use(statics(path.join(__dirname, '../../client')));
 app.use(statics(path.join(__dirname, '../../../bower_components')));
 app.use(statics(path.join(__dirname, '../../../node_modules')));

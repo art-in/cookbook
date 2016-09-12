@@ -5,17 +5,16 @@ nodejs:
 polymer:
 
 - polymer ships only through bower and not npm
-- tripple module naming: file name, <dom-module id=''>, Polymer({is: ''}).
+
+- tripple module naming: file name, \<dom-module id=''\>, Polymer({is: ''}).
 - cannot move module styles to separate .css,
   external stylesheets for modules are deprecated in Polymer v1
   https://www.polymer-project.org/1.0/docs/devguide/styling#external-stylesheets
 - shady dom instead of native shadow dom (even in Chrome) (class='style-scope module-name')
-- binding expressions not supported. 
+- binding expressions are not supported 
   - dom-if template if-logic through separate function only
   - conditional classes through separate function only
-- conditional elements does not re-render by default ("display: none"),
-  but there is no lifecycle event for element is shown after beeing hidden
-- module lifecycle event ready() 
+- module lifecycle event ready()
   - does not wait for dom-if templates are resolved
     https://github.com/Polymer/polymer/issues/2500
   - does not wait for child elements to render
@@ -24,15 +23,18 @@ polymer:
   - inconsistent observable property changes 
     direct prop setting is OK observable change,
     to deep mutate object/arrays - use special API this.set(), this.push(), this.splice() etc.
-    (eg. this.set('address.street', 'Half Moon Street'))
-  - computed props will not compute until all refs are defined
+    (eg. this.set('address.street', 'Half Moon Street'), this.push(array, 'item'))
+  - computed props will not compute until all refs are defined (not undefined)
   - computed prop dependancies are not recursive.
     if prop depends on object property
-    computed: 'getValue(dependancyObject)'
-    changing dependancyObject.prop1 will not hit recomputation of computed prop
+    eg. computed: 'getValue(dependancyObject)'
+    changing dependancyObject.prop will not hit recomputation of computed prop
+  - this.notifyPath() not recursive - should specify exact path
+    this.notifyPath(obj) does not recognize obj.prop change
   - property-attribute mapping
     to bind childProperty to parentProperty - dashed notation should be used in parent
-    child-property="{{parentProperty}}"
+    in child  - childProperty: String
+    in parent - child-property="{{parentProperty}}"
 
 - making requests to API over DOM elements (wtf) (iron-ajax)
   actually idea is to create request and bind result to DOM without writing any javascript

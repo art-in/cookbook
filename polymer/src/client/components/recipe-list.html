@@ -47,9 +47,9 @@
                     <!--
                         Why button sort name specified twice (in 'data-prop' and binding) ?
                         Because...
-                        Computed binding (like class here) can receive custom values,
+                        Computed binding (eg for class here) can receive custom values (eg 'name'),
                         but have no access to target element.
-                        Same time, event handlers (like on-click here) cannot receive custom values,
+                        Same time, event handlers (eg on-click here) cannot receive custom values,
                         but have access to target element.
                         So, values corresponding to particular button come differently:
                         to binding - through custom value in refs list ('name'),
@@ -116,6 +116,7 @@
     <script>
         Polymer({
             is: 'recipe-list',
+            
             properties: {
                 recipes: Object,
                 recipesTotal: Number,

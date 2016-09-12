@@ -13,10 +13,15 @@
         :host .full-width {
             width: 100%;
         }
-
     </style>
     <template>
         
+        <!-- 
+            ajax through html tag (declarative approach).
+            does not requre any coding. ok for simple cases.
+            result immediately bound to DOM. resend on state params change.
+            for complex cases, like POST on user action, use fetch()
+         -->
         <iron-ajax id="ajaxGetRecipes"
             auto
             url="/api/recipes"
@@ -58,6 +63,7 @@
     <script>
         Polymer({
             is: 'recipe-app',
+
             properties: {
                 recipes: Object,
                 recipesTotal: Number,
@@ -129,6 +135,7 @@
             onRecipeSave() {
                 let recipeId = this.selectedRecipe.id;
                 if (recipeId === null) {
+                    // new recipe
                     this.selectedRecipe.id = guid();
                     fetch('/api/recipes/', {
                         method: 'post',
@@ -136,6 +143,7 @@
                         body: JSON.stringify(this.selectedRecipe)
                     });
                 } else {
+                    // existing recipe
                     fetch('/api/recipes/' + recipeId, {
                         method: 'put',
                         headers: {['Content-Type']: 'application/json'},

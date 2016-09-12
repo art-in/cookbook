@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// polyfill on the fly
+// (not recommended for production)
 require('babel-register');
 require('babel-polyfill');
 
