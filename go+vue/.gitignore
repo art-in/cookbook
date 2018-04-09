@@ -1,0 +1,10 @@
+gin-bin.exe
+
+# go workspace folders
+bin/
+pkg/
+
+# go project dependencies
+src/github.com/
+src/golang.org/
+src/server/vendor

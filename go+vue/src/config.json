@@ -1,0 +1,6 @@
+{
+  "server": {
+    "dbConStr": "postgres://postgres:123@localhost/cookbook?sslmode=disable",
+    "apiUrl": "localhost:3001"
+  }
+}
