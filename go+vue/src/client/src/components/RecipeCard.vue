@@ -30,6 +30,20 @@
     align-items: flex-start;
     line-height: 25px;
   }
+
+  .name {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    margin-bottom: 10px;
+    color: gray;
+  }
+
+  .numbers {
+    color: gray;
+  }
 </style>
 
 <script>

@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './components/App'
 import router from './router'
-import store from './state/store'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -16,4 +16,4 @@ new Vue({
   template: '<App/>'
 })
 
-store.dispatch('load-recipes')
+store.dispatch('init')

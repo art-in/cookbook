@@ -7,15 +7,27 @@
       </div>
     </div>
     <div class="items">
+      <div
+        v-if="!$store.state.recipes.isLoaded"
+        class="loading">
+        Loading...
+      </div>
       <recipe-card
-        v-for="recipe in $store.state.recipes"
+        v-for="recipe in $store.state.recipes.items"
         :key="recipe.id"
         :recipe="recipe"
-        class="item" />
+        class="item"
+        @click.native="onRecipeListItemClick(recipe)"
+      />
     </div>
     <div class="footer">
       TODO: paging buttons
     </div>
+
+    <recipe-form-modal
+      :visible="$store.state.modal.isVisible"
+      :is-loaded="$store.state.modal.isLoaded"
+      :recipe="$store.state.modal.recipe" />
   </div>
 </template>
 
@@ -39,13 +51,18 @@
 
   .header button.add {}
 
-  .items {
-    padding: 10px 0;
-  }
+  .items {}
 
   .item + .item {
     border-top: 1px solid #eee;
-    margin-top: 10px;
+  }
+
+  .item {
+    cursor: pointer;
+  }
+
+  .item:hover {
+    background-color: #efefef;
   }
 
   .footer {
@@ -55,12 +72,20 @@
 </style>
 
 <script>
-import RecipeCard from './RecipeCard.vue'
+import {mapActions} from 'vuex'
+import RecipeCard from './RecipeCard'
+import RecipeFormModal from './RecipeFormModal'
 
 export default {
   name: 'RecipeList',
   components: {
-    RecipeCard
+    RecipeCard,
+    RecipeFormModal
+  },
+  methods: {
+    ...mapActions([
+      'onRecipeListItemClick'
+    ])
   }
 }
 </script>
