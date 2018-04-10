@@ -10,7 +10,10 @@
       <div
         v-if="!$store.state.recipes.isLoaded"
         class="loading">
-        Loading...
+        <icon
+          icon="spinner"
+          spin
+          size="2x" />
       </div>
       <recipe-card
         v-for="recipe in $store.state.recipes.items"
@@ -53,6 +56,13 @@
 
   .items {}
 
+  .items .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+  }
+
   .item + .item {
     border-top: 1px solid #eee;
   }
@@ -73,12 +83,14 @@
 
 <script>
 import {mapActions} from 'vuex'
+import Icon from './shared/Icon'
 import RecipeCard from './RecipeCard'
 import RecipeFormModal from './RecipeFormModal'
 
 export default {
   name: 'RecipeList',
   components: {
+    Icon,
     RecipeCard,
     RecipeFormModal
   },

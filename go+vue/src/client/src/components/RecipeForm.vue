@@ -2,7 +2,12 @@
   <div class="recipe-form">
     <div
       v-if="!isLoaded"
-      class="loading">Loading...</div>
+      class="loading">
+      <icon
+        icon="spinner"
+        spin
+        size="2x" />
+    </div>
     <recipe-card
       v-if="isLoaded"
       :recipe="recipe" />
@@ -21,12 +26,14 @@
 </style>
 
 <script>
+import Icon from './shared/Icon'
 import RecipeCard from './RecipeCard'
 
 export default {
   name: 'RecipeForm',
   components: {
-    RecipeCard
+    RecipeCard,
+    Icon
   },
   props: {
     recipe: {
@@ -36,8 +43,7 @@ export default {
     },
     isLoaded: {
       type: Boolean,
-      required: true,
-      default: false
+      required: true
     }
   }
 }

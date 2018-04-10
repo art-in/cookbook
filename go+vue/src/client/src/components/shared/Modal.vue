@@ -8,9 +8,10 @@
     <div
       class="modal"
     >
-      <button
+      <icon-button
+        icon="times"
         class="close"
-        @click="onClose">x</button>
+        @click="onClose" />
 
       <slot />
     </div>
@@ -52,20 +53,25 @@
     box-shadow: 0 0 5px #0005;
   }
 
-  .modal button.close {
+  .modal .close {
     position: absolute;
-    right: 0;
+    top: 10px;
+    right: 10px;
   }
 </style>
 
 <script>
+import IconButton from './IconButton'
+
 export default {
   name: 'Modal',
+  components: {
+    IconButton
+  },
   props: {
     visible: {
       type: Boolean,
-      required: true,
-      default: false
+      required: true
     }
   },
   methods: {

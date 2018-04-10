@@ -34,13 +34,11 @@ export default {
     },
     visible: {
       type: Boolean,
-      required: true,
-      default: false
+      required: true
     },
     isLoaded: {
       type: Boolean,
-      required: true,
-      default: false
+      required: true
     }
   },
   methods: {
