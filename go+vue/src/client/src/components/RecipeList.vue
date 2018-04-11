@@ -27,10 +27,7 @@
       TODO: paging buttons
     </div>
 
-    <recipe-form-modal
-      :visible="$store.state.modal.isVisible"
-      :is-loaded="$store.state.modal.isLoaded"
-      :recipe="$store.state.modal.recipe" />
+    <recipe-form-modal :visible="$store.state.modal.isVisible" />
   </div>
 </template>
 

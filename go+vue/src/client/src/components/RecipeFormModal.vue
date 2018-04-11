@@ -4,8 +4,9 @@
     @close="onRecipeFormModalClose">
     <recipe-form
       v-if="visible"
-      :is-loaded="isLoaded"
-      :recipe="recipe" />
+      :is-loaded="$store.state.modal.isLoaded"
+      :is-editing="$store.state.modal.isEditing"
+      :recipe="$store.state.modal.recipe" />
   </modal>
 </template>
 
@@ -27,16 +28,7 @@ export default {
     RecipeForm
   },
   props: {
-    recipe: {
-      type: Object,
-      required: false,
-      default: null
-    },
     visible: {
-      type: Boolean,
-      required: true
-    },
-    isLoaded: {
       type: Boolean,
       required: true
     }

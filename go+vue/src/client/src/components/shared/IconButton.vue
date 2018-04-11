@@ -2,6 +2,7 @@
   <icon
     :icon="icon"
     :size="size"
+    :title="title"
     class="icon-button"
     @click="onClick" />
 </template>
@@ -26,6 +27,11 @@ export default {
     size: {
       type: String,
       default: null
+    },
+    title: {
+      type: String,
+      required: false,
+      default: undefined
     }
   },
   methods: {
