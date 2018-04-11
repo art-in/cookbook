@@ -9,6 +9,7 @@ import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import faTrashAlt from '@fortawesome/fontawesome-free-solid/faTrashAlt'
 import faSave from '@fortawesome/fontawesome-free-solid/faSave'
 import faEraser from '@fortawesome/fontawesome-free-solid/faEraser'
+import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle'
 
 import faSmile from '@fortawesome/fontawesome-free-regular/faSmile'
 import faClock from '@fortawesome/fontawesome-free-regular/faClock'
@@ -20,6 +21,8 @@ fontawesome.library.add(
   faTrashAlt,
   faSave,
   faEraser,
+  faPlusCircle,
+
   faSmile,
   faClock
 )
@@ -42,6 +45,10 @@ export default Vue.component('icon', {
       type: String,
       required: false,
       default: undefined
+    },
+    spin: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -51,7 +58,7 @@ export default Vue.component('icon', {
   },
   template: `
     <span :title="title" @click="onClick">
-      <font-awesome-icon :icon="icon" :size="size" />
+      <font-awesome-icon :icon="icon" :size="size" :spin="spin" />
     </span>
   `
 })

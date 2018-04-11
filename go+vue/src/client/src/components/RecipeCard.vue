@@ -1,14 +1,25 @@
 <template>
   <div class="recipe-card">
+    <div
+      v-if="isDeletable"
+      class="actions">
+      <icon-button
+        icon="trash-alt"
+        title="Delete"
+        class="action"
+        @click.native.stop="onDelete(recipe)" />
+    </div>
     <div class="image-container">TODO: image</div>
     <div class="props">
       <input
         v-model="recipe.name"
         :readonly="!isEditing"
+        placeholder="Recipe name"
         class="name">
       <textarea
         v-model="recipe.description"
         :readonly="!isEditing"
+        placeholder="Description"
         class="description" />
       <div class="numbers">
         <span
@@ -42,6 +53,12 @@
   .recipe-card {
     display: flex;
     padding: 10px;
+    position: relative;
+  }
+
+  .actions {
+    position: absolute;
+    right: 10px;
   }
 
   .image-container {
@@ -60,13 +77,12 @@
   .name {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    width: 450px;
   }
 
   textarea.description {
     margin-bottom: 10px;
     color: gray;
-    width: 550px;
+    width: calc(100% - 30px);
   }
 
   textarea.description:not(:read-only) {
@@ -89,11 +105,13 @@
 
 <script>
 import Icon from './shared/Icon'
+import IconButton from './shared/IconButton'
 
 export default {
   name: 'RecipeCard',
   components: {
-    Icon
+    Icon,
+    IconButton
   },
   props: {
     recipe: {
@@ -104,6 +122,16 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    isDeletable: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
+  methods: {
+    onDelete (recipe) {
+      this.$emit('delete', recipe)
     }
   }
 }

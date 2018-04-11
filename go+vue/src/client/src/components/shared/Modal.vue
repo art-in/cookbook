@@ -8,12 +8,11 @@
     <div
       class="modal"
     >
+      <slot />
       <icon-button
         icon="times"
         class="close"
         @click="onClose" />
-
-      <slot />
     </div>
   </div>
 </template>
@@ -44,7 +43,7 @@
 
   .modal {
     position: absolute;
-    width: 800px;
+    width: 700px;
     right: 0;
     left: 0;
     margin: 90px auto;

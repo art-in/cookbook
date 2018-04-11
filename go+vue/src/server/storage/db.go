@@ -80,16 +80,18 @@ func GetRecipes() ([]model.Recipe, error) {
 }
 
 // AddRecipe adds new recipe
-func AddRecipe(recipe model.Recipe) error {
-	_, err := db.Exec(`
+func AddRecipe(recipe model.Recipe) (int, error) {
+	var id int
+	err := db.QueryRow(`
 		INSERT INTO recipes(name, description, complexity, popularity)
-		VALUES ($1, $2, $3, $4)`,
+		VALUES ($1, $2, $3, $4)
+		RETURNING id`,
 		recipe.Name,
 		recipe.Description,
 		recipe.Complexity,
-		recipe.Popularity)
+		recipe.Popularity).Scan(&id)
 
-	return err
+	return id, err
 }
 
 // GetRecipe gets one existing recipe

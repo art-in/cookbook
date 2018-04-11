@@ -67,12 +67,14 @@ func postRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = storage.AddRecipe(recipe)
+	recipeID, err := storage.AddRecipe(recipe)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Fprintf(w, strconv.Itoa(recipeID))
 }
 
 func getRecipe(w http.ResponseWriter, r *http.Request) {

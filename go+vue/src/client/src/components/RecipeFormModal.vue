@@ -4,18 +4,14 @@
     @close="onRecipeFormModalClose">
     <recipe-form
       v-if="visible"
-      :is-loaded="$store.state.modal.isLoaded"
+      :is-loading="$store.state.modal.isLoading"
       :is-editing="$store.state.modal.isEditing"
+      :is-deletable="$store.state.modal.isDeletable"
+      :is-cancelable="$store.state.modal.isCancelable"
       :recipe="$store.state.modal.recipe" />
   </modal>
 </template>
 
-<style scoped>
-
-</style>
-  .recipe-form-modal {
-
-  }
 <script>
 import {mapActions} from 'vuex'
 

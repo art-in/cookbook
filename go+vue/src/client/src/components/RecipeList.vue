@@ -1,27 +1,33 @@
 <template>
   <div class="recipe-list">
     <div class="header">
-      <button class="add">+</button>
+      <icon-button
+        icon="plus-circle"
+        size="lg"
+        title="Add new recipe"
+        @click="onAdd" />
       <div class="sorters">
         TODO: sorting buttons
       </div>
     </div>
     <div class="items">
       <div
-        v-if="!$store.state.recipes.isLoaded"
-        class="loading">
-        <icon
-          icon="spinner"
-          spin
-          size="2x" />
+        v-if="isEmpty"
+        class="empty">
+        No recipes yet
       </div>
-      <recipe-card
-        v-for="recipe in $store.state.recipes.items"
-        :key="recipe.id"
-        :recipe="recipe"
-        class="item"
-        @click.native="onRecipeListItemClick(recipe)"
-      />
+      <div v-if="!isEmpty">
+        <recipe-card
+          v-for="recipe in $store.state.recipes.items"
+          :key="recipe.id"
+          :recipe="recipe"
+          :is-deletable="true"
+          class="item"
+          @click.native="onItemClick(recipe)"
+          @delete="onItemDelete"
+        />
+      </div>
+      <waiter v-if="$store.state.recipes.isLoading" />
     </div>
     <div class="footer">
       TODO: paging buttons
@@ -49,11 +55,12 @@
     border-bottom: 1px solid #ddd;
   }
 
-  .header button.add {}
+  .items {
+    position: relative;
+    min-height: 100px;
+  }
 
-  .items {}
-
-  .items .loading {
+  .items .empty {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,6 +88,8 @@
 <script>
 import {mapActions} from 'vuex'
 import Icon from './shared/Icon'
+import IconButton from './shared/IconButton'
+import Waiter from './shared/Waiter'
 import RecipeCard from './RecipeCard'
 import RecipeFormModal from './RecipeFormModal'
 
@@ -88,13 +97,23 @@ export default {
   name: 'RecipeList',
   components: {
     Icon,
+    IconButton,
+    Waiter,
     RecipeCard,
     RecipeFormModal
   },
+  computed: {
+    isEmpty (cmp) {
+      const items = cmp.$store.state.recipes.items
+      return !items || items.length === 0
+    }
+  },
   methods: {
-    ...mapActions([
-      'onRecipeListItemClick'
-    ])
+    ...mapActions({
+      onAdd: 'onRecipeListAdd',
+      onItemClick: 'onRecipeListItemClick',
+      onItemDelete: 'onRecipeListItemDelete'
+    })
   }
 }
 </script>

@@ -1,13 +1,9 @@
 <template>
   <div class="recipe-form">
-    <div
-      v-if="!isLoaded"
-      class="loading">
-      <icon
-        icon="spinner"
-        spin
-        size="2x" />
-    </div>
+    <recipe-card
+      v-if="recipe"
+      :recipe="recipe"
+      :is-editing="isEditing" />
     <div class="actions">
       <icon-button
         v-if="!isEditing"
@@ -22,27 +18,26 @@
         class="action"
         @click.native="onSave" />
       <icon-button
-        v-if="isEditing"
+        v-if="isCancelable && isEditing"
         icon="eraser"
         title="Cancel"
         class="action"
         @click.native="onCancel" />
+      <icon-button
+        v-if="isDeletable"
+        icon="trash-alt"
+        title="Delete"
+        class="action"
+        @click.native="onDelete(recipe)" />
     </div>
-    <recipe-card
-      v-if="isLoaded"
-      :recipe="recipe"
-      :is-editing="isEditing" />
+    <waiter v-if="isLoading" />
   </div>
 </template>
 
 <style scoped>
-  .recipe-form {}
-
-  .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
+  .recipe-form {
+    min-height: 150px;
+    position: relative;
   }
 
   .actions {
@@ -54,14 +49,6 @@
   .actions .action + .action {
     margin-left: 15px;
   }
-
-  .action {
-    color: gray;
-  }
-
-  .action:hover {
-    color: black;
-  }
 </style>
 
 <script>
@@ -69,6 +56,7 @@ import {mapActions} from 'vuex'
 
 import Icon from './shared/Icon'
 import IconButton from './shared/IconButton'
+import Waiter from './shared/Waiter'
 import RecipeCard from './RecipeCard'
 
 export default {
@@ -76,7 +64,8 @@ export default {
   components: {
     RecipeCard,
     Icon,
-    IconButton
+    IconButton,
+    Waiter
   },
   props: {
     recipe: {
@@ -84,11 +73,19 @@ export default {
       required: false,
       default: null
     },
-    isLoaded: {
+    isLoading: {
       type: Boolean,
       required: true
     },
     isEditing: {
+      type: Boolean,
+      required: true
+    },
+    isDeletable: {
+      type: Boolean,
+      required: true
+    },
+    isCancelable: {
       type: Boolean,
       required: true
     }
@@ -97,7 +94,8 @@ export default {
     ...mapActions({
       onEdit: 'onRecipeFormEdit',
       onSave: 'onRecipeFormSave',
-      onCancel: 'onRecipeFormCancel'
+      onCancel: 'onRecipeFormCancel',
+      onDelete: 'onRecipeFormDelete'
     })
   }
 }

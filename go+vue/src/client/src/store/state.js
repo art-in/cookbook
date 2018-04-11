@@ -1,12 +1,16 @@
 export default {
   recipes: {
     isLoaded: false,
+    isLoading: true,
     items: null
   },
   modal: {
     isVisible: false,
-    isLoaded: false,
+    isLoading: false,
     isEditing: false,
+    isDeletable: false,
+    isCancelable: false,
+    isNewRecipe: false,
     recipe: null,
     prevRecipe: null
   }

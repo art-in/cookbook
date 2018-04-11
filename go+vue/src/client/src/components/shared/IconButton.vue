@@ -10,6 +10,11 @@
 <style scoped>
   .icon-button {
     cursor: pointer;
+    color: gray;
+  }
+
+  .icon-button:hover {
+    color: black;
   }
 </style>
 
