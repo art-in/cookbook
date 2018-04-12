@@ -2,7 +2,9 @@ export default {
   recipes: {
     isLoaded: false,
     isLoading: true,
-    items: null
+    items: null,
+    sortProp: 'name', // 'complexity', 'popularity'
+    sortDir: 'asc' // 'desc'
   },
   modal: {
     isVisible: false,

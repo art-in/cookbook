@@ -6,9 +6,23 @@
         size="lg"
         title="Add new recipe"
         @click="onAdd" />
-      <div class="sorters">
-        TODO: sorting buttons
-      </div>
+      <btn-group class="sorters">
+        <btn
+          :active="sortProp == 'name'"
+          @click.native="onSort('name')">
+          by alphabet
+        </btn>
+        <btn
+          :active="sortProp == 'complexity'"
+          @click.native="onSort('complexity')">
+          by complexity
+        </btn>
+        <btn
+          :active="sortProp == 'popularity'"
+          @click.native="onSort('popularity')">
+          by popularity
+        </btn>
+      </btn-group>
     </div>
     <div class="items">
       <div
@@ -87,8 +101,11 @@
 
 <script>
 import {mapActions} from 'vuex'
+
 import Icon from './shared/Icon'
 import IconButton from './shared/IconButton'
+import Btn from './shared/Btn'
+import BtnGroup from './shared/BtnGroup'
 import Waiter from './shared/Waiter'
 import RecipeCard from './RecipeCard'
 import RecipeFormModal from './RecipeFormModal'
@@ -98,6 +115,8 @@ export default {
   components: {
     Icon,
     IconButton,
+    Btn,
+    BtnGroup,
     Waiter,
     RecipeCard,
     RecipeFormModal
@@ -106,13 +125,17 @@ export default {
     isEmpty (cmp) {
       const items = cmp.$store.state.recipes.items
       return !items || items.length === 0
+    },
+    sortProp (cmp) {
+      return cmp.$store.state.recipes.sortProp
     }
   },
   methods: {
     ...mapActions({
       onAdd: 'onRecipeListAdd',
       onItemClick: 'onRecipeListItemClick',
-      onItemDelete: 'onRecipeListItemDelete'
+      onItemDelete: 'onRecipeListItemDelete',
+      onSort: 'onRecipeListSort'
     })
   }
 }

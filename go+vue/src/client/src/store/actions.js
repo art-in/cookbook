@@ -11,7 +11,8 @@ export function init (store) {
 
 export async function loadRecipes (context) {
   context.commit('update-recipe-list', {isLoading: true})
-  const recipes = await api.getRecipes()
+  const {sortProp, sortDir} = context.state.recipes
+  const recipes = await api.getRecipes(sortProp, sortDir)
   context.commit('update-recipe-list', {
     items: recipes,
     isLoading: false,
@@ -52,6 +53,22 @@ export function onRecipeListAdd (context) {
     isNewRecipe: true,
     isVisible: true
   })
+}
+
+export function onRecipeListSort (context, sortProp) {
+  let {sortDir} = context.state.recipes
+  if (sortProp === context.state.recipes.sortProp) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortDir = 'asc'
+  }
+
+  context.commit('update-recipe-list', {
+    sortProp,
+    sortDir
+  })
+
+  context.dispatch('loadRecipes')
 }
 
 export function onRecipeFormModalClose (context) {

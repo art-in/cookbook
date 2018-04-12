@@ -33,7 +33,15 @@ func Serve(url string) {
 }
 
 func getRecipes(w http.ResponseWriter, r *http.Request) {
-	recipes, err := storage.GetRecipes()
+	q := r.URL.Query()
+	sortProp := q.Get("sp")
+	sortDir := q.Get("sd")
+
+	if sortProp == "" {
+		sortProp = "name"
+	}
+
+	recipes, err := storage.GetRecipes(sortProp, sortDir)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "internal error", http.StatusInternalServerError)

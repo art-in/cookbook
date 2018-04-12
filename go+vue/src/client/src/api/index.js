@@ -1,7 +1,7 @@
 const apiUrl = 'http://localhost:8080/api'
 
-export async function getRecipes () {
-  const res = await fetch(`${apiUrl}/recipes`)
+export async function getRecipes (sortProp, sortDir) {
+  const res = await fetch(`${apiUrl}/recipes?sp=${sortProp}&sd=${sortDir}`)
   const recipes = await res.json()
   return recipes
 }

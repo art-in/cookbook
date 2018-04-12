@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 
 	"server/model"
@@ -49,10 +50,14 @@ func createTables() {
 }
 
 // GetRecipes gets all recipes
-func GetRecipes() ([]model.Recipe, error) {
-	rows, err := db.Query(`
+func GetRecipes(sortProp string, sortDir string) ([]model.Recipe, error) {
+	// use usual string templating here to be able to pass sort direction param
+	query := fmt.Sprintf(`
 		SELECT id, name, description, complexity, popularity
-		FROM recipes`)
+		FROM recipes
+		ORDER BY %s %s`, sortProp, sortDir)
+
+	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
