@@ -44,7 +44,18 @@
       <waiter v-if="$store.state.recipes.isLoading" />
     </div>
     <div class="footer">
-      TODO: paging buttons
+      <ul>
+        <btn-group>
+          <btn
+            v-for="page in pages"
+            :key="page"
+            :active="page - 1 == $store.state.recipes.currentPage"
+            :disabled="page - 1 == $store.state.recipes.currentPage"
+            @click.native="onPage(page - 1)">
+            {{ page }}
+          </btn>
+        </btn-group>
+      </ul>
     </div>
 
     <recipe-form-modal :visible="$store.state.modal.isVisible" />
@@ -128,6 +139,10 @@ export default {
     },
     sortProp (cmp) {
       return cmp.$store.state.recipes.sortProp
+    },
+    pages (cmp) {
+      const {totalCount, pageLimit} = cmp.$store.state.recipes
+      return Math.ceil(totalCount / pageLimit)
     }
   },
   methods: {
@@ -135,7 +150,8 @@ export default {
       onAdd: 'onRecipeListAdd',
       onItemClick: 'onRecipeListItemClick',
       onItemDelete: 'onRecipeListItemDelete',
-      onSort: 'onRecipeListSort'
+      onSort: 'onRecipeListSort',
+      onPage: 'onRecipeListPage'
     })
   }
 }

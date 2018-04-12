@@ -50,12 +50,15 @@ func createTables() {
 }
 
 // GetRecipes gets all recipes
-func GetRecipes(sortProp string, sortDir string) ([]model.Recipe, error) {
+func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySubset, error) {
 	// use usual string templating here to be able to pass sort direction param
 	query := fmt.Sprintf(`
 		SELECT id, name, description, complexity, popularity
 		FROM recipes
-		ORDER BY %s %s`, sortProp, sortDir)
+		ORDER BY %s %s
+		OFFSET %d LIMIT %d`,
+		sortProp, sortDir,
+		pageOffset, pageLimit)
 
 	rows, err := db.Query(query)
 	if err != nil {
@@ -81,7 +84,14 @@ func GetRecipes(sortProp string, sortDir string) ([]model.Recipe, error) {
 		return nil, err
 	}
 
-	return recipes, nil
+	var count int
+	row := db.QueryRow("SELECT COUNT (*) FROM recipes")
+	err = row.Scan(&count)
+	if err != nil {
+		return nil, err
+	}
+
+	return &EntitySubset{Items: recipes, TotalCount: count}, nil
 }
 
 // AddRecipe adds new recipe

@@ -10,6 +10,7 @@ import (
 
 	"server/model"
 	"server/storage"
+	"server/utils"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -34,21 +35,19 @@ func Serve(url string) {
 
 func getRecipes(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
-	sortProp := q.Get("sp")
-	sortDir := q.Get("sd")
+	sortProp := utils.DefaultString(q.Get("sp"), "name")
+	sortDir := utils.DefaultString(q.Get("sd"), "asc")
+	pageOffset := utils.DefaultInteger(q.Get("po"), 0)
+	pageLimit := utils.DefaultInteger(q.Get("pl"), 100)
 
-	if sortProp == "" {
-		sortProp = "name"
-	}
-
-	recipes, err := storage.GetRecipes(sortProp, sortDir)
+	entities, err := storage.GetRecipes(sortProp, sortDir, pageOffset, pageLimit)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 
-	out, err := json.Marshal(recipes)
+	out, err := json.Marshal(entities)
 	if err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return

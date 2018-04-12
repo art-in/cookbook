@@ -56,6 +56,7 @@
     position: relative;
   }
 
+  /* TODO: show actions on hover only */
   .actions {
     position: absolute;
     right: 10px;

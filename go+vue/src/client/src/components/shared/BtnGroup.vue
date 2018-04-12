@@ -31,7 +31,7 @@
 export default {
   name: 'BtnGroup',
   render: function (createElement) {
-    const childs = this.$slots.default
+    const childs = this.$slots.default || []
     childs.forEach(child => {
       if (child.text === ' ') {
         // skip text nodes

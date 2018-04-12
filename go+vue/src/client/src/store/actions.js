@@ -11,10 +11,15 @@ export function init (store) {
 
 export async function loadRecipes (context) {
   context.commit('update-recipe-list', {isLoading: true})
-  const {sortProp, sortDir} = context.state.recipes
-  const recipes = await api.getRecipes(sortProp, sortDir)
+
+  const {sortProp, sortDir, pageLimit, currentPage} = context.state.recipes
+  const pageOffset = currentPage * pageLimit
+
+  const res = await api.getRecipes(sortProp, sortDir, pageOffset, pageLimit)
+
   context.commit('update-recipe-list', {
-    items: recipes,
+    items: res.items,
+    totalCount: res.totalCount,
     isLoading: false,
     isLoaded: true
   })
@@ -132,7 +137,20 @@ export async function deleteRecipe (context, recipe) {
   if (confirm(`Delete recipe "${recipe.name}"?`)) {
     context.commit('update-recipe-form-modal', {isVisible: false})
     context.commit('update-recipe-list', {isLoading: true})
+
     await api.deleteRecipe(recipe.id)
+
+    const {currentPage, items} = context.state.recipes
+    if (currentPage !== 0 && items.length === 1) {
+      // jump to prev page if deleting last item on current page
+      context.commit('update-recipe-list', {currentPage: currentPage - 1})
+    }
+
     context.dispatch('loadRecipes')
   }
+}
+
+export async function onRecipeListPage (context, pageNumber) {
+  context.commit('update-recipe-list', {currentPage: pageNumber})
+  context.dispatch('loadRecipes')
 }
