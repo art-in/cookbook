@@ -41,7 +41,9 @@ func createTables() {
 			name varchar(50) NOT NULL,
 			description varchar(100) NOT NULL,
 			complexity SMALLINT NOT NULL,
-			popularity SMALLINT NOT NULL
+			popularity SMALLINT NOT NULL,
+			ingredients JSON NOT NULL,
+			steps JSON NOT NULL
 		)`)
 
 	if err != nil {
@@ -53,7 +55,7 @@ func createTables() {
 func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySubset, error) {
 	// use usual string templating here to be able to pass sort direction param
 	query := fmt.Sprintf(`
-		SELECT id, name, description, complexity, popularity
+		SELECT id, name, description, complexity, popularity, ingredients, steps
 		FROM recipes
 		ORDER BY %s %s
 		OFFSET %d LIMIT %d`,
@@ -71,7 +73,15 @@ func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySub
 	for rows.Next() {
 		r := model.Recipe{}
 
-		err = rows.Scan(&r.ID, &r.Name, &r.Description, &r.Complexity, &r.Popularity)
+		err = rows.Scan(
+			&r.ID,
+			&r.Name,
+			&r.Description,
+			&r.Complexity,
+			&r.Popularity,
+			&r.Ingredients,
+			&r.Steps)
+
 		if err != nil {
 			return nil, err
 		}
@@ -98,13 +108,15 @@ func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySub
 func AddRecipe(recipe model.Recipe) (int, error) {
 	var id int
 	err := db.QueryRow(`
-		INSERT INTO recipes(name, description, complexity, popularity)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO recipes(name, description, complexity, popularity, ingredients, steps)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id`,
 		recipe.Name,
 		recipe.Description,
 		recipe.Complexity,
-		recipe.Popularity).Scan(&id)
+		recipe.Popularity,
+		recipe.Ingredients,
+		recipe.Steps).Scan(&id)
 
 	return id, err
 }
@@ -114,12 +126,20 @@ func GetRecipe(id int64) (model.Recipe, error) {
 	r := model.Recipe{}
 
 	row := db.QueryRow(`
-		SELECT id, name, description, complexity, popularity
+		SELECT id, name, description, complexity, popularity, ingredients, steps
 		FROM recipes
 		WHERE id = $1`,
 		id)
 
-	err := row.Scan(&r.ID, &r.Name, &r.Description, &r.Complexity, &r.Popularity)
+	err := row.Scan(
+		&r.ID,
+		&r.Name,
+		&r.Description,
+		&r.Complexity,
+		&r.Popularity,
+		&r.Ingredients,
+		&r.Steps)
+
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
@@ -140,14 +160,18 @@ func UpdateRecipe(id int64, recipe model.Recipe) error {
 			name = $2,
 			description = $3,
 			complexity = $4,
-			popularity = $5
+			popularity = $5,
+			ingredients = $6,
+			steps = $7
 		WHERE
 			id = $1`,
 		id,
 		recipe.Name,
 		recipe.Description,
 		recipe.Complexity,
-		recipe.Popularity)
+		recipe.Popularity,
+		recipe.Ingredients,
+		recipe.Steps)
 
 	if err != nil {
 		return err

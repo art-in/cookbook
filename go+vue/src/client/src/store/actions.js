@@ -1,7 +1,9 @@
-import clone from 'clone'
+import clone from '../utils/clone'
 
 import * as api from '../api'
 import Recipe from '../model/Recipe'
+import Ingredient from '../model/Ingredient'
+import Step from '../model/Step'
 
 // TODO: handle API requests failure
 
@@ -31,13 +33,12 @@ export async function onRecipeListItemClick (context, recipe) {
     isLoading: true,
     isEditing: false,
     isDeletable: false,
-    isCancelalbe: false,
+    isCancelable: false,
     recipe: null
   })
   const fullRecipe = await api.getRecipe(recipe.id)
   context.commit('update-recipe-form-modal', {
     recipe: fullRecipe,
-    prevRecipe: clone(fullRecipe),
     isLoading: false,
     isDeletable: true,
     isCancelable: true,
@@ -48,9 +49,9 @@ export async function onRecipeListItemClick (context, recipe) {
 export function onRecipeListAdd (context) {
   const recipe = new Recipe()
 
+  // TODO: focus recipe name input
   context.commit('update-recipe-form-modal', {
     recipe,
-    prevRecipe: clone(recipe),
     isLoading: false,
     isEditing: true,
     isDeletable: false,
@@ -81,10 +82,17 @@ export function onRecipeFormModalClose (context) {
 }
 
 export function onRecipeFormEdit (context) {
-  context.commit('update-recipe-form-modal', {isEditing: true})
+  const {recipe} = context.state.modal
+
+  context.commit('update-recipe-form-modal', {
+    isEditing: true,
+    prevRecipe: clone(recipe)
+  })
 }
 
 export async function onRecipeFormSave (context) {
+  // TODO: validate inputs
+
   const recipe = context.state.modal.recipe
 
   context.commit('update-recipe-form-modal', {isLoading: true})
@@ -98,6 +106,7 @@ export async function onRecipeFormSave (context) {
   } else {
     await api.putRecipe(recipe)
 
+    // update recipe in the list
     // TODO: will target recipe always be in the list? (no, paging/routing)
     const recipes = Array.from(context.state.recipes.items)
     const idx = recipes.findIndex(r => r.id === recipe.id)
@@ -119,9 +128,7 @@ export function onRecipeFormCancel (context) {
   const prevRecipe = context.state.modal.prevRecipe
   context.commit('update-recipe-form-modal', {
     isEditing: false,
-    recipe: prevRecipe,
-    prevRecipe: clone(prevRecipe),
-    isLoading: false
+    recipe: prevRecipe
   })
 }
 
@@ -153,4 +160,44 @@ export async function deleteRecipe (context, recipe) {
 export async function onRecipeListPage (context, pageNumber) {
   context.commit('update-recipe-list', {currentPage: pageNumber})
   context.dispatch('loadRecipes')
+}
+
+export async function onRecipeFormIngredientAdd (context) {
+  const ingredients = Array.from(context.state.modal.recipe.ingredients)
+  ingredients.push(new Ingredient())
+
+  // TODO: focus new item input
+  context.commit('update-recipe-form-modal', {
+    recipe: {ingredients}
+  })
+}
+
+export async function onRecipeFormIngredientDelete (context, ingredient) {
+  const ingredients = Array.from(context.state.modal.recipe.ingredients)
+  const idx = ingredients.findIndex(i => i === ingredient)
+  ingredients.splice(idx, 1)
+
+  context.commit('update-recipe-form-modal', {
+    recipe: {ingredients}
+  })
+}
+
+export async function onRecipeFormStepAdd (context) {
+  const steps = Array.from(context.state.modal.recipe.steps)
+  steps.push(new Step())
+
+  // TODO: focus new item input
+  context.commit('update-recipe-form-modal', {
+    recipe: {steps}
+  })
+}
+
+export async function onRecipeFormStepDelete (context, step) {
+  const steps = Array.from(context.state.modal.recipe.steps)
+  const idx = steps.findIndex(i => i === step)
+  steps.splice(idx, 1)
+
+  context.commit('update-recipe-form-modal', {
+    recipe: {steps}
+  })
 }

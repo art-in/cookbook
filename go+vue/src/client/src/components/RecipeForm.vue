@@ -4,6 +4,50 @@
       v-if="recipe"
       :recipe="recipe"
       :is-editing="isEditing" />
+
+    <list
+      v-if="recipe"
+      :items="recipe.ingredients"
+      :is-editing="isEditing"
+      class="ingredients"
+      @item-add="onIngredientAdd"
+      @item-delete="onIngredientDelete"
+    >
+      <template slot="title">
+        Ingredients:
+      </template>
+      <template
+        slot="item"
+        slot-scope="scopeProps">
+        <input
+          v-model="scopeProps.item.description"
+          :readonly="!isEditing"
+          class="ingredient">
+      </template>
+    </list>
+
+    <list
+      v-if="recipe"
+      :items="recipe.steps"
+      :is-editing="isEditing"
+      :is-ordered="true"
+      class="steps"
+      @item-add="onStepAdd"
+      @item-delete="onStepDelete"
+    >
+      <template slot="title">
+        Steps:
+      </template>
+      <template
+        slot="item"
+        slot-scope="scopeProps">
+        <input
+          v-model="scopeProps.item.description"
+          :readonly="!isEditing"
+          class="step">
+      </template>
+    </list>
+
     <div class="actions">
       <icon-button
         v-if="!isEditing"
@@ -49,6 +93,17 @@
   .actions .action + .action {
     margin-left: 15px;
   }
+
+  .ingredients,
+  .steps {
+    margin: 15px 15px 0 190px;
+    text-align: left;
+  }
+
+  input.ingredient,
+  input.step {
+    width: 350px;
+  }
 </style>
 
 <script>
@@ -57,15 +112,17 @@ import {mapActions} from 'vuex'
 import Icon from './shared/Icon'
 import IconButton from './shared/IconButton'
 import Waiter from './shared/Waiter'
+import List from './shared/List'
 import RecipeCard from './RecipeCard'
 
 export default {
   name: 'RecipeForm',
   components: {
-    RecipeCard,
     Icon,
     IconButton,
-    Waiter
+    Waiter,
+    List,
+    RecipeCard
   },
   props: {
     recipe: {
@@ -95,7 +152,11 @@ export default {
       onEdit: 'onRecipeFormEdit',
       onSave: 'onRecipeFormSave',
       onCancel: 'onRecipeFormCancel',
-      onDelete: 'onRecipeFormDelete'
+      onDelete: 'onRecipeFormDelete',
+      onIngredientAdd: 'onRecipeFormIngredientAdd',
+      onIngredientDelete: 'onRecipeFormIngredientDelete',
+      onStepAdd: 'onRecipeFormStepAdd',
+      onStepDelete: 'onRecipeFormStepDelete'
     })
   }
 }

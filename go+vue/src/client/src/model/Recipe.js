@@ -4,4 +4,6 @@ export default class Recipe {
   description = ''
   complexity = 1 // [1; 10]
   popularity = 1 // [1; 10]
+  ingredients = []
+  steps = []
 }

@@ -1,9 +1,11 @@
+import deepUpdate from '../utils/deep-update'
+
 export default {
-  'update-recipe-list': (state, payload) => {
-    Object.assign(state.recipes, payload)
+  'update-recipe-list': (state, patch) => {
+    deepUpdate(state.recipes, patch)
   },
 
-  'update-recipe-form-modal': (state, payload) => {
-    Object.assign(state.modal, payload)
+  'update-recipe-form-modal': (state, patch) => {
+    deepUpdate(state.modal, patch)
   }
 }
