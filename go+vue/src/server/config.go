@@ -11,8 +11,9 @@ type config struct {
 }
 
 type configServer struct {
-	DbConStr string `json:"dbConStr"`
-	APIURL   string `json:"apiUrl"`
+	DbConStr    string `json:"dbConStr"`
+	APIURL      string `json:"apiUrl"`
+	ImageFolder string `json:"imageFolder"`
 }
 
 func loadConfig() config {

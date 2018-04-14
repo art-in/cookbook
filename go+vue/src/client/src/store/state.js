@@ -20,6 +20,7 @@ export default {
     isDeletable: false,
     isCancelable: false,
     isNewRecipe: false,
+    isImageChanged: false,
     recipe: null,
     prevRecipe: null
   }

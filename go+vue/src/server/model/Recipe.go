@@ -11,6 +11,7 @@ type Recipe struct {
 	Description string          `json:"description"`
 	Complexity  int             `json:"complexity"`
 	Popularity  int             `json:"popularity"`
+	HasImage    bool            `json:"hasImage"`
 	Ingredients json.RawMessage `json:"ingredients"`
 	Steps       json.RawMessage `json:"steps"`
 }

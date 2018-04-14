@@ -2,7 +2,6 @@ package storage
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"log"
 
@@ -12,28 +11,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
-
-// ErrNotFound indicates that target entity not found in storage
-var ErrNotFound = errors.New("Not found")
-
-// InitDB initializes database before fetching data
-func InitDB(con string) {
-	var err error
-	db, err = sql.Open("postgres", con)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err = db.Ping(); err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("Connected to database.")
-
-	createTables()
-}
-
 func createTables() {
 	_, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS recipes (
@@ -42,6 +19,7 @@ func createTables() {
 			description varchar(100) NOT NULL,
 			complexity SMALLINT NOT NULL,
 			popularity SMALLINT NOT NULL,
+			hasImage BOOLEAN NOT NULL,
 			ingredients JSON NOT NULL,
 			steps JSON NOT NULL
 		)`)
@@ -55,7 +33,7 @@ func createTables() {
 func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySubset, error) {
 	// use usual string templating here to be able to pass sort direction param
 	query := fmt.Sprintf(`
-		SELECT id, name, description, complexity, popularity, ingredients, steps
+		SELECT id, name, description, complexity, popularity, hasImage, ingredients, steps
 		FROM recipes
 		ORDER BY %s %s
 		OFFSET %d LIMIT %d`,
@@ -79,6 +57,7 @@ func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySub
 			&r.Description,
 			&r.Complexity,
 			&r.Popularity,
+			&r.HasImage,
 			&r.Ingredients,
 			&r.Steps)
 
@@ -108,13 +87,14 @@ func GetRecipes(sortProp, sortDir string, pageOffset, pageLimit int) (*EntitySub
 func AddRecipe(recipe model.Recipe) (int, error) {
 	var id int
 	err := db.QueryRow(`
-		INSERT INTO recipes(name, description, complexity, popularity, ingredients, steps)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO recipes(name, description, complexity, popularity, hasImage, ingredients, steps)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id`,
 		recipe.Name,
 		recipe.Description,
 		recipe.Complexity,
 		recipe.Popularity,
+		recipe.HasImage,
 		recipe.Ingredients,
 		recipe.Steps).Scan(&id)
 
@@ -126,7 +106,7 @@ func GetRecipe(id int64) (model.Recipe, error) {
 	r := model.Recipe{}
 
 	row := db.QueryRow(`
-		SELECT id, name, description, complexity, popularity, ingredients, steps
+		SELECT id, name, description, complexity, popularity, hasImage, ingredients, steps
 		FROM recipes
 		WHERE id = $1`,
 		id)
@@ -137,6 +117,7 @@ func GetRecipe(id int64) (model.Recipe, error) {
 		&r.Description,
 		&r.Complexity,
 		&r.Popularity,
+		&r.HasImage,
 		&r.Ingredients,
 		&r.Steps)
 
@@ -161,8 +142,9 @@ func UpdateRecipe(id int64, recipe model.Recipe) error {
 			description = $3,
 			complexity = $4,
 			popularity = $5,
-			ingredients = $6,
-			steps = $7
+			hasImage = $6,
+			ingredients = $7,
+			steps = $8
 		WHERE
 			id = $1`,
 		id,
@@ -170,6 +152,7 @@ func UpdateRecipe(id int64, recipe model.Recipe) error {
 		recipe.Description,
 		recipe.Complexity,
 		recipe.Popularity,
+		recipe.HasImage,
 		recipe.Ingredients,
 		recipe.Steps)
 

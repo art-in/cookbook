@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	cnf := loadConfig()
+	cfg := loadConfig()
 
-	storage.InitDB(cnf.Server.DbConStr)
-	api.Serve(cnf.Server.APIURL)
+	storage.InitStorage(cfg.Server.DbConStr, cfg.Server.ImageFolder)
+	api.Serve(cfg.Server.APIURL)
 }

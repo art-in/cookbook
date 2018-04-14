@@ -1,5 +1,7 @@
 <template>
-  <div class="recipe-card">
+  <div
+    :class="{editing: isEditing}"
+    class="recipe-card">
     <div
       v-if="isDeletable"
       class="actions">
@@ -9,7 +11,30 @@
         class="action"
         @click.native.stop="onDelete(recipe)" />
     </div>
-    <div class="image-container">TODO: image</div>
+    <div
+      :class="{empty: !recipe.hasImage}"
+      class="image-container"
+      @click="onImageClick(recipe)">
+      <img
+        v-if="recipe.hasImage"
+        :src="recipe.imageSrc"
+        :alt="recipe.name">
+      <div
+        v-if="!recipe.hasImage"
+        class="image-stub">
+        {{ isEditing ? '(click to set image)' : '(no image yet)' }}
+      </div>
+      <icon-button
+        v-if="isEditing && recipe.hasImage"
+        icon="trash-alt"
+        class="delete-image"
+        @click.native.stop="onImageDelete(recipe)" />
+      <input
+        v-if="isEditing"
+        ref="imageInput"
+        type="file"
+        @change="onImageChange">
+    </div>
     <div class="props">
       <input
         v-model="recipe.name"
@@ -62,9 +87,47 @@
     right: 10px;
   }
 
+  .recipe-card.editing > .image-container:hover {
+    cursor: pointer;
+  }
+
   .image-container {
     margin-right: 15px;
     flex: 1;
+    position: relative;
+  }
+
+  .image-container .delete-image {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #fffc;
+    padding: 5px;
+  }
+
+  .image-container.empty {
+    position: relative;
+  }
+
+  .image-container.empty > .image-stub {
+    border: 1px solid lightgray;
+    color: gray;
+    width: 250px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-container > img {
+    width: 250px;
+  }
+
+  .image-container > input {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    position: absolute;
   }
 
   .props {
@@ -133,6 +196,24 @@ export default {
   methods: {
     onDelete (recipe) {
       this.$emit('delete', recipe)
+    },
+    onImageClick (e) {
+      if (this.isEditing) {
+        // activate file dialog
+        this.$refs.imageInput.focus()
+        this.$refs.imageInput.click()
+      }
+    },
+    onImageChange (e) {
+      const file = e.target.files[0]
+      if (!file) {
+        // file dialog canceled
+        return
+      }
+      this.$emit('image-change', file)
+    },
+    onImageDelete (recipe) {
+      this.$emit('image-delete', recipe)
     }
   }
 }

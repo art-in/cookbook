@@ -3,7 +3,9 @@
     <recipe-card
       v-if="recipe"
       :recipe="recipe"
-      :is-editing="isEditing" />
+      :is-editing="isEditing"
+      @image-change="onImageChange"
+      @image-delete="onImageDelete" />
 
     <list
       v-if="recipe"
@@ -156,7 +158,9 @@ export default {
       onIngredientAdd: 'onRecipeFormIngredientAdd',
       onIngredientDelete: 'onRecipeFormIngredientDelete',
       onStepAdd: 'onRecipeFormStepAdd',
-      onStepDelete: 'onRecipeFormStepDelete'
+      onStepDelete: 'onRecipeFormStepDelete',
+      onImageChange: 'onRecipeFormImageChange',
+      onImageDelete: 'onRecipeFormImageDelete'
     })
   }
 }

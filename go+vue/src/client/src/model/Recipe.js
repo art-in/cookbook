@@ -1,3 +1,5 @@
+import update from '../utils/deep-update'
+
 export default class Recipe {
   id = null
   name = ''
@@ -6,4 +8,12 @@ export default class Recipe {
   popularity = 1 // [1; 10]
   ingredients = []
   steps = []
+  hasImage = false
+
+  imageSrc = null
+  imageFile = null
+
+  constructor (data) {
+    update(this, data)
+  }
 }

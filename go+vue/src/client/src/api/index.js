@@ -1,20 +1,28 @@
-const apiUrl = 'http://localhost:8080/api'
+import Recipe from '../model/Recipe'
+
+const getRecipeImageUrl = recipeId => `api/recipes/${recipeId}/image`
 
 export async function getRecipes (sortProp, sortDir, pageOffset, pageLimit) {
   const query = `?sp=${sortProp}&sd=${sortDir}&po=${pageOffset}&pl=${pageLimit}`
-  const res = await fetch(`${apiUrl}/recipes${query}`)
+  const res = await fetch(`api/recipes${query}`)
   const recipes = await res.json()
+  recipes.items.forEach(r =>
+    (r.imageSrc = r.hasImage && getRecipeImageUrl(r.id)))
   return recipes
 }
 
 export async function getRecipe (recipeId) {
-  const res = await fetch(`${apiUrl}/recipes/${recipeId}`)
-  const recipe = await res.json()
+  const res = await fetch(`api/recipes/${recipeId}`)
+  const data = await res.json()
+
+  const recipe = new Recipe(data)
+  recipe.imageSrc = recipe.hasImage && getRecipeImageUrl(recipe.id)
+
   return recipe
 }
 
 export async function postRecipe (recipe) {
-  const res = await fetch(`${apiUrl}/recipes`, {
+  const res = await fetch(`api/recipes`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -26,7 +34,7 @@ export async function postRecipe (recipe) {
 }
 
 export async function putRecipe (recipe) {
-  await await fetch(`${apiUrl}/recipes/${recipe.id}`, {
+  await fetch(`api/recipes/${recipe.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -36,7 +44,23 @@ export async function putRecipe (recipe) {
 }
 
 export async function deleteRecipe (recipeId) {
-  await await fetch(`${apiUrl}/recipes/${recipeId}`, {
+  await fetch(`api/recipes/${recipeId}`, {
+    method: 'DELETE'
+  })
+}
+
+export async function postRecipeImage (recipeId, imageFile) {
+  const formData = new FormData()
+  formData.set('file', imageFile)
+
+  await fetch(`api/recipes/${recipeId}/image`, {
+    method: 'POST',
+    body: formData
+  })
+}
+
+export async function deleteRecipeImage (recipeId) {
+  await fetch(`api/recipes/${recipeId}/image`, {
     method: 'DELETE'
   })
 }

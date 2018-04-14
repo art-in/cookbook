@@ -34,7 +34,8 @@ export async function onRecipeListItemClick (context, recipe) {
     isEditing: false,
     isDeletable: false,
     isCancelable: false,
-    recipe: null
+    recipe: null,
+    isImageChanged: false
   })
   const fullRecipe = await api.getRecipe(recipe.id)
   context.commit('update-recipe-form-modal', {
@@ -92,13 +93,15 @@ export function onRecipeFormEdit (context) {
 
 export async function onRecipeFormSave (context) {
   // TODO: validate inputs
+  // TODO: skip server requests if no changes
 
-  const recipe = context.state.modal.recipe
+  const {recipe, isImageChanged} = context.state.modal
+  let recipeId = recipe.id
 
   context.commit('update-recipe-form-modal', {isLoading: true})
 
   if (context.state.modal.isNewRecipe) {
-    const recipeId = await api.postRecipe(recipe)
+    recipeId = await api.postRecipe(recipe)
     const newRecipe = clone(recipe)
     newRecipe.id = recipeId
 
@@ -117,8 +120,17 @@ export async function onRecipeFormSave (context) {
     })
     context.commit('update-recipe-form-modal', {
       isEditing: false,
-      isLoading: false
+      isLoading: false,
+      isImageChanged: false
     })
+  }
+
+  if (isImageChanged) {
+    if (recipe.hasImage) {
+      await api.postRecipeImage(recipeId, recipe.imageFile)
+    } else {
+      await api.deleteRecipeImage(recipeId)
+    }
   }
 
   context.dispatch('loadRecipes')
@@ -128,6 +140,7 @@ export function onRecipeFormCancel (context) {
   const prevRecipe = context.state.modal.prevRecipe
   context.commit('update-recipe-form-modal', {
     isEditing: false,
+    isImageChanged: false,
     recipe: prevRecipe
   })
 }
@@ -146,6 +159,7 @@ export async function deleteRecipe (context, recipe) {
     context.commit('update-recipe-list', {isLoading: true})
 
     await api.deleteRecipe(recipe.id)
+    await api.deleteRecipeImage(recipe.id)
 
     const {currentPage, items} = context.state.recipes
     if (currentPage !== 0 && items.length === 1) {
@@ -199,5 +213,29 @@ export async function onRecipeFormStepDelete (context, step) {
 
   context.commit('update-recipe-form-modal', {
     recipe: {steps}
+  })
+}
+
+export async function onRecipeFormImageChange (context, imageFile) {
+  const imageSrc = URL.createObjectURL(imageFile)
+
+  context.commit('update-recipe-form-modal', {
+    isImageChanged: true,
+    recipe: {
+      hasImage: true,
+      imageSrc,
+      imageFile
+    }
+  })
+}
+
+export async function onRecipeFormImageDelete (context, recipe) {
+  context.commit('update-recipe-form-modal', {
+    isImageChanged: true,
+    recipe: {
+      hasImage: false,
+      imageSrc: null,
+      imageFile: null
+    }
   })
 }

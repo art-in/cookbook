@@ -21,3 +21,6 @@ src/server/vendor
 
 # nodejs dependencies
 node_modules
+
+# file storage
+src/server/storage/images/

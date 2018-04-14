@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -26,6 +27,9 @@ func Serve(url string) {
 	router.HandleFunc("/api/recipes/{id}", getRecipe).Methods("GET")
 	router.HandleFunc("/api/recipes/{id}", putRecipe).Methods("PUT")
 	router.HandleFunc("/api/recipes/{id}", deleteRecipe).Methods("DELETE")
+	router.HandleFunc("/api/recipes/{id}/image", getRecipeImage).Methods("GET")
+	router.HandleFunc("/api/recipes/{id}/image", postRecipeImage).Methods("POST")
+	router.HandleFunc("/api/recipes/{id}/image", deleteRecipeImage).Methods("DELETE")
 
 	handler := handlers.LoggingHandler(os.Stdout, router)
 
@@ -174,6 +178,91 @@ func deleteRecipe(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.Error(w, "internal error", http.StatusInternalServerError)
 		}
+		return
+	}
+}
+
+func getRecipeImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	if err != nil {
+		err := errors.Wrap(err, "invalid params")
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	image, err := storage.GetRecipeImage(id)
+	defer image.Close()
+
+	if err != nil {
+		log.Println(err)
+		switch err {
+		case storage.ErrNotFound:
+			http.Error(w, "not found", http.StatusNotFound)
+		default:
+			http.Error(w, "internal error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	_, err = io.Copy(w, image)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+}
+
+func postRecipeImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	if err != nil {
+		err := errors.Wrap(err, "invalid params")
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+
+	image, err := storage.AddRecipeImage(id)
+	defer image.Close()
+
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = io.Copy(image, file)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+}
+
+func deleteRecipeImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	if err != nil {
+		err := errors.Wrap(err, "invalid params")
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = storage.DeleteRecipeImage(id)
+
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 }
