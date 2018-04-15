@@ -5,9 +5,10 @@ import RecipeList from '../components/RecipeList'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [{
     path: '/',
-    name: 'RecipeList',
+    name: 'recipes',
     component: RecipeList
   }]
 })

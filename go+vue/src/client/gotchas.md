@@ -26,3 +26,15 @@
     But since deep array updates not detected, you either need deep-update utility
     which ignores arrays (shallow-replaces them), or create separate mutator for
     each entity with array inside.
+
+---
+
+3. `vuex-router-sync`: immutable `store.state.route`.  
+    
+    You should use imperative router API (`push`/`go`/`replace`) to update route, and after that - handle `beforeRouteUpdate` event.  
+    Event will be triggered either programmatically through router API or by user action.
+
+    It's a bit inconsistent to mutate state not by `context.commit(...)`, but by separate router API.  
+    Unlike everything else, browser history (BH) is not fully part of app state here.  
+    BH contains set of history records, one of which is current (not necessarily last one).
+    While `store.state.route` reflects only current history record.  

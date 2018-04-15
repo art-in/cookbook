@@ -1,4 +1,12 @@
 export default {
+  // router state is immutable and can be updated only through router API
+  route: {
+    rid: null, // recipe id
+    sp: null, // sort prop
+    sd: null, // sort dir
+    p: null // current page
+  },
+
   recipes: {
     isLoaded: false,
     isLoading: true,
@@ -13,6 +21,7 @@ export default {
     pageLimit: 3,
     currentPage: 0
   },
+
   modal: {
     isVisible: false,
     isLoading: false,

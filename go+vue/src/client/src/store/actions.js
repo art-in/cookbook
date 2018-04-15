@@ -4,17 +4,50 @@ import * as api from '../api'
 import Recipe from '../model/Recipe'
 import Ingredient from '../model/Ingredient'
 import Step from '../model/Step'
+import router from '../router'
 
-// TODO: handle API requests failure
+const defaultCurrentPage = 0
+const defaultSortProp = 'name'
+const defaultSortDir = 'asc'
 
-export function init (store) {
-  store.dispatch('loadRecipes')
+// TODO: handle API request failures
+
+export async function onRecipeListRouteEnter (context, payload) {
+  await onRecipeListRouteUpdate(context, payload)
+}
+
+export async function onRecipeListRouteUpdate (context, {to, from}) {
+  const recipeId = to.query.rid
+  if (!from || recipeId !== from.query.rid) {
+    if (recipeId !== undefined) {
+      await openRecipeModal(context, recipeId)
+    } else {
+      closeRecipeModal(context)
+    }
+  }
+
+  // ensure route updated
+  if (!from ||
+    to.query.p !== from.query.p ||
+    to.query.sp !== from.query.sp ||
+    to.query.sd !== from.query.sd
+  ) {
+    context.commit('update-recipe-list', {
+      currentPage: to.query.p !== undefined ? to.query.p : defaultCurrentPage,
+      sortProp: to.query.sp || defaultSortProp,
+      sortDir: to.query.sd || defaultSortDir
+    })
+
+    context.dispatch('loadRecipes')
+  }
 }
 
 export async function loadRecipes (context) {
   context.commit('update-recipe-list', {isLoading: true})
 
-  const {sortProp, sortDir, pageLimit, currentPage} = context.state.recipes
+  const {currentPage, sortProp, sortDir} = context.state.recipes
+
+  const {pageLimit} = context.state.recipes
   const pageOffset = currentPage * pageLimit
 
   const res = await api.getRecipes(sortProp, sortDir, pageOffset, pageLimit)
@@ -28,6 +61,18 @@ export async function loadRecipes (context) {
 }
 
 export async function onRecipeListItemClick (context, recipe) {
+  router.push({
+    name: 'recipes',
+    query: {
+      rid: recipe.id,
+      p: context.state.route.query.p,
+      sp: context.state.route.query.sp,
+      sd: context.state.route.query.sd
+    }
+  })
+}
+
+async function openRecipeModal (context, recipeId) {
   context.commit('update-recipe-form-modal', {
     isVisible: true,
     isLoading: true,
@@ -37,7 +82,7 @@ export async function onRecipeListItemClick (context, recipe) {
     recipe: null,
     isImageChanged: false
   })
-  const fullRecipe = await api.getRecipe(recipe.id)
+  const fullRecipe = await api.getRecipe(recipeId)
   context.commit('update-recipe-form-modal', {
     recipe: fullRecipe,
     isLoading: false,
@@ -70,15 +115,29 @@ export function onRecipeListSort (context, sortProp) {
     sortDir = 'asc'
   }
 
-  context.commit('update-recipe-list', {
-    sortProp,
-    sortDir
+  router.push({
+    name: 'recipes',
+    query: {
+      p: context.state.route.query.p,
+      sp: defaultSortProp === sortProp ? undefined : sortProp,
+      sd: defaultSortDir === sortDir ? undefined : sortDir
+    }
   })
-
-  context.dispatch('loadRecipes')
 }
 
 export function onRecipeFormModalClose (context) {
+  router.push({
+    name: 'recipes',
+    query: {
+      rid: undefined,
+      p: context.state.route.query.p,
+      sp: context.state.route.query.sp,
+      sd: context.state.route.query.sd
+    }
+  })
+}
+
+function closeRecipeModal (context) {
   context.commit('update-recipe-form-modal', {isVisible: false})
 }
 
@@ -159,21 +218,40 @@ export async function deleteRecipe (context, recipe) {
     context.commit('update-recipe-list', {isLoading: true})
 
     await api.deleteRecipe(recipe.id)
-    await api.deleteRecipeImage(recipe.id)
-
-    const {currentPage, items} = context.state.recipes
-    if (currentPage !== 0 && items.length === 1) {
-      // jump to prev page if deleting last item on current page
-      context.commit('update-recipe-list', {currentPage: currentPage - 1})
+    if (recipe.hasImage) {
+      await api.deleteRecipeImage(recipe.id)
     }
 
-    context.dispatch('loadRecipes')
+    const query = context.state.route.query
+    const currentPage = query.p !== undefined ? query.p : defaultCurrentPage
+
+    const {items} = context.state.recipes
+    if (currentPage !== 0 && items.length === 1) {
+      // jump to prev page if deleting last item on current page
+      const pageNumber = currentPage - 1
+      router.push({
+        name: 'recipes',
+        query: {
+          p: pageNumber === defaultCurrentPage ? undefined : pageNumber.toString(),
+          sp: context.state.route.query.sp,
+          sd: context.state.route.query.sd
+        }
+      })
+    } else {
+      context.dispatch('loadRecipes')
+    }
   }
 }
 
 export async function onRecipeListPage (context, pageNumber) {
-  context.commit('update-recipe-list', {currentPage: pageNumber})
-  context.dispatch('loadRecipes')
+  router.push({
+    name: 'recipes',
+    query: {
+      p: pageNumber === defaultCurrentPage ? undefined : pageNumber,
+      sp: context.state.route.query.sp,
+      sd: context.state.route.query.sd
+    }
+  })
 }
 
 export async function onRecipeFormIngredientAdd (context) {

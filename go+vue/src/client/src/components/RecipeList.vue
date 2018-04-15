@@ -153,6 +153,13 @@ export default {
       onSort: 'onRecipeListSort',
       onPage: 'onRecipeListPage'
     })
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => vm.$store.dispatch('onRecipeListRouteEnter', {to}))
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.$store.dispatch('onRecipeListRouteUpdate', {to, from})
+    next()
   }
 }
 </script>
