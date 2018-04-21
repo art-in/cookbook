@@ -34,7 +34,14 @@
     You should use imperative router API (`push`/`go`/`replace`) to update route, and after that - handle `beforeRouteUpdate` event.  
     Event will be triggered either programmatically through router API or by user action.
 
-    It's a bit inconsistent to mutate state not by `context.commit(...)`, but by separate router API.  
     Unlike everything else, browser history (BH) is not fully part of app state here.  
     BH contains set of history records, one of which is current (not necessarily last one).
     While `store.state.route` reflects only current history record.  
+
+    Main difficulty here is that action logic becomes partly router-centric (inconsistent).  
+    - (router-centric) to change parts of state that should be reflected in URL you should first change URL through router API, and later update state in URL change event handler.  
+    - (inconsistent) to change other parts of state - just update state as usual.
+
+---
+
+4. `vue-devtools`: mutation list jumps when time traveling over `route/ROUTE_CHANGED` events.

@@ -44,18 +44,16 @@
       <waiter v-if="$store.state.recipes.isLoading" />
     </div>
     <div class="footer">
-      <ul>
-        <btn-group>
-          <btn
-            v-for="page in pages"
-            :key="page"
-            :active="page - 1 == $store.state.recipes.currentPage"
-            :disabled="page - 1 == $store.state.recipes.currentPage"
-            @click.native="onPage(page - 1)">
-            {{ page }}
-          </btn>
-        </btn-group>
-      </ul>
+      <btn-group class="pages">
+        <btn
+          v-for="page in pages"
+          :key="page"
+          :active="page - 1 == $store.state.recipes.currentPage"
+          :disabled="page - 1 == $store.state.recipes.currentPage"
+          @click.native="onPage(page - 1)">
+          {{ page }}
+        </btn>
+      </btn-group>
     </div>
 
     <recipe-form-modal :visible="$store.state.modal.isVisible" />

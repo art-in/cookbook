@@ -22,6 +22,7 @@
  * @template T
  * @param {T} target
  * @param {Partial<T>} source
+ * @return {T} updated target
  */
 export default function deepUpdate (target, source) {
   for (const prop in source) {
@@ -65,4 +66,6 @@ export default function deepUpdate (target, source) {
       target[prop] = sourceValue
     }
   }
+
+  return target
 }
