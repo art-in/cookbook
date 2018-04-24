@@ -141,6 +141,8 @@
   .name {
     font-size: 1.5rem;
     margin-bottom: 10px;
+    /* leave space on the right for form action buttons */
+    width: calc(100% - 135px);
   }
 
   textarea.description {
