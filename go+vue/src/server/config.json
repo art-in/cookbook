@@ -1,0 +1,6 @@
+{
+  "dbConStr": "postgres://postgres:123@localhost/cookbook?sslmode=disable",
+  "apiUrl": "localhost:3001",
+  "serveFolder": "../client/dist/",
+  "imageFolder": "storage/images/"
+}

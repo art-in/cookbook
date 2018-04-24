@@ -11,6 +11,25 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// TODO: get rid of global state
+var db *sql.DB
+
+func initDBStorage(dbCon string) {
+	var err error
+	db, err = sql.Open("postgres", dbCon)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err = db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Connected to database.")
+
+	createTables()
+}
+
 func createTables() {
 	_, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS recipes (

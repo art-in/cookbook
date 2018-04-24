@@ -1,4 +1,4 @@
-package api
+package routes
 
 import (
 	"encoding/json"
@@ -6,22 +6,17 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"server/model"
 	"server/storage"
 	"server/utils"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 )
 
-// Serve starts rest api service over http
-func Serve(url string) {
-	router := mux.NewRouter()
-
+func handleAPI(router *mux.Router) {
 	router.HandleFunc("/api/recipes", getRecipes).Methods("GET")
 	router.HandleFunc("/api/recipes", postRecipe).Methods("POST")
 	router.HandleFunc("/api/recipes/{id}", getRecipe).Methods("GET")
@@ -30,11 +25,6 @@ func Serve(url string) {
 	router.HandleFunc("/api/recipes/{id}/image", getRecipeImage).Methods("GET")
 	router.HandleFunc("/api/recipes/{id}/image", postRecipeImage).Methods("POST")
 	router.HandleFunc("/api/recipes/{id}/image", deleteRecipeImage).Methods("DELETE")
-
-	handler := handlers.LoggingHandler(os.Stdout, router)
-
-	log.Printf("Listening at %s...\n", url)
-	log.Fatal(http.ListenAndServe(url, handler))
 }
 
 func getRecipes(w http.ResponseWriter, r *http.Request) {
@@ -212,6 +202,8 @@ func getRecipeImage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
+
+	// TODO: add cache headers
 }
 
 func postRecipeImage(w http.ResponseWriter, r *http.Request) {

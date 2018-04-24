@@ -7,17 +7,14 @@ import (
 )
 
 type config struct {
-	Server configServer `json:"server"`
-}
-
-type configServer struct {
 	DbConStr    string `json:"dbConStr"`
 	APIURL      string `json:"apiUrl"`
+	ServeFolder string `json:"serveFolder"`
 	ImageFolder string `json:"imageFolder"`
 }
 
 func loadConfig() config {
-	file, err := os.Open("../config.json")
+	file, err := os.Open("config.json")
 	if err != nil {
 		log.Fatal(err)
 	}

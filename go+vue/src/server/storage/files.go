@@ -6,6 +6,13 @@ import (
 	"os"
 )
 
+// TODO: get rid of global state
+var imagesFolder string
+
+func initFileStorage(imgFolder string) {
+	imagesFolder = imgFolder
+}
+
 // GetRecipeImage returns recipe image from file storage
 func GetRecipeImage(recipeID int64) (*os.File, error) {
 	filePath := fmt.Sprintf("%s%d", imagesFolder, recipeID)
