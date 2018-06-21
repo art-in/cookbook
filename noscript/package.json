@@ -1,0 +1,23 @@
+{
+  "name": "cookbook-noscript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "express": "^4.16.3",
+    "jquery": "^1.12.4",
+    "nommon": "0.0.32",
+    "noscript": "^0.8.13-safe-refresh",
+    "prettier": "^1.13.5",
+    "stylelint": "^9.3.0",
+    "stylelint-config-standard": "^18.2.0",
+    "vow": "^0.3.13",
+    "yate": "0.0.82"
+  }
+}

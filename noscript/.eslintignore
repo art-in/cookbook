@@ -1,0 +1,5 @@
+# ignored by default
+/node_modules/*
+
+# compiled yate templates
+*.yate.js

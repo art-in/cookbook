@@ -1,0 +1,9 @@
+match .recipe-list ns-view-add-class {
+    " recipe-list"
+}
+
+match .recipe-list ns-view-content {
+    <div class="recipe-list__items ns-view-container-desc">
+        apply . ns-view-collection
+    </div>
+}

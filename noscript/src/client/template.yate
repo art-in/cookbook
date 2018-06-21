@@ -1,0 +1,6 @@
+module "main"
+
+include "../../node_modules/noscript/yate/noscript.yate"
+
+include "components/recipe-list/recipe-list.yate"
+include "components/recipe-card/recipe-card.yate"

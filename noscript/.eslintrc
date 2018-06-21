@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "prettier/prettier": ["error", {
+      "printWidth": 80,
+      "bracketSpacing": false,
+      "singleQuote": true
+    }],
+    "no-console": 0
+  },
+  "globals": {
+    "window": false,
+    "document": false,
+    "console": false,
+    "require": false,
+
+    // noscript global reference
+    "ns": false
+  }
+}
