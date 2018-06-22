@@ -5,3 +5,6 @@ node_modules
 # compiled yate templates
 *.yate.js
 *.yate.obj
+
+# recipe images
+src/server/storage/images/*

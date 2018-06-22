@@ -7,7 +7,7 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 2018
   },
   "rules": {
     "prettier/prettier": ["error", {
@@ -15,13 +15,21 @@
       "bracketSpacing": false,
       "singleQuote": true
     }],
-    "no-console": 0
+    "no-console": 0,
+    "prefer-const": ["error"]
   },
   "globals": {
+    // browser
     "window": false,
     "document": false,
     "console": false,
+    "Promise": false,
+
+    // nodejs
+    "__dirname": false,
     "require": false,
+    "module": false,
+    "process": false,
 
     // noscript global reference
     "ns": false
