@@ -24,6 +24,7 @@
     "document": false,
     "console": false,
     "Promise": false,
+    "setTimeout": false,
 
     // nodejs
     "__dirname": false,

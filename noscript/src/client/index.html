@@ -50,6 +50,11 @@
   <script src="node_modules/noscript/src/ns.box.js"></script>
   <script src="node_modules/noscript/yate/noscript-yate-externals.js"></script>
 
+  <!-- components shared -->
+  <link rel="stylesheet" href="components/shared/btn/btn.css">
+  <link rel="stylesheet" href="components/shared/btn/btn-group.css">
+  <link rel="stylesheet" href="components/shared/waiter/waiter.css">
+
   <!-- components -->
   <script src="components/app/app.layout.js"></script>
   <script src="components/app/app.view.js"></script>
@@ -57,15 +62,19 @@
 
   <script src="components/recipe-list/recipe-list.model.js"></script>
   <script src="components/recipe-list/recipe-list.view.js"></script>
+  <link rel="stylesheet" href="components/recipe-list/recipe-list.css">
 
   <script src="components/recipe-card/recipe-card.model.js"></script>
   <script src="components/recipe-card/recipe-card.view.js"></script>
+  <link rel="stylesheet" href="components/recipe-card/recipe-card.css">
 
+  <!-- models -->
+  <script src="models/recipe.js"></script>
+
+  <!-- main -->
   <script src="template.yate.js"></script>
   <script src="router.js"></script>
   <script src="api.js"></script>
-
-  <!-- init logic -->
   <script src="main.js"></script>
 </head>
 <body>

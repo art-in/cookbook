@@ -1,3 +1,94 @@
 match .recipe-card ns-view-content {
-  <span>TODO: RECIPE CARD</span>
+
+  readonlyAttr = (
+    if !model('recipe-card').isEditing {
+      @readonly = "true"
+    }
+  )
+
+  <div class="recipe-card">
+    if model('recipe-card').isDeletable {
+      <div class="recipe-card__actions">
+        <span
+          title="Delete">
+          "DEL"
+        </span>
+      </div>
+    }
+
+    <div class="recipe-card__image-container">
+
+      if !model('recipe').hasImage {
+        @class += " empty"
+      }
+
+      if model('recipe').hasImage {
+        <img
+          src="{ model('recipe').imageSrc }"
+          alt="{ model('recipe').name }" />
+      }
+
+      if !model('recipe').hasImage {
+        <div class="image-stub">
+          model('recipe-card').isEditing ? "(click to set image)" : "(no image yet)"
+        </div>
+      }
+
+      if model('recipe-card').isEditing && model('recipe').hasImage {
+        <span
+          icon="trash-alt"
+          class="recipe-card__delete-image">
+          "DEL"
+        </span>
+      }
+
+      if model('recipe-card').isEditing {
+        <input
+          ref="imageInput"
+          type="file" />
+      }
+    </div>
+
+    <div class="recipe-card__props">
+      <input
+        class="recipe-card__name"
+        placeholder="Recipe name"
+        value="{ model('recipe').name }"
+      >
+        readonlyAttr
+      </input>
+      <textarea
+        class="recipe-card__description"
+        placeholder="Description"
+      >
+        readonlyAttr
+
+        model('recipe').description
+      </textarea>
+      <div class="recipe-card__numbers">
+        <span class="recipe-card__complexity" title="Complexity">
+          "Complexity: "
+          <input
+            value="{ model('recipe').complexity }"
+            type="number"
+            min="1"
+            max="10"
+          >
+            readonlyAttr
+          </input>
+        </span>
+        <span class="recipe-card__popularity" title="Popularity">
+          "Popularity: "
+          <input
+            value="{ model('recipe').popularity }"
+            type="number"
+            min="1"
+            max="10"
+          >
+            readonlyAttr
+          </input>
+        </span>
+      </div>
+    </div>
+  </div>
 }

@@ -1,0 +1,9 @@
+match .* waiter () {
+  <div
+    class="waiter">
+    <div class="waiter__back" />
+    <span class="waiter__spinner">
+      "loading..."
+    </span>
+  </div>
+}

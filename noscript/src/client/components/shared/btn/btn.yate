@@ -1,0 +1,20 @@
+match .* btn (text, class, active, disabled, title = "") {
+  <button
+    class="btn"
+    title="{ title }"
+  >
+    if (class) {
+      @class += " { class }"
+    }
+    
+    if (active === "active") {
+      @class += " active"
+    }
+
+    if (disabled === "disabled") {
+      @disabled = "disabled"
+    }
+    
+    text
+  </button>
+}

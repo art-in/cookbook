@@ -1,9 +1,43 @@
 match .recipe-list ns-view-add-class {
-    " recipe-list"
+  " recipe-list"
+}
+
+/* TODO: do not duplicate items between async stub and main layout */
+
+match .recipe-list ns-view-async-content {
+  <div class="recipe-list__header">
+    
+    apply . btn ("ADD", "", "", "disabled", "Add new recipe")
+
+    <span class="recipe-list__sorters btn-group">
+      apply . btn ("by alphabet", "by-alphabet", "", "disabled")
+      apply . btn ("by complexity", "by-complexity", "", "disabled")
+      apply . btn ("by popularity", "by-popularity", "", "disabled")
+    </span>
+  </div>
+  <div class="recipe-list__items ns-view-container-desc">
+    apply . waiter
+  </div>
 }
 
 match .recipe-list ns-view-content {
-    <div class="recipe-list__items ns-view-container-desc">
-        apply . ns-view-collection
-    </div>
+  <div class="recipe-list__header">
+    
+    apply . btn ("ADD", "", "", "disabled", "Add new recipe")
+
+    <span class="recipe-list__sorters btn-group">
+      sortProp = model('recipe-list').sortProp
+      apply . btn ("by alphabet", "by-alphabet", sortProp === 'name' ? "active" : "")
+      apply . btn ("by complexity", "by-complexity", sortProp === 'complexity' ? "active" : "")
+      apply . btn ("by popularity", "by-popularity", sortProp === 'popularity' ? "active" : "")
+    </span>
+  </div>
+  <div class="recipe-list__items ns-view-container-desc">
+    if model('recipe-list').recipes.items {
+      apply . ns-view-collection
+    } else {
+      @class += " recipe-list__empty"
+      "No recipes yet"
+    }
+  </div>
 }

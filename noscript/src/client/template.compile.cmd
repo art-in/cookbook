@@ -1,0 +1,1 @@
+..\..\node_modules\.bin\yate --output template.yate.js template.yate
