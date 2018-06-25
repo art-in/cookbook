@@ -1,8 +1,5 @@
 match .* btn (text, class, active, disabled, title = "") {
-  <button
-    class="btn"
-    title="{ title }"
-  >
+  <button class="btn">
     if (class) {
       @class += " { class }"
     }
@@ -13,6 +10,10 @@ match .* btn (text, class, active, disabled, title = "") {
 
     if (disabled === "disabled") {
       @disabled = "disabled"
+    }
+
+    if (title) {
+      @title = title
     }
     
     text

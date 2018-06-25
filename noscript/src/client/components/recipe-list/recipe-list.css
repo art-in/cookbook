@@ -42,4 +42,6 @@
 .recipe-list__footer {
   padding: 10px;
   border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
 }

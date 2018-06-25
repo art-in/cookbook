@@ -6,6 +6,7 @@ ns.Model.define('recipe-list', {
         sortDir: 'asc',
         pageLimit: 3,
         currentPage: 0,
+        pages: [],
         recipes: {
           items: [],
           totalCount: 0
@@ -37,11 +38,22 @@ ns.Model.define('recipe-list', {
       return window.api
         .getRecipes(sortProp, sortDir, pageOffset, pageLimit)
         .then(
-          data =>
+          data => {
             this.setData({
               ...this.getData(),
               recipes: data
-            }),
+            });
+
+            // update pages
+            const pagesCount = Math.ceil(data.totalCount / pageLimit);
+            if (this.get('.pages').length !== pagesCount) {
+              const pages = [];
+              for (let i = 0; i < pagesCount; i++) {
+                pages.push({id: i, text: i + 1});
+              }
+              this.set('.pages', pages);
+            }
+          },
           error => this.setError(error)
         );
     },
@@ -64,6 +76,15 @@ ns.Model.define('recipe-list', {
       ns.request([this]);
 
       // TODO: why need to init update manually?
+      ns.page.go();
+    },
+
+    page(pageId) {
+      this.set('.currentPage', pageId);
+
+      this.invalidate();
+      ns.request([this]);
+
       ns.page.go();
     }
   }

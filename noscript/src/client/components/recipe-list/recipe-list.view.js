@@ -7,7 +7,8 @@ ns.ViewCollection.define('recipe-list', {
   events: {
     'click .by-alphabet': 'onSort',
     'click .by-complexity': 'onSort',
-    'click .by-popularity': 'onSort'
+    'click .by-popularity': 'onSort',
+    'click .page': 'onPage'
   },
   methods: {
     onSort(e) {
@@ -25,6 +26,10 @@ ns.ViewCollection.define('recipe-list', {
       }
 
       this.getModel('recipe-list').sort(sortProp);
+    },
+    onPage(e) {
+      const pageId = Number(e.target.innerHTML) - 1;
+      this.getModel('recipe-list').page(pageId);
     }
   }
 });

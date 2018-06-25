@@ -40,4 +40,17 @@ match .recipe-list ns-view-content {
       "No recipes yet"
     }
   </div>
+  <div class="recipe-list__footer">
+    <span class="recipe-list__pages btn-group">
+      currentPage = model('recipe-list').currentPage
+      for model('recipe-list').pages {
+        apply . btn (
+          scalar(.text), 
+          "page", 
+          .id === currentPage ? "active" : "",
+          .id === currentPage ? "disabled" : ""
+        )
+      }
+    </span>
+  </div>
 }
