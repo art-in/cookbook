@@ -7,12 +7,15 @@ match .recipe-card ns-view-content {
   )
 
   <div class="recipe-card">
+  
     if model('recipe-card').isDeletable {
       <div class="recipe-card__actions">
-        <span
-          title="Delete">
-          "DEL"
-        </span>
+        apply . btn (
+          "DEL", 
+          "delete", 
+          "not active", 
+          "not disabled", 
+          "Delete recipe")
       </div>
     }
 

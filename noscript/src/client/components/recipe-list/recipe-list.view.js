@@ -8,7 +8,8 @@ ns.ViewCollection.define('recipe-list', {
     'click .by-alphabet': 'onSort',
     'click .by-complexity': 'onSort',
     'click .by-popularity': 'onSort',
-    'click .page': 'onPage'
+    'click .page': 'onPage',
+    'delete-recipe': 'onDeleteRecipe'
   },
   methods: {
     onSort(e) {
@@ -30,6 +31,9 @@ ns.ViewCollection.define('recipe-list', {
     onPage(e) {
       const pageId = Number(e.target.innerHTML) - 1;
       this.getModel('recipe-list').page(pageId);
+    },
+    onDeleteRecipe(event, recipeId) {
+      this.getModel('recipe-list').deleteRecipe(recipeId);
     }
   }
 });

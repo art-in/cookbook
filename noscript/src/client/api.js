@@ -9,6 +9,14 @@ window.api = {
       );
       return recipes;
     });
+  },
+
+  deleteRecipe(recipeId) {
+    return ns.http(
+      `api/recipes/${recipeId}`,
+      {},
+      {type: 'DELETE', dataType: null}
+    );
   }
 };
 

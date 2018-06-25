@@ -25,6 +25,10 @@
     "console": false,
     "Promise": false,
     "setTimeout": false,
+    "confirm": false,
+
+    // jquery
+    "$": false,
 
     // nodejs
     "__dirname": false,

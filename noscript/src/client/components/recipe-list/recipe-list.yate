@@ -39,6 +39,10 @@ match .recipe-list ns-view-content {
       @class += " recipe-list__empty"
       "No recipes yet"
     }
+
+    if model('recipe-list').isLoading {
+      apply . waiter
+    }
   </div>
   <div class="recipe-list__footer">
     <span class="recipe-list__pages btn-group">

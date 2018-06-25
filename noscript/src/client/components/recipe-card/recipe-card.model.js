@@ -3,7 +3,7 @@ ns.Model.define('recipe-card', {
     'ns-model-init': function() {
       this.setData({
         isEditing: false,
-        isDeletable: false
+        isDeletable: true
       });
     },
     'ns-model-changed': function() {

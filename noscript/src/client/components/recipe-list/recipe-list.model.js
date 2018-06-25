@@ -2,6 +2,7 @@ ns.Model.define('recipe-list', {
   events: {
     'ns-model-init': function() {
       this.setData({
+        isLoading: false,
         sortProp: 'name',
         sortDir: 'asc',
         pageLimit: 3,
@@ -86,6 +87,38 @@ ns.Model.define('recipe-list', {
       ns.request([this]);
 
       ns.page.go();
+    },
+
+    deleteRecipe(recipeId) {
+      const recipe = this.get('.recipes.items').find(r => r.id === recipeId);
+
+      if (confirm(`Delete recipe "${recipe.name}"?`)) {
+        // show loading indicator while sending delete request
+        this.set('.isLoading', true);
+        // TODO: this update causes error "[ns.ViewCollection] Can't find
+        // descendants container (.ns-view-container-desc element) for 'recipe-list'"
+        // have no idea why.
+        ns.page.go();
+
+        window.api
+          .deleteRecipe(recipeId)
+          .then(() => {
+            if (recipe.hasImage) {
+              return window.api.deleteRecipeImage(recipeId);
+            }
+          })
+          .then(
+            () => {
+              this.invalidate();
+              return ns.request([this]);
+            },
+            error => this.setError(error)
+          )
+          .then(() => {
+            this.set('.isLoading', false);
+            ns.page.go();
+          });
+      }
     }
   }
 });
