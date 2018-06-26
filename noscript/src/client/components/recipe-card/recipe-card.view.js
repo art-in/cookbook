@@ -4,9 +4,20 @@ ns.View.define('recipe-card', {
     'click button.delete': 'onDelete'
   },
   methods: {
-    onDelete() {
+    onDelete(e) {
       const recipeId = this.getModel('recipe').get('.id');
-      ns.events.trigger('delete-recipe', recipeId);
+      ns.events.trigger('recipe-card-delete', recipeId);
+
+      // prevent selecting recipe from recipe list
+      e.stopPropagation();
+    },
+    setRecipe(recipe) {
+      const recipeModel = this.getModel('recipe');
+      recipeModel.setData({...recipeModel.getData(), ...recipe});
+    },
+    setRecipeCard(recipeCard) {
+      const recipeCardModel = this.getModel('recipe-card');
+      recipeCardModel.setData({...recipeCardModel.getData(), ...recipeCard});
     }
   }
 });

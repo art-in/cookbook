@@ -17,6 +17,15 @@ window.api = {
       {},
       {type: 'DELETE', dataType: null}
     );
+  },
+
+  getRecipe(recipeId) {
+    return ns
+      .http(`api/recipes/${recipeId}`, {}, {type: 'GET'})
+      .then(recipe => {
+        recipe.imageSrc = recipe.hasImage && getRecipeImageUrl(recipe.id);
+        return recipe;
+      });
   }
 };
 

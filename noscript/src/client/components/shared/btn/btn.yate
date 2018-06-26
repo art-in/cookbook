@@ -1,3 +1,5 @@
+/* TODO: use boolean type args for active and disabled */
+
 match .* btn (text, class, active, disabled, title = "") {
   <button class="btn">
     if (class) {

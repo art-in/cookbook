@@ -9,7 +9,8 @@ ns.ViewCollection.define('recipe-list', {
     'click .by-complexity': 'onSort',
     'click .by-popularity': 'onSort',
     'click .page': 'onPage',
-    'delete-recipe': 'onDeleteRecipe'
+    'click .recipe-card': 'onRecipeCardClick',
+    'recipe-card-delete': 'onRecipeCardDelete'
   },
   methods: {
     onSort(e) {
@@ -32,8 +33,16 @@ ns.ViewCollection.define('recipe-list', {
       const pageId = Number(e.target.innerHTML) - 1;
       this.getModel('recipe-list').page(pageId);
     },
-    onDeleteRecipe(event, recipeId) {
-      this.getModel('recipe-list').deleteRecipe(recipeId);
+    onRecipeCardClick(e) {
+      const recipeId = Number(
+        $(e.target)
+          .closest('.recipe-card')
+          .attr('data-recipe-id')
+      );
+      ns.events.trigger('selecting-recipe', recipeId);
+    },
+    onRecipeCardDelete(event, recipeId) {
+      this.getModel('recipe-list').onRecipeCardDelete(recipeId);
     }
   }
 });

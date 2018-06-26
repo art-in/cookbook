@@ -1,0 +1,29 @@
+match .recipe-form ns-view-content {
+  <div class="recipe-form">
+
+    apply /.views.recipe-card ns-view
+
+    apply . list (
+      model('recipe-form').recipe.ingredients,
+      "recipe-form__ingredients",
+      "Ingredients:"
+    )
+    apply . list (
+      model('recipe-form').recipe.steps,
+      "recipe-form__steps",
+      "Steps:",
+      "ordered"
+    )
+
+    <div class="recipe-form__actions">
+      <span class="recipe-form__action edit">edit</span>
+      <span class="recipe-form__action save">save</span>
+      <span class="recipe-form__action cancel">cancel</span>
+      <span class="recipe-form__action delete">delete</span>
+    </div>
+
+    if model('recipe-form').isLoading {
+      apply . waiter
+    }
+  </div>
+}

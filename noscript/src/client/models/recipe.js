@@ -4,6 +4,10 @@ ns.Model.define('recipe', {
     id: null
   },
   events: {
+    'ns-model-init': function() {
+      // prevent server request, since recipe model is used on recipe-form
+      this.setData({});
+    },
     'ns-model-changed': function() {
       // TODO: remove
       console.log('recipe ns-model-changed', this.getData());

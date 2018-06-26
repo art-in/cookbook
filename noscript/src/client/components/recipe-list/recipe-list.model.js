@@ -76,7 +76,7 @@ ns.Model.define('recipe-list', {
       this.invalidate();
       ns.request([this]);
 
-      // TODO: why need to init update manually?
+      // TODO: why need to update manually?
       ns.page.go();
     },
 
@@ -89,7 +89,7 @@ ns.Model.define('recipe-list', {
       ns.page.go();
     },
 
-    deleteRecipe(recipeId) {
+    onRecipeCardDelete(recipeId) {
       const recipe = this.get('.recipes.items').find(r => r.id === recipeId);
 
       if (confirm(`Delete recipe "${recipe.name}"?`)) {

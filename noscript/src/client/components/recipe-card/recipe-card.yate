@@ -7,7 +7,10 @@ match .recipe-card ns-view-content {
   )
 
   <div class="recipe-card">
-  
+
+    /* used when selecting recipe from list */
+    @data-recipe-id = model('recipe').id
+
     if model('recipe-card').isDeletable {
       <div class="recipe-card__actions">
         apply . btn (

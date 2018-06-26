@@ -1,0 +1,15 @@
+match .* modal (nodeset isVisible, xml children) {
+  <div class="modal__container">
+    
+    if isVisible {
+      @class += " visible"
+    }
+
+    <div class="modal__back" />
+    <div class="modal">
+      children
+
+      <span class="modal__close">close</span>
+    </div>
+  </div>
+}

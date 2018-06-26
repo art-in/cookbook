@@ -1,4 +1,8 @@
 ns.Model.define('recipe-card', {
+  params: {
+    // required when splitting unto recipe-cards in recipe-list model
+    id: null
+  },
   events: {
     'ns-model-init': function() {
       this.setData({

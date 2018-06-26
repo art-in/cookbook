@@ -1,0 +1,25 @@
+.recipe-form {
+  min-height: 150px;
+  position: relative;
+}
+
+.recipe-form__actions {
+  position: absolute;
+  right: 55px;
+  top: 10px;
+}
+
+.recipe-form__action + .recipe-form__action {
+  margin-left: 15px;
+}
+
+.recipe-form__ingredients,
+.recipe-form__steps {
+  margin: 15px 15px 0 190px;
+  text-align: left;
+}
+
+input.recipe-form__ingredient,
+input.recipe-form__step {
+  width: 350px;
+}

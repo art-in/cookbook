@@ -1,0 +1,5 @@
+match .recipe-form-modal ns-view-content {
+
+  content = apply /.views.recipe-form ns-view
+  apply . modal (model('recipe-form-modal').isVisible, content)
+}

@@ -1,0 +1,17 @@
+match .* list (nodeset items, class, title, boolean isOrdered) {
+  <div class="list { class }">
+    <span class="list__title">
+      title
+    </span>
+    <ul>
+      if isOrdered {
+        @class += " ordered"
+      }
+      for items {
+        <li class="list__item">
+          .description
+        </li>
+      }
+    </ul>
+  </div>
+}

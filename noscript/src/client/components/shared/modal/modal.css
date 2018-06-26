@@ -1,0 +1,44 @@
+.modal__back {
+  background-color: black;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.modal__container,
+.modal__back {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.modal__container:not(.visible) {
+  visibility: hidden;
+}
+
+.modal__container:not(.visible) .modal__back {
+  opacity: 0;
+}
+
+.modal {
+  position: absolute;
+  width: 700px;
+  right: 0;
+  left: 0;
+  margin: 90px auto;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0 0 5px #0005;
+}
+
+.modal .modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: gray;
+}
+
+.modal .modal__close:hover {
+  color: black;
+}
