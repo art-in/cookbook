@@ -1,0 +1,6 @@
+match .* btn-group (xml children, class) {
+  <span class="btn-group">
+    @class += " { class }"
+    children
+  </span>
+}

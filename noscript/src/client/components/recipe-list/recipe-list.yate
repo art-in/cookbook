@@ -9,11 +9,12 @@ match .recipe-list ns-view-async-content {
     
     apply . btn ("ADD", "", "", "disabled", "Add new recipe")
 
-    <span class="recipe-list__sorters btn-group">
+    sortButtons = (
       apply . btn ("by alphabet", "by-alphabet", "", "disabled")
       apply . btn ("by complexity", "by-complexity", "", "disabled")
       apply . btn ("by popularity", "by-popularity", "", "disabled")
-    </span>
+    )
+    apply . btn-group (sortButtons, "recipe-list__sorters")
   </div>
   <div class="recipe-list__items ns-view-container-desc">
     apply . waiter
@@ -25,12 +26,13 @@ match .recipe-list ns-view-content {
     
     apply . btn ("ADD", "", "", "disabled", "Add new recipe")
 
-    <span class="recipe-list__sorters btn-group">
-      sortProp = model('recipe-list').sortProp
+    sortProp = model('recipe-list').sortProp
+    sortButtons = (
       apply . btn ("by alphabet", "by-alphabet", sortProp === 'name' ? "active" : "")
       apply . btn ("by complexity", "by-complexity", sortProp === 'complexity' ? "active" : "")
       apply . btn ("by popularity", "by-popularity", sortProp === 'popularity' ? "active" : "")
-    </span>
+    )
+    apply . btn-group (sortButtons, "recipe-list__sorters")
   </div>
   <div class="recipe-list__items ns-view-container-desc">
     if model('recipe-list').recipes.items {
@@ -45,16 +47,17 @@ match .recipe-list ns-view-content {
     }
   </div>
   <div class="recipe-list__footer">
-    <span class="recipe-list__pages btn-group">
-      currentPage = model('recipe-list').currentPage
-      for model('recipe-list').pages {
-        apply . btn (
-          scalar(.text), 
-          "page", 
-          .id === currentPage ? "active" : "",
-          .id === currentPage ? "disabled" : ""
-        )
-      }
-    </span>
+    
+    currentPage = model('recipe-list').currentPage
+    pageButtons = for model('recipe-list').pages {
+      apply . btn (
+        scalar(.text), 
+        "page", 
+        .id === currentPage ? "active" : "",
+        .id === currentPage ? "disabled" : ""
+      )
+    }
+
+    apply . btn-group (pageButtons, "recipe-list__pages")
   </div>
 }
