@@ -16,10 +16,18 @@ match .recipe-form ns-view-content {
     )
 
     <div class="recipe-form__actions">
-      <span class="recipe-form__action edit">edit</span>
-      <span class="recipe-form__action save">save</span>
-      <span class="recipe-form__action cancel">cancel</span>
-      <span class="recipe-form__action delete">delete</span>
+      if !model('recipe-form').isEditing {
+        <span class="recipe-form__action edit">edit</span>
+      }
+      if model('recipe-form').isEditing {
+        <span class="recipe-form__action save">save</span>
+      }
+      if model('recipe-form').isCancelable && model('recipe-form').isEditing {
+        <span class="recipe-form__action cancel">cancel</span>
+      }
+      if model('recipe-form').isDeletable {
+        <span class="recipe-form__action delete">delete</span>
+      }
     </div>
 
     if model('recipe-form').isLoading {

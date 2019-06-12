@@ -4,7 +4,8 @@ ns.View.define('recipe-form-modal', {
     // TODO: binding to element class of child component
     'click .modal__close': 'onModalClose',
     'click .modal__back': 'onModalClose',
-    'selecting-recipe': 'onSelectingRecipe'
+    'selecting-recipe': 'onSelectingRecipe',
+    'closing-recipe': 'onModalClose'
   },
   methods: {
     onModalClose() {

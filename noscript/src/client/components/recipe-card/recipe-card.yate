@@ -7,6 +7,9 @@ match .recipe-card ns-view-content {
   )
 
   <div class="recipe-card">
+    if !model('recipe-card').isEditing {
+      @class += " editing"
+    }
 
     /* used when selecting recipe from list */
     @data-recipe-id = model('recipe').id

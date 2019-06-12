@@ -26,6 +26,18 @@ window.api = {
         recipe.imageSrc = recipe.hasImage && getRecipeImageUrl(recipe.id);
         return recipe;
       });
+  },
+
+  postRecipe() {},
+
+  async putRecipe(recipe) {
+    await fetch(`api/recipes/${recipe.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(recipe)
+    });
   }
 };
 
