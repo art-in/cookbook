@@ -1,0 +1,16 @@
+[package]
+name = "server"
+version = "0.1.0"
+authors = ["art-in <artin@artin.space>"]
+edition = "2018"
+
+[dependencies]
+actix-web = "1.0.9"
+listenfd = "0.3.3"
+env_logger = "0.7.1"
+actix-files = "0.1.7"
+diesel = { version = "1.4.3", features = ["postgres"] }
+dotenv = "0.15.0"
+diesel_migrations = "1.4.0"
+toml = "0.5.5"
+serde = "1.0.103"

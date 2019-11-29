@@ -1,0 +1,6 @@
+[web]
+url = "0.0.0.0:8080"
+statics_folder = "client/build/"
+
+[database]
+url = "" # see .env
