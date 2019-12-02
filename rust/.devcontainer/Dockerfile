@@ -16,9 +16,6 @@ RUN apt-get install -y \
     libssl-dev \
     pkg-config
 
-# auto convert line endings (CRLF to LF) if on windows host
-RUN git config --global core.autocrlf true
-
 # install database (https://docs.docker.com/engine/examples/postgresql_service/)
 RUN apt-get install -y \
     software-properties-common \
