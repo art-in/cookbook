@@ -5,12 +5,19 @@ authors = ["art-in <artin@artin.space>"]
 edition = "2018"
 
 [dependencies]
-actix-web = "1.0.9"
+actix-rt = "1.0.0-alpha.3"
+actix-web = "2.0.0-alpha.4"
+actix-files = "0.2.0-alpha.3"
+actix-threadpool = "0.3.1"
+
+diesel = { version = "1.4.3", features = ["postgres", "r2d2"] }
+diesel_migrations = "1.4.0"
+
 listenfd = "0.3.3"
 env_logger = "0.7.1"
-actix-files = "0.1.7"
-diesel = { version = "1.4.3", features = ["postgres"] }
 dotenv = "0.15.0"
-diesel_migrations = "1.4.0"
 toml = "0.5.5"
 serde = "1.0.103"
+r2d2 = "0.8.7"
+futures = "0.3.1"
+log = "0.4.8"

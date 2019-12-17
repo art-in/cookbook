@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate diesel;
+#[macro_use]
+extern crate log;
 
 use config::Config;
 
@@ -8,16 +10,17 @@ mod models;
 mod routes;
 mod storage;
 
-fn main() {
+#[actix_rt::main]
+async fn main() {
     // enable logging
-    std::env::set_var("RUST_LOG", "actix_web=debug");
+    std::env::set_var("RUST_LOG", "actix_web=debug,server=trace");
     std::env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
 
     let config = Config::from_file("./server/config.toml");
 
-    let db_connection = storage::db::connect(&config.database.url);
-    storage::db::run_migrations(&db_connection);
+    let pool = storage::db::connect(&config.database.url);
+    storage::db::run_migrations(&pool.get().unwrap());
 
-    routes::connect(&config.web.url, config.web.statics_folder, db_connection);
+    routes::connect(&config.web.url, config.web.statics_folder, pool).await;
 }

@@ -1,32 +1,30 @@
 use actix_files as fs;
-use actix_web::{get, middleware, web, App, HttpResponse, HttpServer, Result};
+use actix_web::{middleware, web, App, HttpServer};
 use diesel::pg::PgConnection;
+use diesel::r2d2;
 use listenfd::ListenFd;
-use std::sync::Mutex;
 
 mod api;
+mod utils;
+
+pub type Pool = r2d2::Pool<r2d2::ConnectionManager<PgConnection>>;
 
 struct AppState {
-    db_connection: Mutex<PgConnection>,
-    statics_folder: String,
+    pool: Pool,
 }
 
-pub fn connect(url: &str, statics_folder: String, db_connection: PgConnection) {
+pub async fn connect(url: &str, statics_folder: String, pool: Pool) {
     let mut listenfd = ListenFd::from_env();
 
-    let state = web::Data::new(AppState {
-        db_connection: Mutex::new(db_connection),
-        statics_folder: statics_folder,
-    });
+    let state = web::Data::new(AppState { pool: pool });
 
     let mut server = HttpServer::new(move || {
         App::new()
             .register_data(state.clone())
             .wrap(middleware::Logger::new(r#""%r" - %s - %Ts"#))
             .wrap(middleware::Compress::default())
-            .service(index)
-            .service(favicon)
-            .service(api::setup())
+            .service(api::register())
+            .service(fs::Files::new("/", &statics_folder).index_file("index.html"))
     });
 
     // reuse same socket on auto-reloads
@@ -36,19 +34,7 @@ pub fn connect(url: &str, statics_folder: String, db_connection: PgConnection) {
         server.bind(url).unwrap()
     };
 
-    println!("Listening on {}", url);
+    info!("Listening on {}", url);
 
-    server.shutdown_timeout(1).run().unwrap();
-}
-
-#[get("/")]
-fn index() -> HttpResponse {
-    HttpResponse::Ok().body("test")
-}
-
-#[get("/favicon")]
-fn favicon(data: web::Data<AppState>) -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open(
-        data.statics_folder.clone() + "favicon.ico",
-    )?)
+    server.shutdown_timeout(1).start().await.unwrap();
 }

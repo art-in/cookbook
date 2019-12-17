@@ -27,7 +27,7 @@ impl Config {
                 .expect("Failed to parse config file");
 
         // read database url from .env file instead of config.toml,
-        // since we need to share it with diesel_cli
+        // since we need to share it with diesel_cli through .env
         dotenv::from_path("./server/.env").ok();
         config.database.url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         config

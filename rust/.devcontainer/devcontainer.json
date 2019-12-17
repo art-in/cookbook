@@ -4,12 +4,7 @@
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash",
 		// fix "RLS could not be started" error of 'rust-lang' extension
-		"rust-client.rustupPath": "/root/.cargo/bin/rustup",
-		// fix "Error finalizing incremental compilation session directory" warning of 'cargo build'
-		// https://github.com/rust-lang/rust/issues/62031
-		"files.watcherExclude": {
-			"/workspaces/cookbook.git/rust/target/**": true
-		}
+		"rust-client.rustupPath": "/root/.cargo/bin/rustup"
 	},
 	"appPort": [
 		8080, // rust server

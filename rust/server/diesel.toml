@@ -3,3 +3,9 @@
 
 [print_schema]
 file = "src/storage/db/schema.rs"
+
+# TODO: configure migrations directory in diesel.toml when supported
+#       https://github.com/diesel-rs/diesel/issues/2163
+#       workaround: diesel migration redo --migration-dir src/storage/db/migrations/
+# [migrations_directory]
+# dir = "src/storage/db/migrations/"
