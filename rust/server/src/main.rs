@@ -19,8 +19,14 @@ async fn main() {
 
     let config = Config::from_file("./server/config.toml");
 
-    let pool = storage::db::connect(&config.database.url);
+    let pool = storage::db::connect(&config.storage.database_url);
     storage::db::run_migrations(&pool.get().unwrap());
 
-    routes::connect(&config.web.url, config.web.statics_folder, pool).await;
+    routes::connect(
+        &config.web.url,
+        config.web.statics_folder,
+        config.storage.images_folder,
+        pool,
+    )
+    .await;
 }

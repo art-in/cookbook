@@ -5,18 +5,22 @@ use diesel::r2d2;
 use listenfd::ListenFd;
 
 mod api;
-mod utils;
+pub mod utils;
 
 pub type Pool = r2d2::Pool<r2d2::ConnectionManager<PgConnection>>;
 
 struct AppState {
     pool: Pool,
+    images_folder: String,
 }
 
-pub async fn connect(url: &str, statics_folder: String, pool: Pool) {
+pub async fn connect(url: &str, statics_folder: String, images_folder: String, pool: Pool) {
     let mut listenfd = ListenFd::from_env();
 
-    let state = web::Data::new(AppState { pool: pool });
+    let state = web::Data::new(AppState {
+        pool: pool,
+        images_folder: images_folder,
+    });
 
     let mut server = HttpServer::new(move || {
         App::new()

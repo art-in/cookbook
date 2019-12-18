@@ -6,7 +6,7 @@ use std::fs::read_to_string;
 #[derive(Clone, Deserialize)]
 pub struct Config {
     pub web: Web,
-    pub database: Database,
+    pub storage: Storage,
 }
 
 #[derive(Clone, Deserialize)]
@@ -16,8 +16,9 @@ pub struct Web {
 }
 
 #[derive(Clone, Deserialize)]
-pub struct Database {
-    pub url: String,
+pub struct Storage {
+    pub database_url: String,
+    pub images_folder: String,
 }
 
 impl Config {
@@ -29,7 +30,7 @@ impl Config {
         // read database url from .env file instead of config.toml,
         // since we need to share it with diesel_cli through .env
         dotenv::from_path("./server/.env").ok();
-        config.database.url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        config.storage.database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         config
     }
 }

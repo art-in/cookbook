@@ -5,10 +5,10 @@ authors = ["art-in <artin@artin.space>"]
 edition = "2018"
 
 [dependencies]
-actix-rt = "1.0.0-alpha.3"
-actix-web = "2.0.0-alpha.4"
+actix-rt = "1.0.0"
+actix-web = "2.0.0-alpha.6"
 actix-files = "0.2.0-alpha.3"
-actix-threadpool = "0.3.1"
+actix-multipart = "0.2.0-alpha.3"
 
 diesel = { version = "1.4.3", features = ["postgres", "r2d2"] }
 diesel_migrations = "1.4.0"

@@ -1,6 +1,8 @@
 use super::utils::{IntoHttpResponse, ParseParam};
+use super::AppState;
 use crate::models::recipe::{NewRecipe, Recipe};
 use crate::storage;
+use actix_multipart::Multipart;
 use actix_web::{delete, get, post, put, web, Error, HttpRequest, HttpResponse, Scope};
 use serde::Deserialize;
 
@@ -16,6 +18,9 @@ pub fn register() -> Scope {
         .service(post_recipe)
         .service(delete_recipe)
         .service(put_recipe)
+        .service(post_recipe_image)
+        .service(get_recipe_image)
+        .service(delete_recipe_image)
 }
 
 #[derive(Deserialize)]
@@ -26,9 +31,11 @@ struct GetRecipesParams {
     pl: Option<i32>,    // page limit
 }
 
+// TODO: is it possible to get rid of `.map_err(|e| e.into_http_response())`s?
+
 #[get("/recipes")]
 async fn get_recipes(
-    data: web::Data<super::AppState>,
+    data: web::Data<AppState>,
     query: web::Query<GetRecipesParams>,
 ) -> Result<HttpResponse, Error> {
     let recipes = storage::db::get_recipes(
@@ -45,10 +52,7 @@ async fn get_recipes(
 }
 
 #[get("/recipes/{recipe_id}")]
-async fn get_recipe(
-    data: web::Data<super::AppState>,
-    req: HttpRequest,
-) -> Result<HttpResponse, Error> {
+async fn get_recipe(data: web::Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
     let recipe_id: i32 = req.parse_param("recipe_id")?;
 
     let recipe = storage::db::get_recipe(&data.pool, recipe_id)
@@ -60,7 +64,7 @@ async fn get_recipe(
 
 #[post("/recipes")]
 async fn post_recipe(
-    data: web::Data<super::AppState>,
+    data: web::Data<AppState>,
     body: web::Json<NewRecipe>,
 ) -> Result<HttpResponse, Error> {
     let recipe = body.into_inner();
@@ -73,22 +77,23 @@ async fn post_recipe(
 }
 
 #[delete("/recipes/{recipe_id}")]
-async fn delete_recipe(
-    data: web::Data<super::AppState>,
-    req: HttpRequest,
-) -> Result<HttpResponse, Error> {
+async fn delete_recipe(data: web::Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
     let recipe_id: i32 = req.parse_param("recipe_id")?;
 
     storage::db::delete_recipe(&data.pool, recipe_id)
         .await
         .map_err(|e| e.into_http_response())?;
 
-    Ok(HttpResponse::Ok().body(""))
+    storage::images::delete_recipe_image(&data.images_folder, recipe_id)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
+    Ok(HttpResponse::Ok().into())
 }
 
 #[put("/recipes/{recipe_id}")]
 async fn put_recipe(
-    data: web::Data<super::AppState>,
+    data: web::Data<AppState>,
     req: HttpRequest,
     body: web::Json<Recipe>,
 ) -> Result<HttpResponse, Error> {
@@ -101,4 +106,65 @@ async fn put_recipe(
         .map_err(|e| e.into_http_response())?;
 
     Ok(HttpResponse::Ok().json(updated_recipe))
+}
+
+#[post("/recipes/{recipe_id}/image")]
+async fn post_recipe_image(
+    data: web::Data<AppState>,
+    req: HttpRequest,
+    payload: Multipart,
+) -> Result<HttpResponse, Error> {
+    let recipe_id: i32 = req.parse_param("recipe_id")?;
+
+    let mut recipe = storage::db::get_recipe(&data.pool, recipe_id)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
+    storage::images::create_recipe_image(&data.images_folder, recipe_id, payload).await?;
+
+    if !recipe.has_image {
+        recipe.has_image = true;
+        storage::db::update_recipe(&data.pool, recipe)
+            .await
+            .map_err(|e| e.into_http_response())?;
+    }
+
+    Ok(HttpResponse::Ok().into())
+}
+
+#[get("/recipes/{recipe_id}/image")]
+async fn get_recipe_image(
+    data: web::Data<AppState>,
+    req: HttpRequest,
+) -> Result<actix_files::NamedFile, Error> {
+    let recipe_id: i32 = req.parse_param("recipe_id")?;
+
+    let file = storage::images::get_recipe_image(&data.images_folder, recipe_id)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
+    Ok(file)
+}
+
+#[delete("/recipes/{recipe_id}/image")]
+async fn delete_recipe_image(
+    data: web::Data<AppState>,
+    req: HttpRequest,
+) -> Result<HttpResponse, Error> {
+    let recipe_id: i32 = req.parse_param("recipe_id")?;
+
+    let mut recipe = storage::db::get_recipe(&data.pool, recipe_id)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
+    storage::images::delete_recipe_image(&data.images_folder, recipe_id)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
+    recipe.has_image = false;
+    storage::db::update_recipe(&data.pool, recipe)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
+    Ok(HttpResponse::Ok().into())
 }

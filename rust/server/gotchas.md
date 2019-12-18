@@ -23,9 +23,49 @@ cargo fails on rebuilds sometimes
 `error: failed to link or copy`  
 `error: unable to copy <...> No such file or directory (os error 2)`
 
+```
+[Running 'cargo run']
+   Compiling server v0.1.0 (/workspaces/cookbook/rust/server)
+error: unable to copy /workspaces/cookbook/rust/target/debug/incremental/server-vr9l6c56dd5r/s-fivs35fi87-1j19rqk-working/24q9aggu6j5p0j1o.o to /workspaces/cookbook/rust/target/debug/deps/server-2e8bb0725aec4b50.24q9aggu6j5p0j1o.rcgu.o: No such file or directory (os error 2)
+
+error: aborting due to previous error
+
+error: could not compile `server`.
+
+To learn more, run the command again with --verbose.
+[Finished running. Exit status: 101]
+```
+
 https://github.com/actix/actix-web/issues/1180
 
 solution: restart docker
+
+---
+
+cargo cannot install several versions of same package
+
+eg. trying to install `reqwest` which depends on `tokio`, but there's also
+`actix-web` already installed which also depends on `tokio`:
+
+```
+error: failed to select a version for `tokio`.
+    ... required by package `reqwest v0.10.0-alpha.2`
+    ... which is depended on by `server v0.1.0 (/workspaces/cookbook/rust/server)`
+versions that meet the requirements `= 0.2.0-alpha.6` are: 0.2.0-alpha.6
+
+all possible versions conflict with previously selected packages.
+
+  previously selected package `tokio v0.2.4`
+    ... which is depended on by `actix-rt v1.0.0`
+    ... which is depended on by `actix-web v2.0.0-alpha.6`
+    ... which is depended on by `server v0.1.0 (/workspaces/cookbook/rust/server)`
+
+failed to select a version for `tokio` which could resolve this conflict
+```
+
+it happens even across different packages of same workspace
+
+https://stackoverflow.com/questions/59399723/how-to-have-multiple-versions-of-the-same-indirect-dependency
 
 ---
 

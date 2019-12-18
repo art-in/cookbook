@@ -2,5 +2,6 @@
 url = "0.0.0.0:8080"
 statics_folder = "client/build/"
 
-[database]
-url = "" # see .env
+[storage]
+database_url = "" # see .env
+images_folder = "images/"

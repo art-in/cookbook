@@ -1,4 +1,4 @@
-use crate::storage::db::utils::{BlockingDieselError, BlockingError, DieselError};
+use crate::storage::utils::BlockingError;
 use actix_web::{Error, HttpRequest, HttpResponse};
 
 pub trait ParseParam {
@@ -20,13 +20,39 @@ pub trait IntoHttpResponse {
     fn into_http_response(&self) -> HttpResponse;
 }
 
-impl IntoHttpResponse for BlockingDieselError {
+impl IntoHttpResponse for BlockingError<diesel::result::Error> {
     fn into_http_response(&self) -> HttpResponse {
         match &self {
-            BlockingError::Error(DieselError::NotFound) => {
+            BlockingError::Error(e) => {
+                warn!("Failed to run database query: {}", e);
                 HttpResponse::NotFound().body("not found")
             }
-            _ => HttpResponse::InternalServerError().body("internal server error"),
+            _ => {
+                error!("Failed to run database query: {}", self);
+                HttpResponse::InternalServerError().body("internal server error")
+            }
         }
+    }
+}
+
+impl IntoHttpResponse for BlockingError<std::io::Error> {
+    fn into_http_response(&self) -> HttpResponse {
+        match &self {
+            BlockingError::Error(e) => {
+                warn!("Failed to run IO operation: {}", e);
+                HttpResponse::NotFound().body("not found")
+            }
+            _ => {
+                error!("Failed to run IO operation: {}", self);
+                HttpResponse::InternalServerError().body("internal server error")
+            }
+        }
+    }
+}
+
+impl IntoHttpResponse for actix_multipart::MultipartError {
+    fn into_http_response(&self) -> HttpResponse {
+        warn!("Failed to parse multipart form data: {}", self);
+        HttpResponse::BadRequest().body("invalid multipart form data")
     }
 }
