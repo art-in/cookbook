@@ -1,3 +1,2 @@
+# rust compilation results
 target/
-images/*
-!images/.gitkeep

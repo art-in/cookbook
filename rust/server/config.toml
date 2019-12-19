@@ -4,4 +4,4 @@ statics_folder = "client/build/"
 
 [storage]
 database_url = "" # see .env
-images_folder = "images/"
+images_folder = "server/images/"

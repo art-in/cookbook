@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.workingDirectories": [
+    "./client"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust"
+  }
+}

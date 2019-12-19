@@ -1,19 +1,22 @@
 {
-	"name": "cookbook rust",
-	"dockerFile": "Dockerfile",
-	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
-		// fix "RLS could not be started" error of 'rust-lang' extension
-		"rust-client.rustupPath": "/root/.cargo/bin/rustup"
-	},
-	"appPort": [
-		8080, // rust server
-		5432 //  postgres db
-	],
-	"extensions": [
-		"bungcip.better-toml",
-		"eamodio.gitlens",
-		"rust-lang.rust",
-		"dtsvet.vscode-wasm"
-	]
+  "name": "cookbook rust",
+  "dockerFile": "Dockerfile",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    // fix "RLS could not be started" error of 'rust-lang' extension
+    "rust-client.rustupPath": "/root/.cargo/bin/rustup"
+  },
+  "appPort": [
+    8080, // rust server
+    5432, // postgres db
+    3000 //  webpack dev server
+  ],
+  "extensions": [
+    "bungcip.better-toml",
+    "eamodio.gitlens",
+    "rust-lang.rust",
+    "dtsvet.vscode-wasm",
+    "dbaeumer.vscode-eslint",
+    "thibaudcolas.stylelint"
+  ]
 }

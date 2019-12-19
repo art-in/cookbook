@@ -26,9 +26,15 @@ pub async fn connect(url: &str, statics_folder: String, images_folder: String, p
         App::new()
             .register_data(state.clone())
             .wrap(middleware::Logger::new(r#""%r" - %s - %Ts"#))
-            .wrap(middleware::Compress::default())
+            // TODO: enable compression when brotli encoding will be fixed
+            // https://github.com/actix/actix-web/issues/1224
+            //.wrap(middleware::Compress::default())
             .service(api::register())
-            .service(fs::Files::new("/", &statics_folder).index_file("index.html"))
+            .service(
+                fs::Files::new("/", &statics_folder)
+                    .index_file("index.html")
+                    .disable_content_disposition(),
+            )
     });
 
     // reuse same socket on auto-reloads

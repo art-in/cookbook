@@ -1,6 +1,7 @@
 server rebuilds are too slow
 
-with basic actix-web example and single endpoint it takes ~15sec
+for basic actix-web example with single endpoint it takes ~15sec,  
+and for completed REST API server it takes ~35sec
 
 ---
 
@@ -74,6 +75,12 @@ actix-web auto-reload requires too much
 1. install `systemfd` and `cargo-watch` crates
 2. update source code (!) to restart server without losing socket
 3. start with ugly CLI: `systemfd --no-pid -s http::0.0.0.0:8080 -- cargo watch -x run`
+
+---
+
+actix-web truncates response when using brotli compression
+
+https://github.com/actix/actix-web/issues/1224
 
 ---
 

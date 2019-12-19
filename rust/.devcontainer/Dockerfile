@@ -47,3 +47,12 @@ RUN $HOME/.cargo/bin/cargo install \
 RUN $HOME/.cargo/bin/cargo install \
     # for diesel orm
     diesel_cli --no-default-features --features postgres
+
+# install nodejs
+ARG NODE_VERSION=v12.14.0
+RUN mkdir -p /opt/node
+WORKDIR /opt/node
+RUN curl https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz -o node-$NODE_VERSION-linux-x64.tar.xz
+RUN mkdir -p /usr/local/lib/nodejs
+RUN tar -xJvf node-$NODE_VERSION-linux-x64.tar.xz -C /usr/local/lib/nodejs
+ENV PATH=/usr/local/lib/nodejs/node-$NODE_VERSION-linux-x64/bin:$PATH
