@@ -26,9 +26,7 @@ pub async fn connect(url: &str, statics_folder: String, images_folder: String, p
         App::new()
             .register_data(state.clone())
             .wrap(middleware::Logger::new(r#""%r" - %s - %Ts"#))
-            // TODO: enable compression when brotli encoding will be fixed
-            // https://github.com/actix/actix-web/issues/1224
-            //.wrap(middleware::Compress::default())
+            .wrap(middleware::Compress::default())
             .service(api::register())
             .service(
                 fs::Files::new("/", &statics_folder)
