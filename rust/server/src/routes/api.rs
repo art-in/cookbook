@@ -80,13 +80,19 @@ async fn post_recipe(
 async fn delete_recipe(data: web::Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
     let recipe_id: i32 = req.parse_param("recipe_id")?;
 
+    let recipe = storage::db::get_recipe(&data.pool, recipe_id)
+        .await
+        .map_err(|e| e.into_http_response())?;
+
     storage::db::delete_recipe(&data.pool, recipe_id)
         .await
         .map_err(|e| e.into_http_response())?;
 
-    storage::images::delete_recipe_image(&data.images_folder, recipe_id)
-        .await
-        .map_err(|e| e.into_http_response())?;
+    if recipe.has_image {
+        storage::images::delete_recipe_image(&data.images_folder, recipe_id)
+            .await
+            .map_err(|e| e.into_http_response())?;
+    }
 
     Ok(HttpResponse::Ok().into())
 }
