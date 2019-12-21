@@ -5,6 +5,6 @@ CREATE TABLE recipes (
   complexity SMALLINT NOT NULL,
   popularity SMALLINT NOT NULL,
   has_image BOOLEAN NOT NULL,
-  ingredients VARCHAR NOT NULL,
-  steps VARCHAR NOT NULL
+  ingredients JSONB NOT NULL,
+  steps JSONB NOT NULL
 )

@@ -6,7 +6,7 @@ table! {
         complexity -> Int2,
         popularity -> Int2,
         has_image -> Bool,
-        ingredients -> Varchar,
-        steps -> Varchar,
+        ingredients -> Jsonb,
+        steps -> Jsonb,
     }
 }
