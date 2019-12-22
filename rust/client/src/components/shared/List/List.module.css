@@ -1,0 +1,17 @@
+.root {
+  /* initiate new block formatting context so child margins not slip out of
+    list container */
+  overflow: hidden;
+}
+
+.title {
+  font-size: 1.3rem;
+}
+
+ul.ordered {
+  list-style-type: decimal;
+}
+
+.item {
+  line-height: 1.7em;
+}

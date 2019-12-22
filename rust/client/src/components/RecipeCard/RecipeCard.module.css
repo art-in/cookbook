@@ -1,0 +1,95 @@
+.root {
+  display: flex;
+  padding: 10px;
+  position: relative;
+}
+
+.actions {
+  position: absolute;
+  right: 10px;  
+  display: none;
+}
+
+.root:hover .actions {
+  display: block;
+}
+
+.root.editing > .image-container {
+  cursor: pointer;
+}
+
+.image-container {
+  margin-right: 15px;
+  flex: 1;
+  position: relative;
+}
+
+.image-container .delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #fffc;
+  padding: 5px;
+}
+
+.image-container.empty {
+  position: relative;
+}
+
+.image-container.empty > .image-stub {
+  border: 1px solid lightgray;
+  color: gray;
+  width: 250px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container > img {
+  width: 250px;
+}
+
+.image-container > input {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.props {
+  display: flex;
+  flex-direction: column;
+  flex: 3;
+  align-items: flex-start;
+  line-height: 25px;
+}
+
+.name {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  /* leave space on the right for form action buttons */
+  width: calc(100% - 145px);
+}
+
+textarea.description {
+  margin-bottom: 10px;
+  color: gray;
+  width: calc(100% - 30px);
+}
+
+textarea.description:not(:read-only) {
+  resize: vertical;
+}
+
+.numbers {
+  color: gray;
+}
+
+.numbers > span + span {
+  margin-left: 10px;
+}
+
+.numbers input[type=number] {
+  width: 50px;
+}

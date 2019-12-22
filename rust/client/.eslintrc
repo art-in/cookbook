@@ -64,6 +64,8 @@
         "prefer-const": [
             "error"
         ],
+        // no reason for "error" and block the build
+        "no-unused-vars": "warn",
         // react hooks
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn"
