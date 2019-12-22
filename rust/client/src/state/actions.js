@@ -3,47 +3,79 @@ import * as api from 'api';
 import Recipe from 'model/Recipe';
 import Ingredient from 'model/Ingredient';
 import Step from 'model/Step';
+import st from './state';
+import {getHistoryState, setHistoryState} from './bind-history';
 
-const defaultCurrentPage = 0;
-const defaultSortProp = 'name';
-const defaultSortDir = 'asc';
+const initialState = clone(st);
 
 // TODO: handle API request failures
 
-export async function onRecipeListRouteEnter(context, payload) {
-  await onRecipeListRouteUpdate(context, payload);
+export function onInit(location) {
+  return dispatch => dispatch(onHistoryUpdate(location));
 }
 
-export async function onRecipeListRouteUpdate(context, {to, from}) {
-  const recipeId = to.query.rid;
-  if (!from || recipeId !== from.query.rid) {
-    if (recipeId !== undefined) {
-      await openRecipeModal(context, recipeId);
-    } else {
-      closeRecipeModal(context);
+// maps history update to store
+export function onHistoryUpdate(location) {
+  return (dispatch, getState) => {
+    const storeState = getState();
+    const historyState = getHistoryState(location);
+
+    let reloadRecipes = false;
+
+    if (historyState.recipeId !== storeState.modal.recipeId) {
+      // TODO: close modal in case history recipe is unreachable
+      if (historyState.recipeId !== undefined) {
+        dispatch(openRecipeModal(historyState.recipeId));
+      } else {
+        dispatch(closeRecipeModal());
+      }
     }
-  }
 
-  // ensure route updated
-  if (
-    !from ||
-    to.query.p !== from.query.p ||
-    to.query.sp !== from.query.sp ||
-    to.query.sd !== from.query.sd
-  ) {
-    context.commit('update-recipe-list', {
-      currentPage: to.query.p !== undefined ? to.query.p : defaultCurrentPage,
-      sortProp: to.query.sp || defaultSortProp,
-      sortDir: to.query.sd || defaultSortDir
-    });
+    if (
+      historyState.sortProp !== storeState.recipes.sortProp ||
+      historyState.sortDir !== storeState.recipes.sortDir ||
+      historyState.currentPage !== storeState.recipes.currentPage
+    ) {
+      // TODO: move to first page if history page is unreachable
+      dispatch({
+        type: 'update-recipe-list',
+        data: {
+          sortProp: historyState.sortProp,
+          sortDir: historyState.sortDir,
+          currentPage: historyState.currentPage
+        }
+      });
+      reloadRecipes = true;
+    }
 
-    context.dispatch('loadRecipes');
-  }
+    if (storeState.recipes.isFirstLoad || reloadRecipes) {
+      dispatch(loadRecipes());
+    }
+  };
+}
+
+// maps store update to history
+export function onStoreUpdate(history) {
+  return (_, getState) => {
+    const storeState = getState();
+
+    const historyState = {
+      recipeId: storeState.modal.recipeId,
+      sortProp: storeState.recipes.sortProp,
+      sortDir: storeState.recipes.sortDir,
+      currentPage: storeState.recipes.currentPage
+    };
+
+    setHistoryState(history, historyState);
+  };
 }
 
 export function loadRecipes() {
   return async (dispatch, getState) => {
-    dispatch({type: 'update-recipe-list', data: {isLoading: true}});
+    dispatch({
+      type: 'update-recipe-list',
+      data: {isLoading: true, isFirstLoad: false}
+    });
 
     const state = getState();
 
@@ -59,8 +91,7 @@ export function loadRecipes() {
       data: {
         items: res.items,
         total: res.total,
-        isLoading: false,
-        isLoaded: true
+        isLoading: false
       }
     });
   };
@@ -83,6 +114,7 @@ function openRecipeModal(recipeId) {
         isDeletable: false,
         isCancelable: false,
         recipe: null,
+        recipeId,
         isImageChanged: false
       }
     });
@@ -130,7 +162,7 @@ export function onRecipeListSort(sortProp) {
       sortDir = sortDir === 'asc' ? 'desc' : 'asc';
     } else {
       sortDir = 'asc';
-      currentPage = defaultCurrentPage;
+      currentPage = initialState.recipes.currentPage;
     }
 
     dispatch({
@@ -147,7 +179,10 @@ export function onRecipeFormModalClose() {
 
 function closeRecipeModal() {
   return dispatch =>
-    dispatch({type: 'update-recipe-form-modal', data: {isVisible: false}});
+    dispatch({
+      type: 'update-recipe-form-modal',
+      data: {isVisible: false, recipeId: undefined, recipe: null}
+    });
 }
 
 export function onRecipeFormEdit() {
@@ -167,7 +202,7 @@ export function onRecipeFormEdit() {
 export function onRecipeFormSave() {
   return async (dispatch, getState) => {
     // TODO: validate inputs
-    // TODO: skip server requests if no changes
+    // TODO: skip PUT recipe if no changes
 
     const state = getState();
     const {recipe, isImageChanged} = state.modal;
@@ -184,18 +219,6 @@ export function onRecipeFormSave() {
     } else {
       await api.putRecipe(recipe);
 
-      // update recipe in the list
-      // TODO: will target recipe always be in the list? (no, paging/routing)
-      const recipes = state.recipes.items;
-      const idx = recipes.findIndex(r => r.id === recipe.id);
-      recipes.splice(idx, 1, recipe);
-
-      dispatch({
-        type: 'update-recipe-list',
-        data: {
-          items: recipes
-        }
-      });
       dispatch({
         type: 'update-recipe-form-modal',
         data: {
@@ -251,7 +274,7 @@ export function deleteRecipe(recipe) {
     if (confirm(`Delete recipe "${recipe.name}"?`)) {
       const state = getState();
 
-      dispatch({type: 'update-recipe-form-modal', data: {isVisible: false}});
+      dispatch(closeRecipeModal());
       dispatch({type: 'update-recipe-list', data: {isLoading: true}});
 
       await api.deleteRecipe(recipe.id);
