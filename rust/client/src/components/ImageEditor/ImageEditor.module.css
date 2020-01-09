@@ -1,0 +1,24 @@
+.root {
+  padding: 12px;
+}
+
+.upload > input {
+  /* free space for modal close button */
+  width: calc(100% - 40px);
+}
+
+.image {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: lightgray;
+}
+
+.image > img {
+  height: 200px;
+}
+
+.filters {
+  margin-top: 20px;
+}

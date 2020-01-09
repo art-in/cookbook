@@ -1,29 +1,27 @@
 import React, {useCallback} from 'react';
-import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {onRecipeFormModalClose} from 'state/actions';
 import RecipeForm from '../RecipeForm';
 import Modal from '../shared/Modal';
 
-RecipeFormModal.propTypes = {
-  visible: PropTypes.bool.isRequired
-};
-
-function RecipeFormModal({visible}) {
+function RecipeFormModal() {
+  // TODO: move state connection logic down to RecipeForm or up to
+  // RecipeFormModal, so it's not scattered between both
   const dispatch = useDispatch();
 
-  const recipe = useSelector(state => state.modal.recipe);
-  const isLoading = useSelector(state => state.modal.isLoading);
-  const isEditing = useSelector(state => state.modal.isEditing);
-  const isDeletable = useSelector(state => state.modal.isDeletable);
-  const isCancelable = useSelector(state => state.modal.isCancelable);
+  const isVisible = useSelector(state => state.recipeForm.isVisible);
+  const recipe = useSelector(state => state.recipeForm.recipe);
+  const isLoading = useSelector(state => state.recipeForm.isLoading);
+  const isEditing = useSelector(state => state.recipeForm.isEditing);
+  const isDeletable = useSelector(state => state.recipeForm.isDeletable);
+  const isCancelable = useSelector(state => state.recipeForm.isCancelable);
   const onClose = useCallback(() => dispatch(onRecipeFormModalClose()), [
     dispatch
   ]);
 
   return (
-    <Modal visible={visible} onClose={() => onClose()}>
+    <Modal visible={isVisible} onClose={() => onClose()}>
       <RecipeForm
         recipe={recipe}
         isLoading={isLoading}

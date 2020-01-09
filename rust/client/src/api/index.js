@@ -1,7 +1,5 @@
 import Recipe from '../model/Recipe';
 
-const getRecipeImageUrl = recipeId => `api/recipes/${recipeId}/image`;
-
 export async function getRecipes(
   sortProp = 'id',
   sortDir = 'asc',
@@ -14,7 +12,7 @@ export async function getRecipes(
 
   data.items = data.items.map(r => {
     const recipe = new Recipe(r);
-    recipe.imageSrc = recipe.hasImage && getRecipeImageUrl(recipe.id);
+    recipe.imageSrc = getRecipeImageUrl(recipe);
     return recipe;
   });
 
@@ -26,7 +24,7 @@ export async function getRecipe(recipeId) {
   const data = await res.json();
 
   const recipe = new Recipe(data);
-  recipe.imageSrc = recipe.hasImage && getRecipeImageUrl(recipe.id);
+  recipe.imageSrc = getRecipeImageUrl(recipe);
 
   return recipe;
 }
@@ -73,4 +71,8 @@ export async function deleteRecipeImage(recipeId) {
   await fetch(`api/recipes/${recipeId}/image`, {
     method: 'DELETE'
   });
+}
+
+function getRecipeImageUrl(recipe) {
+  return recipe.hasImage ? `api/recipes/${recipe.id}/image` : null;
 }

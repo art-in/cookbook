@@ -14,28 +14,28 @@ import IconBtn from '../shared/IconBtn';
 import Waiter from '../shared/Waiter';
 import RecipeCard from '../RecipeCard';
 import RecipeFormModal from '../RecipeFormModal';
+import ImageEditorModal from '../ImageEditorModal';
 import classes from './RecipeList.module.css';
 
 function RecipeList() {
   // selectors
-  const sortProp = useSelector(state => state.recipes.sortProp);
+  const sortProp = useSelector(state => state.recipeList.sortProp);
   const isEmpty = useSelector(state => {
-    const items = state.recipes.items;
+    const items = state.recipeList.items;
     return !items || items.length === 0;
   });
-  const items = useSelector(state => state.recipes.items);
+  const items = useSelector(state => state.recipeList.items);
   const pages = useSelector(state => {
     // TODO: move to helper function
-    const {total, pageLimit} = state.recipes;
+    const {total, pageLimit} = state.recipeList;
     const res = [];
     for (let i = 0; i < Math.ceil(total / pageLimit); i++) {
       res.push(i);
     }
     return res;
   });
-  const currentPage = useSelector(state => state.recipes.currentPage);
-  const isLoading = useSelector(state => state.recipes.isLoading);
-  const isModalVisible = useSelector(state => state.modal.isVisible);
+  const currentPage = useSelector(state => state.recipeList.currentPage);
+  const isLoading = useSelector(state => state.recipeList.isLoading);
 
   // even handlers
   const dispatch = useDispatch();
@@ -120,7 +120,8 @@ function RecipeList() {
           ))}
         </BtnGroup>
       </div>
-      <RecipeFormModal visible={isModalVisible} />
+      <RecipeFormModal />
+      <ImageEditorModal />
     </div>
   );
 }

@@ -28,12 +28,15 @@ export function getHistoryState(location) {
 
   return {
     recipeId: query.rid === undefined ? undefined : Number(query.rid),
-    sortProp: query.sp || initialState.recipes.sortProp,
-    sortDir: query.sd || initialState.recipes.sortDir,
+    sortProp: query.sp || initialState.recipeList.sortProp,
+    sortDir: query.sd || initialState.recipeList.sortDir,
     currentPage:
       query.p !== undefined
         ? Number(query.p) - 1
-        : initialState.recipes.currentPage
+        : initialState.recipeList.currentPage,
+    isRecipeEditing: query.edit === null || initialState.recipeForm.isEditing,
+    isRecipeImageEditing:
+      query.image === null || initialState.imageEditor.isVisible
   };
 }
 
@@ -45,16 +48,26 @@ export function setHistoryState(history, historyState) {
     query.rid = historyState.recipeId;
   }
 
-  if (historyState.sortProp !== initialState.recipes.sortProp) {
+  if (historyState.sortProp !== initialState.recipeList.sortProp) {
     query.sp = historyState.sortProp;
   }
 
-  if (historyState.sortDir !== initialState.recipes.sortDir) {
+  if (historyState.sortDir !== initialState.recipeList.sortDir) {
     query.sd = historyState.sortDir;
   }
 
-  if (historyState.currentPage !== initialState.recipes.currentPage) {
+  if (historyState.currentPage !== initialState.recipeList.currentPage) {
     query.p = historyState.currentPage + 1;
+  }
+
+  if (historyState.isRecipeEditing !== initialState.recipeForm.isEditing) {
+    query.edit = null;
+  }
+
+  if (
+    historyState.isRecipeImageEditing !== initialState.imageEditor.isVisible
+  ) {
+    query.image = null;
   }
 
   let search = qs.stringify(query);

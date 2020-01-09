@@ -1,5 +1,5 @@
 export default {
-  recipes: {
+  recipeList: {
     isFirstLoad: true,
     isLoading: true,
     items: null,
@@ -14,7 +14,7 @@ export default {
     currentPage: 0
   },
 
-  modal: {
+  recipeForm: {
     isVisible: false,
     isLoading: false,
     isEditing: false,
@@ -25,5 +25,10 @@ export default {
     recipe: null,
     recipeId: undefined,
     prevRecipe: null
+  },
+
+  imageEditor: {
+    isVisible: false,
+    imageSrc: null
   }
 };

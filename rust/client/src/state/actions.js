@@ -16,25 +16,25 @@ export function onInit(location) {
 
 // maps history update to store
 export function onHistoryUpdate(location) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const storeState = getState();
     const historyState = getHistoryState(location);
 
     let reloadRecipes = false;
 
-    if (historyState.recipeId !== storeState.modal.recipeId) {
+    if (historyState.recipeId !== storeState.recipeForm.recipeId) {
       // TODO: close modal in case history recipe is unreachable
       if (historyState.recipeId !== undefined) {
-        dispatch(openRecipeModal(historyState.recipeId));
+        await dispatch(openRecipeModal(historyState.recipeId));
       } else {
         dispatch(closeRecipeModal());
       }
     }
 
     if (
-      historyState.sortProp !== storeState.recipes.sortProp ||
-      historyState.sortDir !== storeState.recipes.sortDir ||
-      historyState.currentPage !== storeState.recipes.currentPage
+      historyState.sortProp !== storeState.recipeList.sortProp ||
+      historyState.sortDir !== storeState.recipeList.sortDir ||
+      historyState.currentPage !== storeState.recipeList.currentPage
     ) {
       // TODO: move to first page if history page is unreachable
       dispatch({
@@ -48,8 +48,27 @@ export function onHistoryUpdate(location) {
       reloadRecipes = true;
     }
 
-    if (storeState.recipes.isFirstLoad || reloadRecipes) {
+    if (storeState.recipeList.isFirstLoad || reloadRecipes) {
       dispatch(loadRecipes());
+    }
+
+    if (historyState.isRecipeEditing !== storeState.recipeForm.isEditing) {
+      if (historyState.isRecipeEditing) {
+        dispatch(onRecipeFormEdit());
+      } else {
+        dispatch(onRecipeFormCancel());
+      }
+
+      // only allow to edit recipe image when editing recipe itself
+      if (
+        historyState.isRecipeImageEditing !== storeState.imageEditor.isVisible
+      ) {
+        if (historyState.isRecipeImageEditing) {
+          dispatch(onRecipeFormImageEditing());
+        } else {
+          dispatch(onImageEditorModalClose());
+        }
+      }
     }
   };
 }
@@ -60,10 +79,12 @@ export function onStoreUpdate(history) {
     const storeState = getState();
 
     const historyState = {
-      recipeId: storeState.modal.recipeId,
-      sortProp: storeState.recipes.sortProp,
-      sortDir: storeState.recipes.sortDir,
-      currentPage: storeState.recipes.currentPage
+      recipeId: storeState.recipeForm.recipeId,
+      sortProp: storeState.recipeList.sortProp,
+      sortDir: storeState.recipeList.sortDir,
+      currentPage: storeState.recipeList.currentPage,
+      isRecipeEditing: storeState.recipeForm.isEditing,
+      isRecipeImageEditing: storeState.imageEditor.isVisible
     };
 
     setHistoryState(history, historyState);
@@ -79,9 +100,9 @@ export function loadRecipes() {
 
     const state = getState();
 
-    const {currentPage, sortProp, sortDir} = state.recipes;
+    const {currentPage, sortProp, sortDir} = state.recipeList;
 
-    const {pageLimit} = state.recipes;
+    const {pageLimit} = state.recipeList;
     const pageOffset = currentPage * pageLimit;
 
     const res = await api.getRecipes(sortProp, sortDir, pageOffset, pageLimit);
@@ -106,7 +127,7 @@ export function onRecipeListItemClick(recipe) {
 function openRecipeModal(recipeId) {
   return async dispatch => {
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         isVisible: true,
         isLoading: true,
@@ -122,7 +143,7 @@ function openRecipeModal(recipeId) {
     const recipe = await api.getRecipe(recipeId);
 
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe,
         isLoading: false,
@@ -140,7 +161,7 @@ export function onRecipeListAdd() {
 
     // TODO: focus recipe name input
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe,
         isLoading: false,
@@ -157,12 +178,12 @@ export function onRecipeListAdd() {
 export function onRecipeListSort(sortProp) {
   return (dispatch, getState) => {
     const state = getState();
-    let {sortDir, currentPage} = state.recipes;
-    if (sortProp === state.recipes.sortProp) {
+    let {sortDir, currentPage} = state.recipeList;
+    if (sortProp === state.recipeList.sortProp) {
       sortDir = sortDir === 'asc' ? 'desc' : 'asc';
     } else {
       sortDir = 'asc';
-      currentPage = initialState.recipes.currentPage;
+      currentPage = initialState.recipeList.currentPage;
     }
 
     dispatch({
@@ -180,17 +201,22 @@ export function onRecipeFormModalClose() {
 function closeRecipeModal() {
   return dispatch =>
     dispatch({
-      type: 'update-recipe-form-modal',
-      data: {isVisible: false, recipeId: undefined, recipe: null}
+      type: 'update-recipe-form',
+      data: {
+        isVisible: false,
+        recipeId: undefined,
+        recipe: null,
+        isEditing: false
+      }
     });
 }
 
 export function onRecipeFormEdit() {
   return (dispatch, getState) => {
     const state = getState();
-    const {recipe} = state.modal;
+    const {recipe} = state.recipeForm;
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         isEditing: true,
         prevRecipe: clone(recipe)
@@ -205,22 +231,22 @@ export function onRecipeFormSave() {
     // TODO: skip PUT recipe if no changes
 
     const state = getState();
-    const {recipe, isImageChanged} = state.modal;
+    const {recipe, isImageChanged} = state.recipeForm;
     let recipeId = recipe.id;
 
-    dispatch({type: 'update-recipe-form-modal', data: {isLoading: true}});
+    dispatch({type: 'update-recipe-form', data: {isLoading: true}});
 
-    if (state.modal.isNewRecipe) {
+    if (state.recipeForm.isNewRecipe) {
       recipeId = await api.postRecipe(recipe);
       const newRecipe = clone(recipe);
       newRecipe.id = recipeId;
 
-      dispatch({type: 'update-recipe-form-modal', data: {isVisible: false}});
+      dispatch({type: 'update-recipe-form', data: {isVisible: false}});
     } else {
       await api.putRecipe(recipe);
 
       dispatch({
-        type: 'update-recipe-form-modal',
+        type: 'update-recipe-form',
         data: {
           isEditing: false,
           isLoading: false,
@@ -237,6 +263,8 @@ export function onRecipeFormSave() {
       }
     }
 
+    // TODO: when recipe image file updated, list still shows old image
+    // since image url stays the same. need to trigger image rerender somehow.
     dispatch(loadRecipes());
   };
 }
@@ -244,9 +272,9 @@ export function onRecipeFormSave() {
 export function onRecipeFormCancel() {
   return (dispatch, getState) => {
     const state = getState();
-    const prevRecipe = state.modal.prevRecipe;
+    const prevRecipe = state.recipeForm.prevRecipe;
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         isEditing: false,
         isImageChanged: false,
@@ -257,8 +285,7 @@ export function onRecipeFormCancel() {
 }
 
 export function onRecipeFormChange(recipe) {
-  return dispatch =>
-    dispatch({type: 'update-recipe-form-modal', data: {recipe}});
+  return dispatch => dispatch({type: 'update-recipe-form', data: {recipe}});
 }
 
 export function onRecipeFormDelete(recipe) {
@@ -279,9 +306,9 @@ export function deleteRecipe(recipe) {
 
       await api.deleteRecipe(recipe.id);
 
-      const {currentPage} = state.recipes;
+      const {currentPage} = state.recipeList;
 
-      const {items} = state.recipes;
+      const {items} = state.recipeList;
       if (currentPage !== 0 && items.length === 1) {
         // jump to prev page if deleting last item on current page
         dispatch({
@@ -305,12 +332,12 @@ export function onRecipeListPage(pageNumber) {
 export function onRecipeFormIngredientAdd() {
   return (dispatch, getState) => {
     const state = getState();
-    const {ingredients} = state.modal.recipe;
+    const {ingredients} = state.recipeForm.recipe;
     ingredients.push(new Ingredient());
 
     // TODO: focus new item input
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe: {ingredients}
       }
@@ -321,12 +348,12 @@ export function onRecipeFormIngredientAdd() {
 export function onRecipeFormIngredientDelete(ingredient) {
   return (dispatch, getState) => {
     const state = getState();
-    const {ingredients} = state.modal.recipe;
+    const {ingredients} = state.recipeForm.recipe;
     const idx = ingredients.findIndex(i => i === ingredient);
     ingredients.splice(idx, 1);
 
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe: {ingredients}
       }
@@ -337,10 +364,10 @@ export function onRecipeFormIngredientDelete(ingredient) {
 export function onRecipeFormIngredientChange(ingredient, idx) {
   return (dispatch, getState) => {
     const state = getState();
-    const {ingredients} = state.modal.recipe;
+    const {ingredients} = state.recipeForm.recipe;
     ingredients.splice(idx, 1, ingredient);
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe: {ingredients}
       }
@@ -351,12 +378,12 @@ export function onRecipeFormIngredientChange(ingredient, idx) {
 export function onRecipeFormStepAdd() {
   return (dispatch, getState) => {
     const state = getState();
-    const {steps} = state.modal.recipe;
+    const {steps} = state.recipeForm.recipe;
     steps.push(new Step());
 
     // TODO: focus new item input
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe: {steps}
       }
@@ -367,12 +394,12 @@ export function onRecipeFormStepAdd() {
 export function onRecipeFormStepDelete(step) {
   return (dispatch, getState) => {
     const state = getState();
-    const {steps} = state.modal.recipe;
+    const {steps} = state.recipeForm.recipe;
     const idx = steps.findIndex(i => i === step);
     steps.splice(idx, 1);
 
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe: {steps}
       }
@@ -383,10 +410,10 @@ export function onRecipeFormStepDelete(step) {
 export function onRecipeFormStepChange(step, idx) {
   return (dispatch, getState) => {
     const state = getState();
-    const {steps} = state.modal.recipe;
+    const {steps} = state.recipeForm.recipe;
     steps.splice(idx, 1, step);
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         recipe: {steps}
       }
@@ -394,12 +421,44 @@ export function onRecipeFormStepChange(step, idx) {
   };
 }
 
-export function onRecipeFormImageChange(imageFile) {
+export function onRecipeFormImageDelete() {
+  return dispatch => {
+    dispatch({
+      type: 'update-recipe-form',
+      data: {
+        isImageChanged: true,
+        recipe: {
+          hasImage: false,
+          imageSrc: null,
+          imageFile: null
+        }
+      }
+    });
+  };
+}
+
+export function onRecipeFormImageEditing() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    dispatch(openImageEditor(state.recipeForm.recipe.imageSrc));
+  };
+}
+
+// TODO: move image editor actions to separate file
+
+export function onImageEditorModalClose() {
+  return dispatch => dispatch(closeImageEditor());
+}
+
+export function onImageEditorModalImageChange(imageFile) {
   return dispatch => {
     const imageSrc = URL.createObjectURL(imageFile);
 
+    dispatch({type: 'update-image-editor', data: {imageSrc}});
+
     dispatch({
-      type: 'update-recipe-form-modal',
+      type: 'update-recipe-form',
       data: {
         isImageChanged: true,
         recipe: {
@@ -412,18 +471,18 @@ export function onRecipeFormImageChange(imageFile) {
   };
 }
 
-export function onRecipeFormImageDelete() {
-  return dispatch => {
+function openImageEditor(imageSrc) {
+  return dispatch =>
     dispatch({
-      type: 'update-recipe-form-modal',
-      data: {
-        isImageChanged: true,
-        recipe: {
-          hasImage: false,
-          imageSrc: null,
-          imageFile: null
-        }
-      }
+      type: 'update-image-editor',
+      data: {isVisible: true, imageSrc}
     });
-  };
+}
+
+function closeImageEditor() {
+  return dispatch =>
+    dispatch({
+      type: 'update-image-editor',
+      data: {isVisible: false, imageSrc: null}
+    });
 }

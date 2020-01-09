@@ -14,7 +14,7 @@ import {
   onRecipeFormStepAdd,
   onRecipeFormStepDelete,
   onRecipeFormStepChange,
-  onRecipeFormImageChange,
+  onRecipeFormImageEditing,
   onRecipeFormImageDelete
 } from 'state/actions';
 import Recipe from 'model/Recipe';
@@ -35,7 +35,7 @@ RecipeForm.propTypes = {
 function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
   const dispatch = useDispatch();
 
-  // TODO: do we need to depend on dispatch?
+  // TODO: do we need [dispatch]?
   const onEdit = useCallback(() => dispatch(onRecipeFormEdit()), [dispatch]);
   const onSave = useCallback(() => dispatch(onRecipeFormSave()), [dispatch]);
   const onCancel = useCallback(() => dispatch(onRecipeFormCancel()), [
@@ -80,10 +80,11 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
     },
     [dispatch]
   );
-  const onImageChange = useCallback(
-    file => dispatch(onRecipeFormImageChange(file)),
+  const onImageEditing = useCallback(
+    () => dispatch(onRecipeFormImageEditing()),
     [dispatch]
   );
+
   const onImageDelete = useCallback(() => dispatch(onRecipeFormImageDelete()), [
     dispatch
   ]);
@@ -95,7 +96,7 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
           recipe={recipe}
           isEditing={isEditing}
           onChange={onChange}
-          onImageChange={onImageChange}
+          onImageEditing={onImageEditing}
           onImageDelete={onImageDelete}
         />
       )}

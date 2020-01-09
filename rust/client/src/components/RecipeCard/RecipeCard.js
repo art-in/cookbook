@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
@@ -16,10 +16,11 @@ RecipeCard.propTypes = {
   onClick: PropTypes.func,
   onChange: PropTypes.func,
   onDelete: PropTypes.func,
-  onImageChange: PropTypes.func,
+  onImageEditing: PropTypes.func,
   onImageDelete: PropTypes.func
 };
 
+// TODO: export default ...
 function RecipeCard({
   className,
   recipe,
@@ -28,11 +29,9 @@ function RecipeCard({
   onClick,
   onChange,
   onDelete,
-  onImageChange,
+  onImageEditing,
   onImageDelete
 }) {
-  const imageInput = useRef(null);
-
   const onNameChange = useCallback(
     e => onChange({...recipe, name: e.target.value}),
     [onChange, recipe]
@@ -55,23 +54,9 @@ function RecipeCard({
 
   const onImageClick = useCallback(() => {
     if (isEditing) {
-      // activate file dialog
-      imageInput.current.focus();
-      imageInput.current.click();
+      onImageEditing();
     }
-  }, [isEditing]);
-
-  const onImageChangeInternal = useCallback(
-    e => {
-      const file = e.target.files[0];
-      if (!file) {
-        // file dialog canceled
-        return;
-      }
-      onImageChange(file);
-    },
-    [onImageChange]
-  );
+  }, [isEditing, onImageEditing]);
 
   const onImageDeleteInternal = useCallback(
     e => {
@@ -100,6 +85,7 @@ function RecipeCard({
         className={cn(classes['image-container'], {
           [classes.empty]: !recipe.hasImage
         })}
+        title={isEditing ? 'Edit image' : null}
         onClick={onImageClick}
       >
         {recipe.hasImage && <img src={recipe.imageSrc} alt={recipe.name} />}
@@ -112,14 +98,8 @@ function RecipeCard({
           <IconBtn
             className={classes.delete}
             icon="trash"
+            title="Delete image"
             onClick={onImageDeleteInternal}
-          />
-        )}
-        {isEditing && (
-          <input
-            type="file"
-            ref={imageInput}
-            onChange={onImageChangeInternal}
           />
         )}
       </div>
