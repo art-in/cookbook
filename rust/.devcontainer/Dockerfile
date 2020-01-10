@@ -43,7 +43,9 @@ RUN $HOME/.cargo/bin/cargo install \
     cargo-edit \
     # for actix auto-reload
     systemfd \
-    cargo-watch
+    cargo-watch \
+    # for building wasm npm package
+    wasm-pack
 RUN $HOME/.cargo/bin/cargo install \
     # for diesel orm
     diesel_cli --no-default-features --features postgres

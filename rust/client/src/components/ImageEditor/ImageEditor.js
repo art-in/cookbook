@@ -1,6 +1,7 @@
 import React, {useRef, useCallback} from 'react';
 import PropTypes from 'prop-types';
 
+import * as imageEffects from 'image-effects';
 import classes from './ImageEditor.module.css';
 
 ImageEditor.propTypes = {
@@ -11,7 +12,7 @@ ImageEditor.propTypes = {
 export default function ImageEditor({imageSrc, onImageChange}) {
   const imageInput = useRef(null);
 
-  const onImageChangeInternal = useCallback(
+  const onInputChange = useCallback(
     e => {
       const file = e.target.files[0];
       if (!file) {
@@ -23,16 +24,23 @@ export default function ImageEditor({imageSrc, onImageChange}) {
     [onImageChange]
   );
 
+  const onEffectButtonClick = useCallback(() => {
+    imageEffects.say_hello();
+  }, []);
+
   return (
     <div className={classes.root}>
       <div className={classes.upload}>
-        <input type="file" ref={imageInput} onChange={onImageChangeInternal} />
+        <input type="file" ref={imageInput} onChange={onInputChange} />
       </div>
 
       <div className={classes.image}>{imageSrc && <img src={imageSrc} />}</div>
 
       <div className={classes.filters}>
-        <div>Filters: TBD</div>
+        <div>Filters:</div>
+        <div>
+          <button onClick={onEffectButtonClick}></button>
+        </div>
       </div>
     </div>
   );

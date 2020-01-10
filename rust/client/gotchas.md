@@ -11,6 +11,31 @@ unable to configure webpack css loader to change css-modules configuration, eg.
 
 ---
 
+create-react-app does not support wasm modules
+
+its webpack config passes wasm modules to file loader which returns default error  
+```
+.-image-effects/pkg/client_image_effects_bg.wasm
+Module parse failed: magic header not detected
+File was processed with these loaders:
+ * ./node_modules/file-loader/dist/cjs.js
+You may need an additional loader to handle the result of these loaders.
+```
+
+all we need is to ignore file loader and passthrough wasm modules directly to
+webpack, which already supports wasm.
+
+but since next webpack 5 moved wasm to experiments and disabled it by default,
+cra decided to wait for stable support from webpack.  
+https://github.com/facebook/create-react-app/issues/4912
+
+and webpack 5 in its turn will support new WebAssembly/ES Module Integration spec.  
+https://github.com/WebAssembly/esm-integration/tree/master/proposals/esm-integration
+
+meanwhile we have to eject from cra to update webpack 4 config.
+
+---
+
 routers do not work with state containers correctly
 
 when using state container you want to keep entire app state inside container ("single source of truth")
