@@ -17,7 +17,7 @@ async fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
 
-    let config = Config::from_file("./server/config.toml");
+    let config = Config::from_file("config.toml");
 
     let pool = storage::db::connect(&config.storage.database_url);
     storage::db::run_migrations(&pool.get().unwrap());

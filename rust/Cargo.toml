@@ -1,2 +1,2 @@
 [workspace]
-members = ["client-image-effects", "server"]
+members = ["image-effects", "server"]

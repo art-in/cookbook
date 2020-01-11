@@ -5,6 +5,7 @@ import {createLogger} from 'redux-logger';
 import reducer from './reducer';
 import initialState from './state';
 
+// TODO: disable logger in prod
 const logger = createLogger({
   collapsed: true,
   timestamp: false

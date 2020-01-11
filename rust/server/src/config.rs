@@ -29,7 +29,7 @@ impl Config {
 
         // read database url from .env file instead of config.toml,
         // since we need to share it with diesel_cli through .env
-        dotenv::from_path("./server/.env").ok();
+        dotenv::from_path(".env").ok();
         config.storage.database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         config
     }

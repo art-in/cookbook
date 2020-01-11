@@ -15,7 +15,7 @@
   background-color: lightgray;
 }
 
-.image > img {
+.image > canvas {
   height: 200px;
 }
 

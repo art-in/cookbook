@@ -70,7 +70,15 @@ https://stackoverflow.com/questions/59399723/how-to-have-multiple-versions-of-th
 
 ---
 
-actix-web auto-reload requires too much
+cargo-watch does not detect changes sometimes
+
+probably related to in-docker use (win host, hyper-v vm, fs bindings)
+
+solution: using polling (`cargo-watch --poll`)
+
+---
+
+actix-web auto-reload requires too much setup
 
 1. install `systemfd` and `cargo-watch` crates
 2. update source code (!) to restart server without losing socket

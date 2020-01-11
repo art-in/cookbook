@@ -9,7 +9,7 @@ use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
 use entity_subset::EntitySubset;
 
-static MIGRATIONS_DIR: &str = "./server/src/storage/db/migrations";
+static MIGRATIONS_DIR: &str = "./src/storage/db/migrations";
 
 pub mod entity_subset;
 pub mod schema;

@@ -1,7 +1,7 @@
-import React, {useRef, useCallback} from 'react';
+import React, {useEffect, useRef, useCallback} from 'react';
 import PropTypes from 'prop-types';
-
 import * as imageEffects from 'image-effects';
+
 import classes from './ImageEditor.module.css';
 
 ImageEditor.propTypes = {
@@ -11,6 +11,21 @@ ImageEditor.propTypes = {
 
 export default function ImageEditor({imageSrc, onImageChange}) {
   const imageInput = useRef(null);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      if (imageSrc) {
+        const imageEl = new Image();
+        imageEl.src = imageSrc;
+        await imageEl.decode();
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(imageEl, 0, 0);
+      }
+    })();
+  }, [imageSrc]);
 
   const onInputChange = useCallback(
     e => {
@@ -25,7 +40,17 @@ export default function ImageEditor({imageSrc, onImageChange}) {
   );
 
   const onEffectButtonClick = useCallback(() => {
-    imageEffects.say_hello();
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    console.time('imageEffect');
+    const image = imageEffects.open_image(canvas, ctx);
+
+    // TODO: more effects
+    imageEffects.grayscale(image);
+
+    imageEffects.put_image_data(canvas, ctx, image);
+    console.timeEnd('imageEffect');
   }, []);
 
   return (
@@ -34,12 +59,14 @@ export default function ImageEditor({imageSrc, onImageChange}) {
         <input type="file" ref={imageInput} onChange={onInputChange} />
       </div>
 
-      <div className={classes.image}>{imageSrc && <img src={imageSrc} />}</div>
+      <div className={classes.image}>
+        <canvas ref={canvasRef} />
+      </div>
 
       <div className={classes.filters}>
         <div>Filters:</div>
         <div>
-          <button onClick={onEffectButtonClick}></button>
+          <button onClick={onEffectButtonClick}>apply</button>
         </div>
       </div>
     </div>
