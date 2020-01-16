@@ -81,3 +81,30 @@ ie. address bar should be treated the same as DOM input.
   - parse params from current history URL
   - compare it with current container state
   - if not equal - dispatch action to update container state
+
+---
+
+`worker-plugin` transforms worker code, breaks some prettier rules and blocks
+the build
+
+workaround: disable linter for workers with `exclude`
+
+---
+
+workers loaded with `worker-plugin` are not hot reloaded and not linted by 
+`eslint-loader`
+
+https://github.com/GoogleChromeLabs/worker-plugin/issues/52
+
+---
+
+not using `OffscreenCanvas` to render inside web worker because it is still experimental
+
+using `ArrayBuffer` transfering instead
+
+even though we transfering image buffer to worker with zero-cost, we still need
+to `getImageData` which clones underlying canvas buffer.  
+`OffscreenCanvas` allows to `transferToImageBitmap` which grabs its buffer
+without cloning.
+
+https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas

@@ -24,6 +24,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const WorkerPlugin = require('worker-plugin');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -343,7 +344,12 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('eslint-loader')
             }
           ],
-          include: paths.appSrc
+          include: paths.appSrc,
+
+          // TODO: figure out how to remove this. for now disable linter for
+          // workers, because worker-plugin transforms worker code, breaks some
+          // prettier rules and blocks the build
+          exclude: /worker-bootstrap\.js/
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -651,7 +657,8 @@ module.exports = function(webpackEnv) {
           silent: true,
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined
-        })
+        }),
+      new WorkerPlugin()
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

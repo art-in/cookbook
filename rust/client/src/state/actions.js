@@ -257,7 +257,7 @@ export function onRecipeFormSave() {
 
     if (isImageChanged) {
       if (recipe.hasImage) {
-        await api.postRecipeImage(recipeId, recipe.imageFile);
+        await api.postRecipeImage(recipeId, recipe.imageBlob);
       } else {
         await api.deleteRecipeImage(recipeId);
       }
@@ -430,7 +430,7 @@ export function onRecipeFormImageDelete() {
         recipe: {
           hasImage: false,
           imageSrc: null,
-          imageFile: null
+          imageBlob: null
         }
       }
     });
@@ -451,11 +451,9 @@ export function onImageEditorModalClose() {
   return dispatch => dispatch(closeImageEditor());
 }
 
-export function onImageEditorModalImageChange(imageFile) {
+export function onImageEditorModalImageChange(imageBlob) {
   return dispatch => {
-    const imageSrc = URL.createObjectURL(imageFile);
-
-    dispatch({type: 'update-image-editor', data: {imageSrc}});
+    const imageSrc = URL.createObjectURL(imageBlob);
 
     dispatch({
       type: 'update-recipe-form',
@@ -464,10 +462,22 @@ export function onImageEditorModalImageChange(imageFile) {
         recipe: {
           hasImage: true,
           imageSrc,
-          imageFile
+          imageBlob
         }
       }
     });
+  };
+}
+
+export function onImageEditorModalEffectApplying() {
+  return dispatch => {
+    dispatch({type: 'update-image-editor', data: {isLoading: true}});
+  };
+}
+
+export function onImageEditorModalEffectApplied() {
+  return dispatch => {
+    dispatch({type: 'update-image-editor', data: {isLoading: false}});
   };
 }
 

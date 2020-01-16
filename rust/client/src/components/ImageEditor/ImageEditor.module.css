@@ -1,3 +1,4 @@
+/* TODO: fix css linting errors */
 .root {
   padding: 12px;
 }
@@ -13,10 +14,6 @@
   justify-content: center;
   padding: 20px;
   background-color: lightgray;
-}
-
-.image > canvas {
-  height: 200px;
 }
 
 .filters {

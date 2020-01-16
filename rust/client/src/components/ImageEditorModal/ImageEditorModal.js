@@ -3,7 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {
   onImageEditorModalClose,
-  onImageEditorModalImageChange
+  onImageEditorModalImageChange,
+  onImageEditorModalEffectApplying,
+  onImageEditorModalEffectApplied
 } from 'state/actions';
 import Modal from '../shared/Modal';
 import ImageEditor from '../ImageEditor';
@@ -13,13 +15,29 @@ export default function ImageEditorModal() {
 
   const isVisible = useSelector(state => state.imageEditor.isVisible);
   const imageSrc = useSelector(state => state.imageEditor.imageSrc);
+  const isLoading = useSelector(state => state.imageEditor.isLoading);
 
-  const onClose = useCallback(() => dispatch(onImageEditorModalClose()), [
-    dispatch
-  ]);
+  const onClose = useCallback(() => {
+    // TODO: allow to cancel image processing by closing modal. until then
+    // it is goint to be a blocking operation.
+    if (!isLoading) {
+      dispatch(onImageEditorModalClose());
+    }
+  }, [dispatch, isLoading]);
 
   const onImageChange = useCallback(
-    file => dispatch(onImageEditorModalImageChange(file)),
+    blob => dispatch(onImageEditorModalImageChange(blob)),
+    [dispatch]
+  );
+
+  // TODO: rename to onImageProcessing
+  const onEffectApplying = useCallback(
+    () => dispatch(onImageEditorModalEffectApplying()),
+    [dispatch]
+  );
+
+  const onEffectApplied = useCallback(
+    () => dispatch(onImageEditorModalEffectApplied()),
     [dispatch]
   );
 
@@ -27,7 +45,13 @@ export default function ImageEditorModal() {
     <Modal visible={isVisible} onClose={() => onClose()}>
       {/* remount editor to reset file input */}
       {isVisible && (
-        <ImageEditor imageSrc={imageSrc} onImageChange={onImageChange} />
+        <ImageEditor
+          imageSrc={imageSrc}
+          isLoading={isLoading}
+          onImageChange={onImageChange}
+          onEffectApplying={onEffectApplying}
+          onEffectApplied={onEffectApplied}
+        />
       )}
     </Modal>
   );

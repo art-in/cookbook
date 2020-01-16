@@ -29,6 +29,8 @@ export default {
 
   imageEditor: {
     isVisible: false,
-    imageSrc: null
+    imageSrc: null,
+    // TODO: rename to isProcessing
+    isLoading: false
   }
 };

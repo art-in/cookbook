@@ -11,7 +11,7 @@ export default class Recipe {
   hasImage = false;
 
   imageSrc = null;
-  imageFile = null;
+  imageBlob = null;
 
   constructor(data) {
     update(this, data);

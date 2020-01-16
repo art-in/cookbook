@@ -57,9 +57,9 @@ export async function deleteRecipe(recipeId) {
   });
 }
 
-export async function postRecipeImage(recipeId, imageFile) {
+export async function postRecipeImage(recipeId, imageBlob) {
   const formData = new FormData();
-  formData.set('file', imageFile);
+  formData.set('image', imageBlob);
 
   await fetch(`api/recipes/${recipeId}/image`, {
     method: 'POST',
