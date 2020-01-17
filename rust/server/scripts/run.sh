@@ -5,4 +5,4 @@ cd $SCRIPTPATH && cd ..
 # start database service
 service postgresql start
 
-cargo run
+cargo run --release

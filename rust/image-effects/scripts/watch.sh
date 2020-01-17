@@ -2,4 +2,4 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 cd $SCRIPTPATH && cd ..
 
-cargo watch --poll -i .gitignore -i "pkg/*" -s "./scripts/build.sh"
+cargo watch --poll -i .gitignore -i "pkg/*" -s 'wasm-pack build --dev'

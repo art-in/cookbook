@@ -68,41 +68,59 @@ export default function ImageEditor({
     [onImageChange]
   );
 
-  const onEffectButtonClick = useCallback(() => {
-    onEffectApplying();
+  const onEffectButtonClick = useCallback(
+    e => {
+      const effectType = e.target.dataset.effect;
 
-    // pass canvas image for processing into worker thread.
-    // TODO: better use OffscreenCanvas. not using it right now as it is still
-    // experimental. even though we transfering image buffer to worker with
-    // zero-cost, we still need to `getImageData` which clones underlying canvas
-    // buffer. OffscreenCanvas allows to grab its buffer without cloning.
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+      onEffectApplying();
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const imageArrayBuffer = imageData.data.buffer;
+      // pass canvas image for processing into worker thread.
+      // TODO: better use OffscreenCanvas. not using it right now as it is still
+      // experimental. even though we transfering image buffer to worker with
+      // zero-cost, we still need to `getImageData` which clones underlying
+      // canvas buffer. OffscreenCanvas allows to grab its buffer without
+      // cloning.
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
 
-    imageEffectsWorker.postMessage(
-      {
-        effectType: 'grayscale',
-        image: {
-          buffer: imageArrayBuffer,
-          width: canvas.width,
-          height: canvas.height
-        }
-      },
-      [imageArrayBuffer]
-    );
-  }, [onEffectApplying]);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const imageArrayBuffer = imageData.data.buffer;
+
+      imageEffectsWorker.postMessage(
+        {
+          effectType,
+          image: {
+            buffer: imageArrayBuffer,
+            width: canvas.width,
+            height: canvas.height
+          }
+        },
+        [imageArrayBuffer]
+      );
+    },
+    [onEffectApplying]
+  );
 
   const onImageEffectsWorkerMessage = useCallback(
     e => {
-      // render processed image back onto canvas
-      const canvas = canvasRef.current;
-      const arrayBuffer = e.data;
-      renderArrayBuffer(canvas, arrayBuffer);
+      switch (e.data.resultCode) {
+        case 'success': {
+          const canvas = canvasRef.current;
+          renderArrayBuffer(canvas, e.data.image.buffer);
 
-      onImageChange(getImageBlob(canvas));
+          onImageChange(getImageBlob(canvas));
+          break;
+        }
+        case 'fail':
+          console.log(e.data);
+          alert(
+            `Failed to apply ${e.data.effectType} effect: \n ${e.data.error}`
+          );
+          break;
+        default:
+          throw Error(`Unknown result code '${e.data.resultCode}'`);
+      }
+
       onEffectApplied();
     },
     [onEffectApplied, onImageChange]
@@ -134,11 +152,25 @@ export default function ImageEditor({
         <canvas ref={canvasRef} width={600} />
       </div>
 
-      <div className={classes.filters}>
-        <div>Filters:</div>
-        <div>
-          <button onClick={onEffectButtonClick}>grayscale</button>
-        </div>
+      <div className={classes.effects}>
+        <button onClick={onEffectButtonClick} data-effect="grayscale">
+          grayscale
+        </button>
+        <button onClick={onEffectButtonClick} data-effect="solarize">
+          solarize
+        </button>
+        <button onClick={onEffectButtonClick} data-effect="halftone">
+          halftone
+        </button>
+        <button onClick={onEffectButtonClick} data-effect="primary">
+          primary
+        </button>
+        <button onClick={onEffectButtonClick} data-effect="colorize">
+          colorize
+        </button>
+        <button onClick={onEffectButtonClick} data-effect="sepia">
+          sepia
+        </button>
       </div>
 
       {isLoading && <Waiter />}

@@ -6,4 +6,4 @@ cd $SCRIPTPATH && cd ..
 service postgresql start
 
 # start server in watch mode
-systemfd --no-pid -s http::0.0.0.0:8080 -- cargo watch --poll -x run
+systemfd --no-pid -s http::0.0.0.0:8080 -- cargo watch --poll -x 'run -- --dev'

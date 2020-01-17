@@ -16,6 +16,12 @@
   background-color: lightgray;
 }
 
-.filters {
+.effects {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.effects > button {
+  margin-left: 5px;
 }
