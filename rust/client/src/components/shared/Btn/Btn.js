@@ -1,22 +1,22 @@
-import React from 'react';
+import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import classes from './Btn.module.css';
+import classes from './Btn.css';
 
 Btn.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
-  active: PropTypes.bool, // TODO: isActive
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func // TODO: .isRequired
+  isActive: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  onClick: PropTypes.func
 };
 
-function Btn({children, className, active, disabled, onClick}) {
+function Btn({children, className, isActive, isDisabled, onClick}) {
   return (
     <button
-      className={cn(classes.root, className, {[classes.active]: active})}
-      disabled={disabled}
+      className={cn(classes.root, className, {[classes.active]: isActive})}
+      disabled={isDisabled}
       onClick={onClick}
     >
       {children}
@@ -24,4 +24,4 @@ function Btn({children, className, active, disabled, onClick}) {
   );
 }
 
-export default Btn;
+export default memo(Btn);

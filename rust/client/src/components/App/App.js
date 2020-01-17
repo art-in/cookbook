@@ -3,7 +3,7 @@ import React from 'react';
 import './global.css';
 
 import RecipeList from '../RecipeList';
-import classes from './App.module.css';
+import classes from './App.css';
 
 export default function App() {
   return (

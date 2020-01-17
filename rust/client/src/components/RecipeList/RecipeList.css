@@ -1,14 +1,14 @@
 .root {
-  width: 900px;
+  width: 56.25rem;
   margin: auto;
 
   background-color: white;
-  box-shadow: 0 0 10px gray;
-  border-radius: 3px;
+  box-shadow: 0 0 0.625em gray;
+  border-radius: 0.2em;
 }
 
 .header {
-  padding: 10px;
+  padding: 0.625em;
   display: flex;
   justify-content: space-between;
 
@@ -17,18 +17,14 @@
 
 .items {
   position: relative;
-  min-height: 100px;
+  min-height: 6.25rem;
 }
 
 .items .empty {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 150px;
-}
-
-.item + .item {
-  border-top: 1px solid #eee;
+  height: 9.375rem;
 }
 
 .item {
@@ -39,7 +35,11 @@
   background-color: #efefef;
 }
 
+.item + .item {
+  border-top: 1px solid #eee;
+}
+
 .footer {
-  padding: 10px;
+  padding: 0.625em;
   border-top: 1px solid #ddd;
 }

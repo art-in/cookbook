@@ -1,4 +1,5 @@
-use super::utils::{IntoHttpResponse, ParseParam};
+use super::utils::MapResultErrorToHttpResponse;
+use super::utils::ParseParam;
 use super::AppState;
 use crate::models::recipe::{NewRecipe, Recipe};
 use crate::storage;
@@ -31,8 +32,6 @@ struct GetRecipesParams {
     pl: Option<i32>,    // page limit
 }
 
-// TODO: is it possible to get rid of `.map_err(|e| e.into_http_response())`s?
-
 #[get("/recipes")]
 async fn get_recipes(
     data: web::Data<AppState>,
@@ -46,7 +45,7 @@ async fn get_recipes(
         query.pl.unwrap_or(DEFAULT_PAGE_LIMIT),
     )
     .await
-    .map_err(|e| e.into_http_response())?;
+    .map_err_to_resp()?;
 
     Ok(HttpResponse::Ok().json(recipes))
 }
@@ -57,7 +56,7 @@ async fn get_recipe(data: web::Data<AppState>, req: HttpRequest) -> Result<HttpR
 
     let recipe = storage::db::get_recipe(&data.pool, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     Ok(HttpResponse::Ok().json(recipe))
 }
@@ -71,7 +70,7 @@ async fn post_recipe(
 
     let recipe_id = storage::db::add_recipe(&data.pool, recipe)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     Ok(HttpResponse::Ok().body(recipe_id.to_string()))
 }
@@ -82,16 +81,16 @@ async fn delete_recipe(data: web::Data<AppState>, req: HttpRequest) -> Result<Ht
 
     let recipe = storage::db::get_recipe(&data.pool, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     storage::db::delete_recipe(&data.pool, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     if recipe.has_image {
         storage::images::delete_recipe_image(&data.images_folder, recipe_id)
             .await
-            .map_err(|e| e.into_http_response())?;
+            .map_err_to_resp()?;
     }
 
     Ok(HttpResponse::Ok().into())
@@ -109,7 +108,7 @@ async fn put_recipe(
 
     let updated_recipe = storage::db::update_recipe(&data.pool, recipe)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     Ok(HttpResponse::Ok().json(updated_recipe))
 }
@@ -124,7 +123,7 @@ async fn post_recipe_image(
 
     let mut recipe = storage::db::get_recipe(&data.pool, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     storage::images::create_recipe_image(&data.images_folder, recipe_id, payload).await?;
 
@@ -132,7 +131,7 @@ async fn post_recipe_image(
         recipe.has_image = true;
         storage::db::update_recipe(&data.pool, recipe)
             .await
-            .map_err(|e| e.into_http_response())?;
+            .map_err_to_resp()?;
     }
 
     Ok(HttpResponse::Ok().into())
@@ -147,7 +146,7 @@ async fn get_recipe_image(
 
     let file = storage::images::get_recipe_image(&data.images_folder, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     Ok(file)
 }
@@ -161,16 +160,16 @@ async fn delete_recipe_image(
 
     let mut recipe = storage::db::get_recipe(&data.pool, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     storage::images::delete_recipe_image(&data.images_folder, recipe_id)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     recipe.has_image = false;
     storage::db::update_recipe(&data.pool, recipe)
         .await
-        .map_err(|e| e.into_http_response())?;
+        .map_err_to_resp()?;
 
     Ok(HttpResponse::Ok().into())
 }

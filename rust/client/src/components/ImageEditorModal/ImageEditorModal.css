@@ -1,0 +1,5 @@
+.front {
+  /* shift it a bit down and shrink so recipe modal is seen */
+  width: 44rem;
+  margin-top: 6em;
+}

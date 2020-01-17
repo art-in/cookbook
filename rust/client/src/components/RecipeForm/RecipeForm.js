@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
-import PropTypes from 'prop-types';
-import {useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import {
   onRecipeFormEdit,
@@ -16,26 +15,27 @@ import {
   onRecipeFormStepChange,
   onRecipeFormImageEditing,
   onRecipeFormImageDelete
-} from 'state/actions';
-import Recipe from 'model/Recipe';
+} from 'state/actions/recipe-form';
 import RecipeCard from '../RecipeCard';
 import IconBtn from '../shared/IconBtn';
 import Waiter from '../shared/Waiter';
 import List from '../shared/List';
-import classes from './RecipeForm.module.css';
+import classes from './RecipeForm.css';
 
-RecipeForm.propTypes = {
-  recipe: PropTypes.instanceOf(Recipe),
-  isLoading: PropTypes.bool.isRequired,
-  isEditing: PropTypes.bool.isRequired,
-  isDeletable: PropTypes.bool.isRequired,
-  isCancelable: PropTypes.bool.isRequired
-};
-
-function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
+export default function RecipeForm() {
   const dispatch = useDispatch();
 
-  // TODO: do we need [dispatch]?
+  const recipe = useSelector(state => state.recipeForm.recipe);
+  const ingredients = useSelector(
+    state => state.recipeForm.recipe?.ingredients
+  );
+  const steps = useSelector(state => state.recipeForm.recipe?.steps);
+
+  const isLoading = useSelector(state => state.recipeForm.isLoading);
+  const isEditing = useSelector(state => state.recipeForm.isEditing);
+  const isDeletable = useSelector(state => state.recipeForm.isDeletable);
+  const isCancelable = useSelector(state => state.recipeForm.isCancelable);
+
   const onEdit = useCallback(() => dispatch(onRecipeFormEdit()), [dispatch]);
   const onSave = useCallback(() => dispatch(onRecipeFormSave()), [dispatch]);
   const onCancel = useCallback(() => dispatch(onRecipeFormCancel()), [
@@ -44,7 +44,7 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
   const onChange = useCallback(recipe => dispatch(onRecipeFormChange(recipe)), [
     dispatch
   ]);
-  const onDelete = useCallback(recipe => dispatch(onRecipeFormDelete(recipe)), [
+  const onDelete = useCallback(() => dispatch(onRecipeFormDelete()), [
     dispatch
   ]);
   const onIngredientAdd = useCallback(
@@ -101,10 +101,10 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
         />
       )}
 
-      {recipe && (
+      {ingredients && (
         <List
           title="Ingredients:"
-          items={recipe.ingredients}
+          items={ingredients}
           isEditing={isEditing}
           className={classes.ingredients}
           onItemAdd={onIngredientAdd}
@@ -121,10 +121,10 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
         </List>
       )}
 
-      {recipe && (
+      {steps && (
         <List
           title="Steps:"
-          items={recipe.steps}
+          items={steps}
           isEditing={isEditing}
           isOrdered
           className={classes.steps}
@@ -148,7 +148,7 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
             icon="pencil"
             title="Edit"
             className={classes.action}
-            onClick={() => onEdit()}
+            onClick={onEdit}
           />
         )}
         {isEditing && (
@@ -156,7 +156,7 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
             icon="save"
             title="Save"
             className={classes.action}
-            onClick={() => onSave()}
+            onClick={onSave}
           />
         )}
         {isCancelable && isEditing && (
@@ -164,7 +164,7 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
             icon="eraser"
             title="Cancel"
             className={classes.action}
-            onClick={() => onCancel()}
+            onClick={onCancel}
           />
         )}
         {isDeletable && (
@@ -172,7 +172,7 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
             icon="trash"
             title="Delete"
             className={classes.action}
-            onClick={() => onDelete(recipe)}
+            onClick={onDelete}
           />
         )}
       </div>
@@ -180,5 +180,3 @@ function RecipeForm({recipe, isLoading, isEditing, isDeletable, isCancelable}) {
     </div>
   );
 }
-
-export default RecipeForm;

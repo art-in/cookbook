@@ -16,6 +16,22 @@ impl ParseParam for HttpRequest {
     }
 }
 
+// TODO: how to get rid of map_err_to_resp() calls on results? actix docs
+// suggest implementing ResponseError trait, but i cannot impl ResponseError
+// for std:Result, since nor trait nor struct is defined in local crate.
+
+pub trait MapResultErrorToHttpResponse<T> {
+    /// maps result error to http response with appropriate status code and
+    /// error message in body
+    fn map_err_to_resp(self) -> Result<T, HttpResponse>;
+}
+
+impl<T, E: IntoHttpResponse> MapResultErrorToHttpResponse<T> for Result<T, E> {
+    fn map_err_to_resp(self) -> Result<T, HttpResponse> {
+        self.map_err(|e| e.into_http_response())
+    }
+}
+
 pub trait IntoHttpResponse {
     fn into_http_response(&self) -> HttpResponse;
 }

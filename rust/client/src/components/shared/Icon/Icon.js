@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import classes from './Icon.module.css';
+import classes from './Icon.css';
 
 import {ReactComponent as ClockIcon} from './images/clock-solid.svg';
 import {ReactComponent as EraserIcon} from './images/eraser-solid.svg';
@@ -65,4 +65,4 @@ function Icon({className, icon, title, width, onClick}) {
   }
 }
 
-export default Icon;
+export default memo(Icon);

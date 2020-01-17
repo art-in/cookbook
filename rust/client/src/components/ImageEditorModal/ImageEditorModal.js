@@ -1,58 +1,31 @@
-import React, {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useCallback, memo} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 
-import {
-  onImageEditorModalClose,
-  onImageEditorModalImageChange,
-  onImageEditorModalEffectApplying,
-  onImageEditorModalEffectApplied
-} from 'state/actions';
+import {onImageEditorModalClose} from 'state/actions/image-editor';
 import Modal from '../shared/Modal';
 import ImageEditor from '../ImageEditor';
+import classes from './ImageEditorModal.css';
 
-export default function ImageEditorModal() {
+function ImageEditorModal() {
   const dispatch = useDispatch();
 
   const isVisible = useSelector(state => state.imageEditor.isVisible);
-  const imageSrc = useSelector(state => state.imageEditor.imageSrc);
-  const isLoading = useSelector(state => state.imageEditor.isLoading);
+  const isProcessing = useSelector(state => state.imageEditor.isProcessing);
 
   const onClose = useCallback(() => {
     // TODO: allow to cancel image processing by closing modal. until then
     // it is goint to be a blocking operation.
-    if (!isLoading) {
+    if (!isProcessing) {
       dispatch(onImageEditorModalClose());
     }
-  }, [dispatch, isLoading]);
-
-  const onImageChange = useCallback(
-    blob => dispatch(onImageEditorModalImageChange(blob)),
-    [dispatch]
-  );
-
-  // TODO: rename to onImageProcessing
-  const onEffectApplying = useCallback(
-    () => dispatch(onImageEditorModalEffectApplying()),
-    [dispatch]
-  );
-
-  const onEffectApplied = useCallback(
-    () => dispatch(onImageEditorModalEffectApplied()),
-    [dispatch]
-  );
+  }, [dispatch, isProcessing]);
 
   return (
-    <Modal visible={isVisible} onClose={() => onClose()}>
-      {/* remount editor to reset file input */}
-      {isVisible && (
-        <ImageEditor
-          imageSrc={imageSrc}
-          isLoading={isLoading}
-          onImageChange={onImageChange}
-          onEffectApplying={onEffectApplying}
-          onEffectApplied={onEffectApplied}
-        />
-      )}
+    <Modal frontClassName={classes.front} visible={isVisible} onClose={onClose}>
+      {/* remount editor when it becomes visible to reset file input */}
+      {isVisible && <ImageEditor />}
     </Modal>
   );
 }
+
+export default memo(ImageEditorModal);

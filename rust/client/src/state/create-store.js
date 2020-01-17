@@ -5,12 +5,17 @@ import {createLogger} from 'redux-logger';
 import reducer from './reducer';
 import initialState from './state';
 
-// TODO: disable logger in prod
-const logger = createLogger({
-  collapsed: true,
-  timestamp: false
-});
+const middlewares = [thunk];
+
+if (process.env.NODE_ENV === 'development') {
+  middlewares.push(
+    createLogger({
+      collapsed: true,
+      timestamp: false
+    })
+  );
+}
 
 export default function() {
-  return createStore(reducer, initialState, applyMiddleware(thunk, logger));
+  return createStore(reducer, initialState, applyMiddleware(...middlewares));
 }

@@ -5,7 +5,7 @@ import cn from 'classnames';
 import Recipe from 'model/Recipe';
 import Icon from '../shared/Icon';
 import IconBtn from '../shared/IconBtn';
-import classes from './RecipeCard.module.css';
+import classes from './RecipeCard.css';
 
 RecipeCard.propTypes = {
   className: PropTypes.string,
@@ -20,8 +20,7 @@ RecipeCard.propTypes = {
   onImageDelete: PropTypes.func
 };
 
-// TODO: export default ...
-function RecipeCard({
+export default function RecipeCard({
   className,
   recipe,
   isEditing,
@@ -148,5 +147,3 @@ function RecipeCard({
     </div>
   );
 }
-
-export default RecipeCard;

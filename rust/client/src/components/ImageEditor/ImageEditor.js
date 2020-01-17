@@ -1,34 +1,29 @@
 import React, {useEffect, useRef, useCallback} from 'react';
-import PropTypes from 'prop-types';
+import {useDispatch, useSelector} from 'react-redux';
 
+import {
+  onImageEditorModalImageChange,
+  onImageEditorModalImageProcessing,
+  onImageEditorModalImageProcessed
+} from 'state/actions/image-editor';
 import getImageBlob from 'utils/get-image-blob-from-canvas';
 import Waiter from '../shared/Waiter';
-import classes from './ImageEditor.module.css';
+import classes from './ImageEditor.css';
 
 const imageEffectsWorker = new Worker('utils/image-effects-worker-bootstrap', {
   name: 'image-effects',
   type: 'module'
 });
 
-ImageEditor.propTypes = {
-  imageSrc: PropTypes.string,
-  isLoading: PropTypes.bool.isRequired,
-  onImageChange: PropTypes.func.isRequired,
-  onEffectApplying: PropTypes.func.isRequired,
-  onEffectApplied: PropTypes.func.isRequired
-};
+export default function ImageEditor() {
+  const dispatch = useDispatch();
 
-export default function ImageEditor({
-  imageSrc,
-  isLoading,
-  onImageChange,
-  onEffectApplying,
-  onEffectApplied
-}) {
   const imageInput = useRef(null);
   const canvasRef = useRef(null);
 
-  // TODO: move this from UI component to actions?
+  const imageSrc = useSelector(state => state.imageEditor.imageSrc);
+  const isProcessing = useSelector(state => state.imageEditor.isProcessing);
+
   async function renderImage(canvas, imageSrc) {
     const imageEl = new Image();
     imageEl.src = imageSrc;
@@ -51,6 +46,21 @@ export default function ImageEditor({
     ctx.putImageData(imageData, 0, 0);
   }
 
+  const onImageChange = useCallback(
+    blob => dispatch(onImageEditorModalImageChange(blob)),
+    [dispatch]
+  );
+
+  const onImageProcessing = useCallback(
+    () => dispatch(onImageEditorModalImageProcessing()),
+    [dispatch]
+  );
+
+  const onImageProcessed = useCallback(
+    () => dispatch(onImageEditorModalImageProcessed()),
+    [dispatch]
+  );
+
   const onInputChange = useCallback(
     async e => {
       const file = e.target.files[0];
@@ -59,6 +69,7 @@ export default function ImageEditor({
         return;
       }
 
+      // TODO: image is not reset when selecting same input file
       const canvas = canvasRef.current;
       const imageSrc = URL.createObjectURL(file);
       await renderImage(canvas, imageSrc);
@@ -72,7 +83,7 @@ export default function ImageEditor({
     e => {
       const effectType = e.target.dataset.effect;
 
-      onEffectApplying();
+      onImageProcessing();
 
       // pass canvas image for processing into worker thread.
       // TODO: better use OffscreenCanvas. not using it right now as it is still
@@ -98,7 +109,7 @@ export default function ImageEditor({
         [imageArrayBuffer]
       );
     },
-    [onEffectApplying]
+    [onImageProcessing]
   );
 
   const onImageEffectsWorkerMessage = useCallback(
@@ -112,7 +123,6 @@ export default function ImageEditor({
           break;
         }
         case 'fail':
-          console.log(e.data);
           alert(
             `Failed to apply ${e.data.effectType} effect: \n ${e.data.error}`
           );
@@ -121,9 +131,9 @@ export default function ImageEditor({
           throw Error(`Unknown result code '${e.data.resultCode}'`);
       }
 
-      onEffectApplied();
+      onImageProcessed();
     },
-    [onEffectApplied, onImageChange]
+    [onImageProcessed, onImageChange]
   );
 
   // on mount
@@ -173,7 +183,7 @@ export default function ImageEditor({
         </button>
       </div>
 
-      {isLoading && <Waiter />}
+      {isProcessing && <Waiter />}
     </div>
   );
 }

@@ -30,7 +30,6 @@ export default {
   imageEditor: {
     isVisible: false,
     imageSrc: null,
-    // TODO: rename to isProcessing
-    isLoading: false
+    isProcessing: false
   }
 };

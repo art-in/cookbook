@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 
 import {
   onRecipeListAdd,
@@ -7,7 +7,7 @@ import {
   onRecipeListSort,
   onRecipeListItemClick,
   onRecipeListItemDelete
-} from 'state/actions';
+} from 'state/actions/recipe-list';
 import Btn from '../shared/Btn';
 import BtnGroup from '../shared/BtnGroup';
 import IconBtn from '../shared/IconBtn';
@@ -15,10 +15,9 @@ import Waiter from '../shared/Waiter';
 import RecipeCard from '../RecipeCard';
 import RecipeFormModal from '../RecipeFormModal';
 import ImageEditorModal from '../ImageEditorModal';
-import classes from './RecipeList.module.css';
+import classes from './RecipeList.css';
 
-function RecipeList() {
-  // selectors
+export default function RecipeList() {
   const sortProp = useSelector(state => state.recipeList.sortProp);
   const isEmpty = useSelector(state => {
     const items = state.recipeList.items;
@@ -26,18 +25,12 @@ function RecipeList() {
   });
   const items = useSelector(state => state.recipeList.items);
   const pages = useSelector(state => {
-    // TODO: move to helper function
     const {total, pageLimit} = state.recipeList;
-    const res = [];
-    for (let i = 0; i < Math.ceil(total / pageLimit); i++) {
-      res.push(i);
-    }
-    return res;
-  });
+    return [...new Array(Math.ceil(total / pageLimit)).keys()];
+  }, shallowEqual);
   const currentPage = useSelector(state => state.recipeList.currentPage);
   const isLoading = useSelector(state => state.recipeList.isLoading);
 
-  // even handlers
   const dispatch = useDispatch();
 
   const onAdd = useCallback(() => dispatch(onRecipeListAdd()), [dispatch]);
@@ -62,24 +55,19 @@ function RecipeList() {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <IconBtn
-          icon="plus"
-          width={30} // TODO: add predefined sizes
-          title="Add recipe"
-          onClick={() => onAdd()}
-        />
+        <IconBtn icon="plus" width={30} title="Add recipe" onClick={onAdd} />
         <BtnGroup class="sorters">
-          <Btn active={sortProp == 'name'} onClick={() => onSort('name')}>
+          <Btn isActive={sortProp == 'name'} onClick={() => onSort('name')}>
             by alphabet
           </Btn>
           <Btn
-            active={sortProp == 'complexity'}
+            isActive={sortProp == 'complexity'}
             onClick={() => onSort('complexity')}
           >
             by complexity
           </Btn>
           <Btn
-            active={sortProp == 'popularity'}
+            isActive={sortProp == 'popularity'}
             onClick={() => onSort('popularity')}
           >
             by popularity
@@ -111,8 +99,8 @@ function RecipeList() {
           {pages.map(page => (
             <Btn
               key={page}
-              active={page == currentPage}
-              disabled={page == currentPage}
+              isActive={page == currentPage}
+              isDisabled={page == currentPage}
               onClick={() => onPage(page)}
             >
               {page + 1}
@@ -125,5 +113,3 @@ function RecipeList() {
     </div>
   );
 }
-
-export default RecipeList;

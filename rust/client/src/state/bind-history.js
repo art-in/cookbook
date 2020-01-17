@@ -2,7 +2,7 @@ import {createBrowserHistory} from 'history';
 import qs from 'query-string';
 
 import clone from 'utils/clone';
-import {onHistoryUpdate, onStoreUpdate} from './actions';
+import {onHistoryUpdate, onStoreUpdate} from './actions/history';
 import st from './state';
 
 const initialState = clone(st);
@@ -43,7 +43,6 @@ export function getHistoryState(location) {
 export function setHistoryState(history, historyState) {
   const query = {};
 
-  // TODO: modal.?recipes syntax ?
   if (historyState.recipeId !== undefined) {
     query.rid = historyState.recipeId;
   }

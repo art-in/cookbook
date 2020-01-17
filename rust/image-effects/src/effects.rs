@@ -40,6 +40,7 @@ pub fn solarize(image_data: Vec<u8>, width: u32, height: u32) -> Vec<u8> {
     image.raw_pixels()
 }
 
+// TODO: this one crashes for pictures of certain sizes (600x337)
 #[wasm_bindgen]
 pub fn halftone(image_data: Vec<u8>, width: u32, height: u32) -> Vec<u8> {
     let mut image = crate::utils::to_dyn_image(image_data, width, height);
@@ -232,7 +233,6 @@ pub fn colorize(image_data: Vec<u8>, width: u32, height: u32) -> Vec<u8> {
 #[wasm_bindgen]
 pub fn sepia(image_data: Vec<u8>, width: u32, height: u32) -> Vec<u8> {
     let mut image = crate::utils::to_dyn_image(image_data, width, height);
-    let (width, height) = image.dimensions();
 
     for x in 0..width {
         for y in 0..height {

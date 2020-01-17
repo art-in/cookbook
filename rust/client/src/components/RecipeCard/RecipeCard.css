@@ -1,12 +1,12 @@
 .root {
   display: flex;
-  padding: 10px;
+  padding: 0.625em;
   position: relative;
 }
 
 .actions {
   position: absolute;
-  right: 10px;  
+  right: 0.625rem;
   display: none;
 }
 
@@ -14,22 +14,22 @@
   display: block;
 }
 
-.root.editing > .image-container {
-  cursor: pointer;
-}
-
 .image-container {
-  margin-right: 15px;
+  margin-right: 1em;
   flex: 1;
   position: relative;
 }
 
+.root.editing > .image-container {
+  cursor: pointer;
+}
+
 .image-container .delete {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0.625rem;
+  right: 0.625rem;
   background-color: #fffc;
-  padding: 5px;
+  padding: 0.3em;
 }
 
 .image-container.empty {
@@ -39,15 +39,15 @@
 .image-container.empty > .image-stub {
   border: 1px solid lightgray;
   color: gray;
-  width: 250px;
-  height: 200px;
+  width: 15.625rem;
+  height: 12.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .image-container > img {
-  width: 250px;
+  width: 15.625rem;
 }
 
 .image-container > input {
@@ -62,20 +62,21 @@
   flex-direction: column;
   flex: 3;
   align-items: flex-start;
-  line-height: 25px;
+  line-height: 1.5em;
 }
 
 .name {
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 0.625em;
+
   /* leave space on the right for form action buttons */
-  width: calc(100% - 145px);
+  width: calc(100% - 9rem);
 }
 
 textarea.description {
-  margin-bottom: 10px;
+  margin-bottom: 0.625em;
   color: gray;
-  width: calc(100% - 30px);
+  width: calc(100% - 1.875rem);
 }
 
 textarea.description:not(:read-only) {
@@ -87,9 +88,14 @@ textarea.description:not(:read-only) {
 }
 
 .numbers > span + span {
-  margin-left: 10px;
+  margin-left: 0.625em;
 }
 
 .numbers input[type=number] {
-  width: 50px;
+  width: 3.125rem;
+}
+
+.complexity > input,
+.popularity > input {
+  margin-left: 0.625em;
 }

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
 import Icon from '../Icon';
-import classes from './IconBtn.module.css';
+import classes from './IconBtn.css';
 
 IconBtn.propTypes = {
   className: PropTypes.string,
@@ -25,4 +25,4 @@ function IconBtn({className, icon, title, width, onClick}) {
   );
 }
 
-export default IconBtn;
+export default memo(IconBtn);

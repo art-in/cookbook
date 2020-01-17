@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import classes from './BtnGroup.module.css';
+import classes from './BtnGroup.css';
 
 BtnGroup.propTypes = {
   children: PropTypes.oneOfType([
@@ -11,7 +11,7 @@ BtnGroup.propTypes = {
   ])
 };
 
-function BtnGroup({children}) {
+export default function BtnGroup({children}) {
   return (
     <span className={classes.root}>
       {children.map((child, idx) =>
@@ -23,5 +23,3 @@ function BtnGroup({children}) {
     </span>
   );
 }
-
-export default BtnGroup;

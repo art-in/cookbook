@@ -8,10 +8,18 @@
   font-size: 1.3rem;
 }
 
+.add {
+  margin-left: 0.625em;
+}
+
 ul.ordered {
   list-style-type: decimal;
 }
 
 .item {
   line-height: 1.7em;
+}
+
+.delete {
+  margin-left: 0.625em;
 }

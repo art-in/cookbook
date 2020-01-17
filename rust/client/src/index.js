@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 
 import createStore from 'state/create-store';
 import bindHistory from 'state/bind-history';
-import {onInit} from 'state/actions';
+import {onInit} from 'state/actions/init';
 import App from 'components/App';
 
 const store = createStore();

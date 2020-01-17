@@ -4,6 +4,11 @@
   vertical-align: middle;
 }
 
+.root > .item {
+  position: relative;
+  float: left;
+}
+
 .root > .item:first-child:not(:last-child) {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -16,11 +21,4 @@
 
 .root > .item:not(:first-child):not(:last-child) {
   border-radius: 0;
-}
-
-.root > .item {
-  position: relative;
-  float: left;
-
-  margin-left: -1px;
 }

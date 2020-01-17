@@ -1,27 +1,26 @@
-/* TODO: fix css linting errors */
 .root {
-  padding: 12px;
+  padding: 1em;
 }
 
 .upload > input {
   /* free space for modal close button */
-  width: calc(100% - 40px);
+  width: calc(100% - 2.5rem);
 }
 
 .image {
-  margin-top: 20px;
+  margin-top: 1.25em;
   display: flex;
   justify-content: center;
-  padding: 20px;
+  padding: 1.25em;
   background-color: lightgray;
 }
 
 .effects {
-  margin-top: 20px;
+  margin-top: 1.25em;
   display: flex;
   justify-content: center;
 }
 
 .effects > button {
-  margin-left: 5px;
+  margin-left: 0.3em;
 }
