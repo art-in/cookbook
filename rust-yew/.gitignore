@@ -1,0 +1,5 @@
+# rust compilation results
+/target/
+
+# default folder for recipe image files
+/images/

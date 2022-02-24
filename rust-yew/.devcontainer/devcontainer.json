@@ -1,0 +1,21 @@
+{
+	"name": "cookbook-rust-yew",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [],
+	// allow dockerfile to setup entrypoint
+	"overrideCommand": false,
+	"forwardPorts": [
+		8080, // http server
+		5432 // postgres
+	],
+	"extensions": [
+		"eamodio.gitlens",
+		"mutantdino.resourcemonitor",
+		"matklad.rust-analyzer",
+		"tamasfe.even-better-toml",
+		"serayuzgur.crates",
+		"jedeop.crates-completer"
+	]
+}
