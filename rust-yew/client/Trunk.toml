@@ -1,0 +1,14 @@
+[[hooks]]
+stage = "pre_build"
+command = "sh"
+command_arguments = [
+    "-c",
+    # Trunk runs assets pipelines (eg. css and wasm) in parallel, so we need to trigger cargo
+    # build script which generates css before running Trunk build
+    # TODO: will it use old css if assets/ folder already exists?
+    "ls assets || (echo \"building assets\" && cargo check)",
+]
+
+[[proxy]]
+rewrite = "/api/"
+backend = "http://localhost:9000/api/"

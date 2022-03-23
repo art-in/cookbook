@@ -4,7 +4,7 @@
 		"dockerfile": "Dockerfile"
 	},
 	"runArgs": [],
-	// allow dockerfile to setup entrypoint
+	// allow dockerfile to setup entrypoint (starting postgres in this case)
 	"overrideCommand": false,
 	"forwardPorts": [
 		8080, // http server
@@ -16,6 +16,7 @@
 		"matklad.rust-analyzer",
 		"tamasfe.even-better-toml",
 		"serayuzgur.crates",
-		"jedeop.crates-completer"
+		"jedeop.crates-completer",
+		"aeschli.vscode-css-formatter"
 	]
 }

@@ -1,0 +1,25 @@
+.root {
+    min-height: 9.375rem;
+    position: relative;
+}
+
+.actions {
+    position: absolute;
+    right: 2.8rem;
+    top: 0.8rem;
+}
+
+.actions .action+.action {
+    margin-left: 1em;
+}
+
+.ingredients,
+.steps {
+    margin: 1em 1em 0 12em;
+    text-align: left;
+}
+
+input.ingredient,
+input.step {
+    width: 22rem;
+}

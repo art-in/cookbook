@@ -1,0 +1,29 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+yew = "0.19.3"
+log = "0.4.14"
+wasm-logger = "0.2.0"
+wasm-bindgen-futures = "0.4.29"
+gloo-net = "0.1.0"
+gloo-dialogs = "0.1.0"
+serde = { version = "1.0.136", features = ["derive", "rc"] }
+serde_json = "1.0.79"
+derive_builder = "0.11.0"
+wasm-bindgen = "0.2.79"
+web-sys = { version = "0.3.56", features = [
+    "Window",
+    "HtmlInputElement",
+    "HtmlTextAreaElement",
+] }
+# TODO: publish css_mod to crates.io
+css_mod = { git = "https://github.com/art-in/css_mod" }
+
+[build-dependencies]
+dotenv = "0.15.0"
+env_logger = "0.9.0"
+log = "0.4.14"
+css_mod = { git = "https://github.com/art-in/css_mod" }

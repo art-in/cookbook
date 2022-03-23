@@ -1,0 +1,8 @@
+.root {
+    cursor: pointer;
+    color: gray;
+}
+
+.root:hover {
+    color: black;
+}

@@ -1,0 +1,44 @@
+.root,
+.back {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.root:not(.visible) {
+    visibility: hidden;
+}
+
+.back {
+    background-color: black;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.root:not(.visible) .back {
+    opacity: 0;
+}
+
+.front {
+    position: absolute;
+    width: 45rem;
+    right: 0;
+    left: 0;
+    margin: 5.625em auto;
+    background-color: white;
+    border-radius: 0.2em;
+    box-shadow: 0 0 0.4em #0005;
+}
+
+.front .close {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+    color: gray;
+}
+
+.front .close:hover {
+    color: black;
+}

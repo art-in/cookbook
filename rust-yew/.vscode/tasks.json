@@ -30,6 +30,24 @@
 			"args": [
 				"-x 'run'"
 			]
-		}
+		},
+		{
+			"label": "client: watch",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/client"
+			},
+			"type": "shell",
+			"command": "trunk serve",
+		},
+		{
+			"label": "client: build",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/client"
+			},
+			"type": "shell",
+			"command": "trunk build",
+		},
 	]
 }

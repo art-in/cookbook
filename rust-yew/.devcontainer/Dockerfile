@@ -40,11 +40,12 @@ VOLUME ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 # move back to root user
 USER root
 
-# install rust (specific version to make it more reproducible)
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y --default-toolchain 1.58.1
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y --default-toolchain 1.59.0
 ENV PATH="/root/.cargo/bin:${PATH}"
+RUN rustup target add wasm32-unknown-unknown
 RUN cargo install diesel_cli --version 1.4.1 --locked --no-default-features --features postgres
 RUN cargo install cargo-watch --version 8.1.1 --locked
+RUN cargo install trunk --version 0.14.0 --locked
 
 # start postgresql service on container startup
 ENTRYPOINT service postgresql start &&\
