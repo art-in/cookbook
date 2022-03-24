@@ -2,6 +2,7 @@ use super::{Ingredient, Step};
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 use std::rc::Rc;
+use web_sys::File;
 
 #[derive(Default, PartialEq, Serialize, Deserialize, Debug, Clone, Builder)]
 #[builder(name = "RecipePatch")]
@@ -14,8 +15,10 @@ pub struct Recipe {
     pub ingredients: Vec<Rc<Ingredient>>,
     pub steps: Vec<Rc<Step>>,
     pub has_image: bool,
-    #[serde(default)]
-    pub image_src: String,
+    #[serde(skip)]
+    pub image_url: Option<String>,
+    #[serde(skip)]
+    pub image_file: Option<File>,
 }
 
 impl Recipe {
@@ -52,8 +55,12 @@ impl Recipe {
             self.has_image = has_image;
         }
 
-        if let Some(image_src) = patch.image_src {
-            self.image_src = image_src;
+        if let Some(image_url) = patch.image_url {
+            self.image_url = image_url;
+        }
+
+        if let Some(image_file) = patch.image_file {
+            self.image_file = image_file;
         }
     }
 }

@@ -2,6 +2,8 @@ use crate::components::shared::{Icon, IconBtn, IconType};
 use crate::models::{Recipe, RecipePatch};
 use crate::utils::{get_input_event_target_value, get_textarea_event_target_value};
 use std::rc::Rc;
+use wasm_bindgen::JsCast;
+use web_sys::{File, HtmlInputElement};
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
@@ -19,12 +21,18 @@ pub struct Props {
     pub on_change: Callback<RecipePatch>,
     #[prop_or_default]
     pub on_delete: Callback<Rc<Recipe>>,
+    #[prop_or_default]
+    pub on_image_change: Callback<File>,
+    #[prop_or_default]
+    pub on_image_delete: Callback<()>,
 }
 
 #[function_component(RecipeCard)]
 pub fn recipe_card(props: &Props) -> Html {
     log::trace!("render RecipeCard");
     let css = css_mod::get!("recipe_card.css");
+
+    let image_input_ref = use_node_ref();
 
     let on_click = {
         let on_click = props.on_click.clone();
@@ -59,14 +67,49 @@ pub fn recipe_card(props: &Props) -> Html {
             on_change.emit(RecipePatch::default().popularity(popularity).to_owned());
         })
     };
-
     let on_delete = {
         let on_delete = props.on_delete.clone();
         let recipe = props.recipe.clone();
         Callback::from(move |event: MouseEvent| {
-            // stop event propagation to avoid triggering on_click event
+            // avoid triggering on_click event
             event.stop_propagation();
             on_delete.emit(recipe.clone());
+        })
+    };
+    let on_image_click = {
+        let image_input_ref = image_input_ref.clone();
+        let is_editing = props.is_editing;
+        Callback::from(move |_| {
+            if is_editing {
+                let image_input = image_input_ref.cast::<HtmlInputElement>().unwrap();
+
+                // trigger file dialog
+                image_input.focus().unwrap();
+                image_input.click();
+            }
+        })
+    };
+    let on_image_change = {
+        let on_image_change = props.on_image_change.clone();
+        Callback::from(move |event: Event| {
+            let file = event
+                .target()
+                .unwrap()
+                .dyn_ref::<HtmlInputElement>()
+                .unwrap()
+                .files()
+                .unwrap()
+                .get(0)
+                .unwrap();
+            on_image_change.emit(file);
+        })
+    };
+    let on_image_delete = {
+        let on_image_delete = props.on_image_delete.clone();
+        Callback::from(move |event: MouseEvent| {
+            // avoid triggering on_image_click event
+            event.stop_propagation();
+            on_image_delete.emit(());
         })
     };
 
@@ -91,11 +134,39 @@ pub fn recipe_card(props: &Props) -> Html {
             <div
                 class={classes!(
                     css["image-container"],
-                    props.recipe.has_image.then(|| css["empty"])
+                    (!props.recipe.has_image).then(|| css["empty"])
                 )}
                 title={if props.is_editing {"Edit image"} else {""}}
+                onclick={on_image_click}
             >
-                {"(no image yet)"}
+                if props.recipe.has_image {
+                    <img
+                        src={props.recipe.image_url.as_ref().unwrap().to_owned()}
+                        alt={props.recipe.name.clone()}
+                    />
+                } else {
+                    <div class={css["image-stub"]}>
+                        if props.is_editing {{"(click to set image)"}} else {{"(no image yet)"}}
+                    </div>
+                }
+
+                if props.is_editing && props.recipe.has_image {
+                    <IconBtn
+                        class={css["delete"]}
+                        icon={IconType::Trash}
+                        title="Delete image"
+                        on_click={on_image_delete}
+                    />
+                }
+
+                if props.is_editing {
+                    <input
+                        type="file"
+                        ref={image_input_ref.clone()}
+                        onchange={on_image_change}
+                    />
+                }
+
             </div>
             <div class={css["props"]}>
                 <input

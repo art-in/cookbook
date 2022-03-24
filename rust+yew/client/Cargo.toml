@@ -18,6 +18,10 @@ web-sys = { version = "0.3.56", features = [
     "Window",
     "HtmlInputElement",
     "HtmlTextAreaElement",
+    "HtmlInputElement",
+    "File",
+    "FileList",
+    "Url",
 ] }
 # TODO: publish css_mod to crates.io
 css_mod = { git = "https://github.com/art-in/css_mod" }

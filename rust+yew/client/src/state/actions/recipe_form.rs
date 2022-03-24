@@ -7,6 +7,7 @@ use crate::models::{
 use crate::state::reducer::Action;
 use gloo_dialogs::confirm;
 use std::rc::Rc;
+use web_sys::{File, Url};
 
 pub async fn open_recipe_modal(state_ref: StateRef, recipe: Rc<Recipe>) {
     let state = state_ref.borrow().clone();
@@ -116,17 +117,23 @@ pub fn on_recipe_form_edit(state_ref: StateRef) {
 pub async fn on_recipe_form_save(state_ref: StateRef) {
     // TODO: validate inputs
     // TODO: skip PUT recipe if no changes
+
     log::debug!("on_recipe_form_save");
     let state = state_ref.borrow().clone();
+    let RecipeForm {
+        recipe,
+        is_image_changed,
+        ..
+    } = state.recipe_form.as_ref();
+    let recipe = recipe.as_ref().expect("No recipe on form");
+    let mut recipe_id = recipe.id;
 
     state.dispatch(Action::UpdateRecipeForm(
         RecipeFormPatch::default().is_loading(true).to_owned(),
     ));
-    let RecipeForm { recipe, .. } = state.recipe_form.as_ref();
-    let recipe = recipe.as_ref().expect("No recipe on form");
 
     if state.recipe_form.is_new_recipe {
-        api::post_recipe(&*recipe).await.unwrap();
+        recipe_id = api::post_recipe(&*recipe).await.unwrap();
         close_recipe_form_modal(state_ref.clone());
     } else {
         api::put_recipe(&*recipe).await.unwrap();
@@ -140,6 +147,18 @@ pub async fn on_recipe_form_save(state_ref: StateRef) {
         ));
     }
 
+    if *is_image_changed {
+        if recipe.has_image {
+            api::post_recipe_image(recipe_id, recipe.image_file.as_ref().unwrap())
+                .await
+                .unwrap();
+        } else {
+            api::delete_recipe_image(recipe_id).await.unwrap();
+        }
+    }
+
+    // TODO: when recipe image file updated, list still shows old image
+    // since image url stays the same. need to trigger image rerender somehow.
     load_recipes(state_ref).await;
 }
 
@@ -267,4 +286,45 @@ pub fn on_recipe_form_step_change(state_ref: StateRef, step_idx: usize, descript
     steps[step_idx] = Rc::new(Step { description });
 
     on_recipe_form_change(state_ref, RecipePatch::default().steps(steps).to_owned());
+}
+
+pub fn on_recipe_form_image_change(state_ref: StateRef, image_file: File) {
+    let state = state_ref.borrow().clone();
+    let image_src = Url::create_object_url_with_blob(&image_file).unwrap();
+
+    let mut recipe = state.recipe_form.recipe.as_ref().unwrap().clone();
+    Rc::make_mut(&mut recipe).apply_patch(
+        RecipePatch::default()
+            .has_image(true)
+            .image_url(Some(image_src))
+            .image_file(Some(image_file))
+            .to_owned(),
+    );
+
+    state.dispatch(Action::UpdateRecipeForm(
+        RecipeFormPatch::default()
+            .is_image_changed(true)
+            .recipe(Some(recipe))
+            .to_owned(),
+    ))
+}
+
+pub fn on_recipe_form_image_delete(state_ref: StateRef) {
+    let state = state_ref.borrow().clone();
+
+    let mut recipe = state.recipe_form.recipe.as_ref().unwrap().clone();
+    Rc::make_mut(&mut recipe).apply_patch(
+        RecipePatch::default()
+            .has_image(false)
+            .image_url(None)
+            .image_file(None)
+            .to_owned(),
+    );
+
+    state.dispatch(Action::UpdateRecipeForm(
+        RecipeFormPatch::default()
+            .is_image_changed(true)
+            .recipe(Some(recipe))
+            .to_owned(),
+    ));
 }

@@ -230,15 +230,13 @@ async fn delete_recipe_image(
         .map_err(ResponseError::Internal)?
         .ok_or(ResponseError::RecipeNotFound(recipe_id))?;
 
-    if !recipe.has_image {
-        return Err(ResponseError::RecipeImageNotFound(recipe_id).into());
+    if recipe.has_image {
+        state
+            .db
+            .update_recipe_has_image(recipe_id, false)
+            .await
+            .map_err(ResponseError::Internal)?;
     }
-
-    state
-        .db
-        .update_recipe_has_image(recipe_id, false)
-        .await
-        .map_err(ResponseError::Internal)?;
 
     state
         .images

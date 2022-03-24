@@ -2,6 +2,7 @@ use crate::models::{EntitySubset, Recipe, SortDir, SortProp};
 use gloo_net::http::Request;
 use gloo_net::Error;
 use std::rc::Rc;
+use web_sys::File;
 
 pub async fn get_recipes(
     sort_prop: SortProp,
@@ -11,16 +12,20 @@ pub async fn get_recipes(
 ) -> Result<EntitySubset<Rc<Recipe>>, Error> {
     let query = format!("?sp={sort_prop}&sd={sort_dir}&po={page_offset}&pl={page_limit}");
     let res = Request::get(&format!("api/recipes{query}")).send().await?;
-    let res = res.json().await?;
-    Ok(res)
+    let mut recipes: EntitySubset<Rc<Recipe>> = res.json().await?;
+    recipes.items.iter_mut().for_each(|recipe| {
+        Rc::make_mut(recipe).image_url = get_recipe_image_url(recipe);
+    });
+    Ok(recipes)
 }
 
 pub async fn get_recipe(recipe_id: i64) -> Result<Recipe, Error> {
     let res = Request::get(&format!("api/recipes/{}", recipe_id))
         .send()
         .await?;
-    let res: Recipe = res.json().await?;
-    Ok(res)
+    let mut recipe: Recipe = res.json().await?;
+    recipe.image_url = get_recipe_image_url(&recipe);
+    Ok(recipe)
 }
 
 pub async fn post_recipe(recipe: &Recipe) -> Result<i64, Error> {
@@ -43,8 +48,31 @@ pub async fn put_recipe(recipe: &Recipe) -> Result<(), Error> {
 }
 
 pub async fn delete_recipe(recipe_id: i64) -> Result<(), Error> {
-    Request::delete(&format!("api/recipes/{}", recipe_id))
+    Request::delete(&format!("api/recipes/{recipe_id}"))
         .send()
         .await?;
     Ok(())
+}
+
+pub async fn post_recipe_image(recipe_id: i64, recipe_image: &File) -> Result<(), Error> {
+    Request::post(&format!("api/recipes/{recipe_id}/image"))
+        .body(recipe_image)
+        .send()
+        .await?;
+    Ok(())
+}
+
+pub async fn delete_recipe_image(recipe_id: i64) -> Result<(), Error> {
+    Request::delete(&format!("api/recipes/{recipe_id}/image"))
+        .send()
+        .await?;
+    Ok(())
+}
+
+fn get_recipe_image_url(recipe: &Recipe) -> Option<String> {
+    if recipe.has_image {
+        Some(format!("api/recipes/{}/image", recipe.id))
+    } else {
+        None
+    }
 }

@@ -63,9 +63,18 @@ pub fn recipe_form(props: &Props) -> Html {
     let on_step_delete = use_callback(state_ref.clone(), |state_ref, step_idx| {
         actions::on_recipe_form_step_delete(state_ref, step_idx);
     });
-    let on_step_change = use_callback(state_ref, |state_ref, (step_idx, event): (usize, Event)| {
-        let description = get_input_event_target_value(&event);
-        actions::on_recipe_form_step_change(state_ref, step_idx, description);
+    let on_step_change = use_callback(
+        state_ref.clone(),
+        |state_ref, (step_idx, event): (usize, Event)| {
+            let description = get_input_event_target_value(&event);
+            actions::on_recipe_form_step_change(state_ref, step_idx, description);
+        },
+    );
+    let on_image_change = use_callback(state_ref.clone(), |state_ref, image_file| {
+        actions::on_recipe_form_image_change(state_ref, image_file);
+    });
+    let on_image_delete = use_callback(state_ref, |state_ref, _| {
+        actions::on_recipe_form_image_delete(state_ref);
     });
 
     html! {
@@ -76,6 +85,8 @@ pub fn recipe_form(props: &Props) -> Html {
                     recipe={recipe}
                     is_editing={is_editing}
                     on_change={&*on_change}
+                    on_image_change={&*on_image_change}
+                    on_image_delete={&*on_image_delete}
                 />
 
                 <List<Rc<Ingredient>>

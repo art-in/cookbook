@@ -101,6 +101,21 @@ people will use simple `#[derive(PartialEq)]`, which will lead to unnecessary wo
 
 ---
 
+`rust`'s move semantics forces boilerplate with explicit clonning on callbacks
+
+component receives callback property, wraps it into another callback (which is ok since local
+callback receives mouse event argument and we need to pass up something else), and then in order
+to move data to local callback closure we need to clone it explicitly, which adds a lot of
+boilerplate code for almost every single callback
+
+```rs
+let on_click = {
+    let on_click = props.on_click.clone(); // <-- these clones are annoying
+    let recipe = props.recipe.clone();
+    move |_| on_click.emit(recipe.clone())
+};
+```
+
 `rust-clippy` warns when child module named the same as parent module
 
 which is generally OK diagnostic, but...
