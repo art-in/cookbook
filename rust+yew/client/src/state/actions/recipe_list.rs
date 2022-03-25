@@ -37,7 +37,7 @@ pub async fn load_recipes(state_ref: StateRef) {
 }
 
 pub async fn on_recipe_list_item_click(state_ref: StateRef, recipe: Rc<Recipe>) {
-    open_recipe_modal(state_ref, recipe).await;
+    open_recipe_modal(state_ref, recipe.id).await;
 }
 
 pub async fn on_recipe_list_item_delete(state_ref: StateRef, recipe: Rc<Recipe>) {

@@ -1,6 +1,7 @@
 use crate::models::Recipe;
 use core::fmt;
 use derive_builder::Builder;
+use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 use std::rc::Rc;
 
@@ -26,8 +27,8 @@ impl Default for RecipeList {
             is_first_load: true,
             is_loading: true,
             items: Vec::new(),
-            sort_prop: SortProp::Name,
-            sort_dir: SortDir::Ascending,
+            sort_prop: SortProp::default(),
+            sort_dir: SortDir::default(),
             total: 0,
             page_limit: 3,
             current_page_idx: 0,
@@ -71,11 +72,20 @@ impl RecipeList {
     }
 }
 
-#[derive(PartialEq, Clone, Copy, Debug)]
+#[derive(PartialEq, Clone, Copy, Debug, Serialize, Deserialize)]
 pub enum SortProp {
+    #[serde(rename = "name")]
     Name,
+    #[serde(rename = "complexity")]
     Complexity,
+    #[serde(rename = "popularity")]
     Popularity,
+}
+
+impl Default for SortProp {
+    fn default() -> Self {
+        SortProp::Name
+    }
 }
 
 impl Display for SortProp {
@@ -88,10 +98,18 @@ impl Display for SortProp {
     }
 }
 
-#[derive(PartialEq, Clone, Copy, Debug)]
+#[derive(PartialEq, Clone, Copy, Debug, Serialize, Deserialize)]
 pub enum SortDir {
+    #[serde(rename = "asc")]
     Ascending,
+    #[serde(rename = "desc")]
     Descending,
+}
+
+impl Default for SortDir {
+    fn default() -> Self {
+        SortDir::Ascending
+    }
 }
 
 impl SortDir {

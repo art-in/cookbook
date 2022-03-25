@@ -73,6 +73,21 @@ https://github.com/yewstack/yew/issues/1090
 
 ---
 
+`yew-router` is historiocentric like js-routers (eg. `react-router`)
+
+browser history should be treated like part of the app state and managed the same way with actions
+dispatching, and not like separate thing with it's own API
+
+address bar should be treated like another DOM input
+
+in order to achieve that good router should provide tool for synchronizing app state and history
+state. while react/yew is state-DOM synchronizer, router should be a state-history synchronizer
+
+currently achieved state-history syncronization with handmade hook which subscribes to state and
+history changes, and two mappers - state-to-history and history-to-state
+
+---
+
 `rust`'s default deep comparison of smart pointers leads to unnecessary property comparison work
 
 to avoid cloning heavy objects on passing to component properties we wrap them in `Rc` and cheaply

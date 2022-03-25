@@ -9,7 +9,7 @@ use gloo_dialogs::confirm;
 use std::rc::Rc;
 use web_sys::{File, Url};
 
-pub async fn open_recipe_modal(state_ref: StateRef, recipe: Rc<Recipe>) {
+pub async fn open_recipe_modal(state_ref: StateRef, recipe_id: i64) {
     let state = state_ref.borrow().clone();
     state.dispatch(Action::UpdateRecipeForm(
         RecipeFormPatch::default()
@@ -20,13 +20,13 @@ pub async fn open_recipe_modal(state_ref: StateRef, recipe: Rc<Recipe>) {
             .is_deletable(false)
             .is_cancelable(false)
             .recipe(None)
-            .recipe_id(Some(recipe.id))
+            .recipe_id(Some(recipe_id))
             .is_image_changed(false)
             .to_owned(),
     ));
 
     // TODO: handle API request failures
-    let recipe = api::get_recipe(recipe.id).await.unwrap();
+    let recipe = api::get_recipe(recipe_id).await.unwrap();
 
     state.dispatch(Action::UpdateRecipeForm(
         RecipeFormPatch::default()

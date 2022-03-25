@@ -1,8 +1,7 @@
 use crate::components::{RecipeFormModal, RecipeList};
-use crate::hooks::use_reducer_ref;
+use crate::hooks::{use_history_listeners, use_reducer_ref};
 use crate::models::{State, StateRef};
-use crate::state::actions::load_recipes;
-use wasm_bindgen_futures::spawn_local;
+use crate::state::actions::{map_history_to_state, map_state_to_history};
 use yew::prelude::*;
 
 #[function_component(App)]
@@ -11,17 +10,11 @@ pub fn app() -> Html {
     let css = css_mod::get!("app.css");
 
     let state_ref: StateRef = use_reducer_ref(State::default);
-
-    {
-        let state_ref = state_ref.clone();
-        use_effect_with_deps(
-            move |_| {
-                spawn_local(load_recipes(state_ref));
-                || {}
-            },
-            (),
-        );
-    }
+    use_history_listeners(
+        state_ref.clone(),
+        map_state_to_history,
+        map_history_to_state,
+    );
 
     html! {
         <ContextProvider<StateRef> context={state_ref.clone()}>
