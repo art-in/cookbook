@@ -18,6 +18,9 @@
 			},
 			"type": "cargo",
 			"command": "run",
+			"args": [
+				"--release"
+			]
 		},
 		{
 			"label": "server: watch",

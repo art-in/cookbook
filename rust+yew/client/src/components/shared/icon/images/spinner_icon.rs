@@ -7,6 +7,7 @@ pub fn spinner_icon(props: &IconProps) -> Html {
     html! {
         <svg
             class={classes!(css["root"], props.class.clone())}
+            style={props.style.clone()}
             width={props.width.to_string()}
             onclick={props.on_click.clone()}
             aria-hidden="true"

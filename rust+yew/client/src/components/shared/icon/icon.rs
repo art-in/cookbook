@@ -24,6 +24,7 @@ pub fn icon(props: &Props) -> Html {
 
     let icon_props = IconProps {
         class: props.class.clone(),
+        style: "vertical-align: sub;".to_string(),
         title: props.title.clone(),
         width: props.width,
         on_click: props.on_click.clone(),

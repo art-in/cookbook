@@ -44,7 +44,9 @@ where
                 {props.title.clone()}
             </span>
 
-            if props.is_editing { <IconBtn icon={IconType::Plus} on_click={on_add_btn_click} /> }
+            if props.is_editing {
+                <IconBtn class={css["add"]} icon={IconType::Plus} on_click={on_add_btn_click} />
+            }
 
             <ul class={props.is_ordered.then(|| css["ordered"])}>
                 {for props.items.iter().cloned().enumerate().map(move |(idx, item)| {

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::rc::Rc;
 use web_sys::File;
 
-#[derive(Default, PartialEq, Serialize, Deserialize, Debug, Clone, Builder)]
+#[derive(PartialEq, Serialize, Deserialize, Debug, Clone, Builder)]
 #[builder(name = "RecipePatch")]
 pub struct Recipe {
     pub id: i64,
@@ -19,6 +19,23 @@ pub struct Recipe {
     pub image_url: Option<String>,
     #[serde(skip)]
     pub image_file: Option<File>,
+}
+
+impl Default for Recipe {
+    fn default() -> Self {
+        Recipe {
+            id: 0,
+            name: "".to_string(),
+            description: "".to_string(),
+            complexity: 1,
+            popularity: 1,
+            ingredients: Vec::new(),
+            steps: Vec::new(),
+            has_image: false,
+            image_url: None,
+            image_file: None,
+        }
+    }
 }
 
 impl Recipe {

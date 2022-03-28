@@ -6,13 +6,14 @@ pub fn trash_icon(props: &IconProps) -> Html {
     html! {
         <svg
             class={props.class.clone()}
+            style={props.style.clone()}
             width={props.width.to_string()}
             onclick={props.on_click.clone()}
             aria-hidden="true"
             focusable="false"
             role="img"
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
+            viewBox="0 0 448 512"
         >
             <title>{props.title.clone()}</title>
             <path

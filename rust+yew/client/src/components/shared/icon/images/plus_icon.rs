@@ -6,6 +6,7 @@ pub fn plus_icon(props: &IconProps) -> Html {
     html! {
         <svg
             class={props.class.clone()}
+            style={props.style.clone()}
             width={props.width.to_string()}
             onclick={props.on_click.clone()}
             aria-hidden="true"

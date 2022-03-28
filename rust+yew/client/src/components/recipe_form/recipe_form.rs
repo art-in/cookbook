@@ -90,7 +90,7 @@ pub fn recipe_form(props: &Props) -> Html {
                 />
 
                 <List<Rc<Ingredient>>
-                    title="Ingredients"
+                    title="Ingredients:"
                     class={css["ingredients"]}
                     items={recipe.ingredients.clone()}
                     {is_editing}
@@ -119,10 +119,11 @@ pub fn recipe_form(props: &Props) -> Html {
                 />
 
                 <List<Rc<Step>>
-                    title="Steps"
+                    title="Steps:"
                     class={css["steps"]}
                     items={recipe.steps.clone()}
                     {is_editing}
+                    is_ordered=true
                     on_item_add={&*on_step_add}
                     on_item_delete={&*on_step_delete}
                     render_item={RenderProp::from(

@@ -23,6 +23,7 @@ use yew::{Callback, Classes, MouseEvent, Properties};
 #[derive(Properties, PartialEq)]
 pub struct IconProps {
     pub class: Classes,
+    pub style: String,
     pub title: String,
     pub width: i32,
     pub on_click: Callback<MouseEvent>,
