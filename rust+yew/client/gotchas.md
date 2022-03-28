@@ -8,26 +8,68 @@ lighter and smoother approach, as it requires less tools and configuration
 
 it doesn't transform assets itself and has no plugin system for that either yet
 
-https://github.com/thedodd/trunk/issues/7
+https://github.com/thedodd/trunk/issues/7  
+https://github.com/thedodd/trunk/issues/3
 
 ---
 
 `trunk serve` builds twice after each source file change
 
+debug rebuild is pretty slow already, and this bug makes it a little worse
+
+duration of debug rebuild (from source file change to page auto-reload): ~7s  
+
 https://github.com/thedodd/trunk/issues/238
+
+---
+
+css assets should be prebuilt before actual Trunk build
+
+Trunk runs asset pipelines in parallel (eg. css and rust), so in case cargo build-script generates
+css assets it should run before Trunks's build process, otherwise css pipeline will fail with "file
+does not exist"
+
+Trunk's `pre_build` hook can be used to compile css beforehand.  
+
+sad thing is cargo doesn't have command to run build script only. closest workaround is `cargo check`
+
+---
+
+cannot avoid unnecessary css re-compilation
+
+there're three initiators of css compilation (ie. who run cargo build script):
+- Trunk's `pre_build` hook in `Trunk.toml` (ie. `cargo check`)
+- Trunk's build pipeline for rust (ie. `cargo build`)
+- `rust-analyzer`
+
+build script is skipped if no source files were changed and compilation options are the same
+(target, debug/release). problem is that I don't see a way to share those compilation options
+between all three places, and thus avoid unnecessary css recompilation
+
+specifics:
+- `cargo check` target can be specified explicitly (`cargo check --target wasm32-unknown-unknown`),
+    but there's no way to figure out what debug/release mode is currently used
+- there's no way to share compilation target with `rust-analyzer` for particular package.   
+    - `rust-analyzer.cargo.target` cannot be used since it's global and wasm is wrong target for server.  
+    - `.cargo/config.toml`  cannot be used since it's global too, and per-package target
+        configuration is not supported yet. https://github.com/rust-lang/cargo/issues/9406
+
+in the end css always gets compiled for two targets:
+- `target/wasm32-unknown-unknown`
+- `target/debug` - unnecessary
 
 ---
 
 cannot work with CSS without pain
 
-there're several UI component libs, but I would like to control styles myself (not flexible)
+there're several UI component libs, but I would like to control styles myself for flexibility
 
 there's [stylist](https://crates.io/crates/stylist), but I don't like css-in-code approach
 
-I like [CSS modules](https://github.com/css-modules/css-modules) approach, but there's only
-one implementation for rust: [css-modules](https://crates.io/crates/css-modules)
+I would like to use [CSS modules](https://github.com/css-modules/css-modules) approach, but there's
+only one implementation for rust: [css-modules](https://crates.io/crates/css-modules)
 
-- it doesn't fully implement CSS modules spec (though it has all the vital features)
+- it doesn't fully implement CSS modules spec (it has all the vital features though)
 - it is abandoned for 2 years now, and source code repo deleted (don't care while it works ok)
 - it forces to use `nightly` rust toolchain, since it uses unstable macro-related feature
     (`proc_macro_span`)

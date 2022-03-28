@@ -1,6 +1,5 @@
 fn main() {
-    dotenv::dotenv().unwrap();
-    env_logger::init();
+    simple_logger::init_with_level(log::Level::Trace).unwrap();
 
     css_mod::Compiler::new()
         .add_modules("src/**/*.css")
