@@ -3,18 +3,18 @@ use std::path::PathBuf;
 use tokio::io::AsyncWriteExt;
 
 pub struct Images {
-    images_folder: String,
+    images_dir: String,
 }
 
 impl Images {
-    pub fn new(images_folder: &str) -> Self {
+    pub fn new(images_dir: &str) -> Self {
         Images {
-            images_folder: images_folder.to_owned(),
+            images_dir: images_dir.to_owned(),
         }
     }
 
     fn get_recipe_image_file_path(&self, recipe_id: i32) -> PathBuf {
-        [&self.images_folder, &format!("recipe-{}", recipe_id)]
+        [&self.images_dir, &format!("recipe-{}", recipe_id)]
             .iter()
             .collect()
     }

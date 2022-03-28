@@ -5,7 +5,7 @@ use std::env;
 pub struct Config {
     pub http_server_url: String,
     pub db_url: String,
-    pub images_folder: String,
+    pub images_dir: String,
 }
 
 impl Config {
@@ -13,7 +13,7 @@ impl Config {
         Ok(Config {
             http_server_url: get_env_var("HTTP_SERVER_URL")?,
             db_url: get_env_var("DATABASE_URL")?,
-            images_folder: get_env_var("IMAGES_FOLDER")?,
+            images_dir: get_env_var("IMAGES_DIR")?,
         })
     }
 }

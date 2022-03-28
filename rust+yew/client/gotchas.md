@@ -177,8 +177,8 @@ let on_click = {
 
 which is generally OK diagnostic, but...
 
-I want each of my UI components lay in separate folder (component can have personal assets like CSS
-files, images, etc.), and component definition lay in `.rs` file with same name
+I want each of my UI components lay in separate directory (component can have personal assets like
+CSS files, images, etc.), and component definition lay in `.rs` file with same name
 
 ```
 components/

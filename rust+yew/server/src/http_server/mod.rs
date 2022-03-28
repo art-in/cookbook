@@ -15,7 +15,7 @@ impl AppState {
     async fn from_config(cfg: Arc<Config>) -> Result<AppState> {
         Ok(AppState {
             db: storage::db::Db::connect(&cfg.db_url).await?,
-            images: storage::images::Images::new(&cfg.images_folder),
+            images: storage::images::Images::new(&cfg.images_dir),
         })
     }
 }
@@ -37,6 +37,7 @@ pub async fn listen(cfg: &Config) -> std::io::Result<()> {
             .data_factory(move || AppState::from_config(cfg_ptr.clone()))
             .wrap(middleware::Logger::default())
             .service(api::scope())
+        // TODO: serve client's static files
     })
     .bind(&cfg.http_server_url)?
     .run()
