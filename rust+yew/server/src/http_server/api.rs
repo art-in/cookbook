@@ -23,8 +23,8 @@ pub fn scope() -> Scope {
 
 static DEFAULT_SORT_PROP: &str = "id";
 static DEFAULT_SORT_DIR: &str = "asc";
-static DEFAULT_PAGE_OFFSET: i64 = 0;
-static DEFAULT_PAGE_LIMIT: i64 = 1000;
+static DEFAULT_PAGE_OFFSET: i32 = 0;
+static DEFAULT_PAGE_LIMIT: i32 = 1000;
 
 #[derive(Deserialize)]
 struct GetRecipesParams {
@@ -35,10 +35,10 @@ struct GetRecipesParams {
     sort_dir: Option<String>,
 
     #[serde(rename = "po")]
-    page_offset: Option<i64>,
+    page_offset: Option<i32>,
 
     #[serde(rename = "pl")]
-    page_limit: Option<i64>,
+    page_limit: Option<i32>,
 }
 
 #[get("/recipes")]

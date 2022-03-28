@@ -9,7 +9,7 @@ use gloo_dialogs::confirm;
 use std::rc::Rc;
 use web_sys::{File, Url};
 
-pub async fn open_recipe_modal(state_ref: StateRef, recipe_id: i64) {
+pub async fn open_recipe_modal(state_ref: StateRef, recipe_id: i32) {
     let state = state_ref.borrow().clone();
     state.dispatch(Action::UpdateRecipeForm(
         RecipeFormPatch::default()

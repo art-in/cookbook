@@ -9,13 +9,13 @@ use wasm_bindgen_futures::spawn_local;
 #[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 struct HistoryState {
     #[serde(default, rename = "rid", skip_serializing_if = "is_default")]
-    pub recipe_id: Option<i64>,
+    pub recipe_id: Option<i32>,
     #[serde(default, rename = "sp", skip_serializing_if = "is_default")]
     pub sort_prop: SortProp,
     #[serde(default, rename = "sd", skip_serializing_if = "is_default")]
     pub sort_dir: SortDir,
     #[serde(default, rename = "p", skip_serializing_if = "is_default")]
-    pub current_page_idx: i64,
+    pub current_page_idx: i32,
 }
 
 pub fn map_state_to_history(state_ref: StateRef, history: BrowserHistory) {

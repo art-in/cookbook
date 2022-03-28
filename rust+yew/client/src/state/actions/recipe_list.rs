@@ -75,7 +75,7 @@ pub async fn on_recipe_list_sort(state_ref: StateRef, sort_prop: SortProp) {
     load_recipes(state_ref).await;
 }
 
-pub async fn on_recipe_list_page(state_ref: StateRef, page_idx: i64) {
+pub async fn on_recipe_list_page(state_ref: StateRef, page_idx: i32) {
     log::debug!("on_recipe_list_page: {:?}", page_idx);
     let state = state_ref.borrow().clone();
     state.dispatch(Action::UpdateRecipeList(

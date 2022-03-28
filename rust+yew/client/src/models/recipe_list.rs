@@ -16,9 +16,9 @@ pub struct RecipeList {
     pub sort_prop: SortProp,
     pub sort_dir: SortDir,
     // paging
-    pub total: i64,
-    pub page_limit: i64,
-    pub current_page_idx: i64,
+    pub total: i32,
+    pub page_limit: i32,
+    pub current_page_idx: i32,
 }
 
 impl Default for RecipeList {

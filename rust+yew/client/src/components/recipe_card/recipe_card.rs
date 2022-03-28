@@ -56,14 +56,14 @@ pub fn recipe_card(props: &Props) -> Html {
     let on_complexity_change = {
         let on_change = props.on_change.clone();
         Callback::from(move |event: Event| {
-            let complexity = get_input_event_target_value(&event).parse::<i8>().unwrap();
+            let complexity = get_input_event_target_value(&event).parse::<i16>().unwrap();
             on_change.emit(RecipePatch::default().complexity(complexity).to_owned());
         })
     };
     let on_popularity_change = {
         let on_change = props.on_change.clone();
         Callback::from(move |event: Event| {
-            let popularity = get_input_event_target_value(&event).parse::<i8>().unwrap();
+            let popularity = get_input_event_target_value(&event).parse::<i16>().unwrap();
             on_change.emit(RecipePatch::default().popularity(popularity).to_owned());
         })
     };

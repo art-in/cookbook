@@ -88,8 +88,8 @@ impl Db {
         &self,
         sort_prop: &str,
         sort_dir: &str,
-        page_offset: i64,
-        page_limit: i64,
+        page_offset: i32,
+        page_limit: i32,
     ) -> Result<EntitySubset<Recipe>> {
         let recipe_rows = self
             .client
@@ -118,11 +118,11 @@ impl Db {
             .client
             .query_one(&self.statements.count_recipes, &[])
             .await?;
-        let recipes_count = recipes_count_row.get(0);
+        let recipes_count: i64 = recipes_count_row.get(0);
 
         Ok(EntitySubset {
             items: recipes,
-            total: recipes_count,
+            total: recipes_count as i32,
         })
     }
 

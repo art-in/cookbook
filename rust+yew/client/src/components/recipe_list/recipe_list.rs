@@ -19,7 +19,7 @@ pub fn recipe_list(props: &Props) -> Html {
 
     let state_ref = use_context::<StateRef>().expect("ctx not found");
     let recipe_list = props.recipe_list.clone();
-    let pages_count = (recipe_list.total as f64 / recipe_list.page_limit as f64).ceil() as i64;
+    let pages_count = (recipe_list.total as f32 / recipe_list.page_limit as f32).ceil() as i32;
 
     let on_add = use_callback(state_ref.clone(), |state_ref, _| {
         actions::on_recipe_list_add(state_ref)

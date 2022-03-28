@@ -7,11 +7,11 @@ use web_sys::File;
 #[derive(PartialEq, Serialize, Deserialize, Debug, Clone, Builder)]
 #[builder(name = "RecipePatch")]
 pub struct Recipe {
-    pub id: i64,
+    pub id: i32,
     pub name: String,
     pub description: String,
-    pub complexity: i8,
-    pub popularity: i8,
+    pub complexity: i16,
+    pub popularity: i16,
     pub ingredients: Vec<Rc<Ingredient>>,
     pub steps: Vec<Rc<Step>>,
     pub has_image: bool,

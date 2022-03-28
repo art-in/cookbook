@@ -7,8 +7,8 @@ use web_sys::File;
 pub async fn get_recipes(
     sort_prop: SortProp,
     sort_dir: SortDir,
-    page_offset: i64,
-    page_limit: i64,
+    page_offset: i32,
+    page_limit: i32,
 ) -> Result<EntitySubset<Rc<Recipe>>, Error> {
     let query = format!("?sp={sort_prop}&sd={sort_dir}&po={page_offset}&pl={page_limit}");
     let res = Request::get(&format!("api/recipes{query}")).send().await?;
@@ -19,7 +19,7 @@ pub async fn get_recipes(
     Ok(recipes)
 }
 
-pub async fn get_recipe(recipe_id: i64) -> Result<Recipe, Error> {
+pub async fn get_recipe(recipe_id: i32) -> Result<Recipe, Error> {
     let res = Request::get(&format!("api/recipes/{}", recipe_id))
         .send()
         .await?;
@@ -28,13 +28,13 @@ pub async fn get_recipe(recipe_id: i64) -> Result<Recipe, Error> {
     Ok(recipe)
 }
 
-pub async fn post_recipe(recipe: &Recipe) -> Result<i64, Error> {
+pub async fn post_recipe(recipe: &Recipe) -> Result<i32, Error> {
     let res = Request::post("api/recipes")
         .body(serde_json::to_string(recipe).unwrap())
         .header("Content-Type", "application/json")
         .send()
         .await?;
-    let recipe_id = res.text().await.unwrap().parse::<i64>().unwrap();
+    let recipe_id = res.text().await.unwrap().parse::<i32>().unwrap();
     Ok(recipe_id)
 }
 
@@ -47,14 +47,14 @@ pub async fn put_recipe(recipe: &Recipe) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn delete_recipe(recipe_id: i64) -> Result<(), Error> {
+pub async fn delete_recipe(recipe_id: i32) -> Result<(), Error> {
     Request::delete(&format!("api/recipes/{recipe_id}"))
         .send()
         .await?;
     Ok(())
 }
 
-pub async fn post_recipe_image(recipe_id: i64, recipe_image: &File) -> Result<(), Error> {
+pub async fn post_recipe_image(recipe_id: i32, recipe_image: &File) -> Result<(), Error> {
     Request::post(&format!("api/recipes/{recipe_id}/image"))
         .body(recipe_image)
         .send()
@@ -62,7 +62,7 @@ pub async fn post_recipe_image(recipe_id: i64, recipe_image: &File) -> Result<()
     Ok(())
 }
 
-pub async fn delete_recipe_image(recipe_id: i64) -> Result<(), Error> {
+pub async fn delete_recipe_image(recipe_id: i32) -> Result<(), Error> {
     Request::delete(&format!("api/recipes/{recipe_id}/image"))
         .send()
         .await?;

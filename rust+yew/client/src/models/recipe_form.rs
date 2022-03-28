@@ -15,7 +15,7 @@ pub struct RecipeForm {
     pub is_new_recipe: bool,
     pub is_image_changed: bool,
     pub recipe: Option<Rc<Recipe>>,
-    pub recipe_id: Option<i64>, // TODO: can replace with recipe.id?
+    pub recipe_id: Option<i32>,
     pub prev_recipe: Option<Rc<Recipe>>,
 }
 
