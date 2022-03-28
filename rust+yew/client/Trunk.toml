@@ -1,12 +1,22 @@
+[build]
+target = "static/index.html"
+dist = "build"
+
+[watch]
+watch = ['.']
+
+[serve]
+port = 8080
+
 [[hooks]]
 stage = "pre_build"
 command = "sh"
 command_arguments = [
     "-c",
-    # Trunk runs assets pipelines (eg. css and wasm) in parallel, so we need to trigger cargo
-    # build script which generates css before running Trunk build
+    # Trunk runs assets pipelines (eg. for css and wasm) in parallel, so we need to trigger cargo
+    # build script for generating css assets before running Trunk build
     # TODO: will it use old css if assets/ folder already exists?
-    "ls assets || (echo \"building assets\" && cargo check)",
+    "ls build-assets || (echo \"building assets\" && cargo check)",
 ]
 
 [[proxy]]

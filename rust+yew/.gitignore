@@ -2,10 +2,5 @@
 /target/
 
 # default directory for recipe image files managed by server
+# TODO: rename to recipe-images
 /images/
-
-# client/trunk compilation results
-/client/dist/
-
-# css compilation results
-/client/assets/
