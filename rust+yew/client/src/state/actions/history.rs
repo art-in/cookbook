@@ -19,7 +19,7 @@ struct HistoryState {
 }
 
 pub fn map_state_to_history(state_ref: StateRef, history: BrowserHistory) {
-    log::info!("map_state_to_history");
+    log::debug!("map_state_to_history");
     let state = state_ref.borrow().to_owned();
 
     let history_state = HistoryState {
@@ -42,7 +42,7 @@ pub fn map_history_to_state(state_ref: StateRef, history: BrowserHistory) {
 
 async fn map_history_to_state_internal(state_ref: StateRef, history: BrowserHistory) {
     let history_state: HistoryState = history.location().query().unwrap();
-    log::info!("map_history_to_state: {:?}", history_state);
+    log::debug!("map_history_to_state: {:?}", history_state);
 
     let state = state_ref.borrow().to_owned();
     let history_state: HistoryState = history.location().query().unwrap();

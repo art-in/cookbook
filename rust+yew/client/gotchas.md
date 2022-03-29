@@ -13,13 +13,25 @@ https://github.com/thedodd/trunk/issues/3
 
 ---
 
-`trunk serve` builds twice after each source file change
-
-debug rebuild is pretty slow already, and this bug makes it a little worse
+`trunk`'s debug rebuild is slow
 
 duration of debug rebuild (from source file change to page auto-reload): ~7s  
+same in cookbook/rust's js/webpack version: <1s
 
+it includes a bug of double rebuild on each change, which adds up to the problem a bit
 https://github.com/thedodd/trunk/issues/238
+
+---
+
+`trunk`-produced wasm file size is ok
+
+wasm file size produced in release mode: ~500Kb (200Kb compressed)  
+js files size in cookbook/rust's js/webpack version: ~200Kb (70Kb compressed)
+
+- `trunk` passes wasm file through `wasm-opt` already  
+- I've additionaly added LTO and `opt-level = 'z'` for release profile (770Kb -> 510Kb)  
+- tried `wee_alloc` but it doesn't affect file size much
+- not tried `wasm-snip` in order to strip panic strings
 
 ---
 

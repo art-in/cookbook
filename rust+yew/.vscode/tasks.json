@@ -50,7 +50,6 @@
 				"cwd": "${workspaceFolder}/client"
 			},
 			"type": "shell",
-			// TODO: try to optimize wasm file size (1Mb currently)
 			"command": "trunk build --release",
 		},
 	]

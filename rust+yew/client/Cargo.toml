@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 yew = "0.19.3"
-log = "0.4.14"
+log = { version = "0.4.14", features = ["release_max_level_info"] }
 wasm-logger = "0.2.0"
 wasm-bindgen-futures = "0.4.29"
 gloo-net = "0.1.0"

@@ -1,2 +1,11 @@
 [workspace]
 members = ["client", "server"]
+
+[profile.release]
+# it makes compilation slower, but eg. removes dead code
+# https://llvm.org/docs/LinkTimeOptimization.html
+lto = true
+
+[profile.release.package.client]
+# aggressively optimize for wasm file size
+opt-level = 'z'
