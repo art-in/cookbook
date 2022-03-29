@@ -6,6 +6,7 @@ pub struct Config {
     pub http_server_url: String,
     pub db_url: String,
     pub images_dir: String,
+    pub statics_dir: String,
 }
 
 impl Config {
@@ -14,6 +15,7 @@ impl Config {
             http_server_url: get_env_var("HTTP_SERVER_URL")?,
             db_url: get_env_var("DATABASE_URL")?,
             images_dir: get_env_var("IMAGES_DIR")?,
+            statics_dir: get_env_var("STATICS_DIR")?,
         })
     }
 }

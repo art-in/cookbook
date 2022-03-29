@@ -17,6 +17,7 @@
 		"tamasfe.even-better-toml",
 		"serayuzgur.crates",
 		"jedeop.crates-completer",
-		"aeschli.vscode-css-formatter"
+		"aeschli.vscode-css-formatter",
+		"dtsvet.vscode-wasm"
 	]
 }
