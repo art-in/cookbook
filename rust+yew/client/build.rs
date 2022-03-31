@@ -3,5 +3,7 @@ fn main() {
 
     css_mod::Compiler::new()
         .add_modules("src/**/*.css")
-        .compile("build-assets/app.css");
+        .unwrap()
+        .compile("build-assets/app.css")
+        .unwrap();
 }

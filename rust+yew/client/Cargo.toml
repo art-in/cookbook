@@ -25,10 +25,9 @@ web-sys = { version = "0.3.56", features = [
     "FileList",
     "Url",
 ] }
-# TODO: publish css_mod to crates.io
-css_mod = { git = "https://github.com/art-in/css_mod" }
+css_mod = "0.1.0"
 
 [build-dependencies]
 log = "0.4.14"
 simple_logger = "2.1.0"
-css_mod = { git = "https://github.com/art-in/css_mod" }
+css_mod = "0.1.0"

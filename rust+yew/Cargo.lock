@@ -248,9 +248,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.55"
+version = "1.0.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "159bb86af3a200e19a068f4224eae4c8bb2d0fa054c7e5d1cacd5cef95e684cd"
+checksum = "4361135be9122e0870de935d7c439aef945b9f9ddd4199a553b5270b49c82a27"
 
 [[package]]
 name = "askama_escape"
@@ -492,9 +492,11 @@ dependencies = [
 
 [[package]]
 name = "css_mod"
-version = "0.1.0"
-source = "git+https://github.com/art-in/css_mod#54793a4fbd1b4e10a2eb14121137aba9529d4360"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e92eeaf26b8003c92b041f6af8cd11252e3cc93e4ee9d20f848694d7ace94ed4"
 dependencies = [
+ "anyhow",
  "glob",
  "log",
  "once_cell",
@@ -503,6 +505,7 @@ dependencies = [
  "quote",
  "serde",
  "serde_json",
+ "thiserror",
 ]
 
 [[package]]
