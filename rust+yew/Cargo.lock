@@ -492,9 +492,9 @@ dependencies = [
 
 [[package]]
 name = "css_mod"
-version = "0.1.2"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e92eeaf26b8003c92b041f6af8cd11252e3cc93e4ee9d20f848694d7ace94ed4"
+checksum = "e9a99d23d77d6aab3889d8abbb4acf85f7c85668c5aa2113edca218a0722b446"
 dependencies = [
  "anyhow",
  "glob",
